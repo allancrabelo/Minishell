@@ -6,13 +6,14 @@
 /*   By: aaugusto <aaugusto@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 17:05:28 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/20 17:30:04 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/08/20 18:32:05 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+// Includes
 #include <stdio.h>				// printf, perror
 #include <stdlib.h>				// malloc, free, exit
 #include <unistd.h>				// write, access, read, close, fork, chdir, unlink, execve, dup, dup2, pipe, isatty, ttyname, ttyslot, getcwd

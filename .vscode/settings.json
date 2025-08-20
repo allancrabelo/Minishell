@@ -1,0 +1,10 @@
+{
+	"files.associations": {
+		"colors.h": "c",
+		"minishell.h": "c",
+		"history.h": "c",
+		"wait.h": "c",
+		"stdio.h": "c",
+		"readline.h": "c"
+	}
+}

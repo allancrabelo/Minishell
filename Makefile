@@ -9,7 +9,8 @@ HEADLIST	:= minishell.h
 HEADERS		:= $(addprefix ${HEADDIR}, ${HEADLIST})
 
 SRCSDIR		:= ./src/
-SRCSLIST	:= main.c
+SRCSLIST	:= main.c \
+
 SRCS		:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
 
 OBJSDIR		:= ./obj/
@@ -25,18 +26,14 @@ all: ${NAME}
 ${NAME}: ${OBJS}
 	@echo ""
 	@echo "${CYAN}Linking ${NAME} ...${RESET}"
-	${CC} ${FLAGS} ${DEBUG} ${OBJS} -o ${NAME}
+	${CC} ${FLAGS} ${DEBUG} ${OBJS} -o ${NAME} -lreadline
 	@echo ""
 	@echo "${CYAN}${NAME} Ready to use${RESET}"
 
-
-${OBJSDIR}%.o: ${SRCSDIR}%.c ${HEADERS} | ${OBJSDIR}
+${OBJSDIR}%.o: ${SRCSDIR}%.c ${HEADERS}
 	@echo "${CYAN}Compiling $< ...${RESET}"
+	mkdir -p $(dir $@)
 	${CC} ${FLAGS} ${DEBUG} -c $< -o $@
-
-
-${OBJSDIR}:
-	mkdir -p ${OBJSDIR}
 
 clean:
 	@echo ""
