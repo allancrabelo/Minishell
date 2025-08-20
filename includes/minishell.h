@@ -6,7 +6,7 @@
 /*   By: aaugusto <aaugusto@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 17:05:28 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/20 18:32:05 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/08/21 00:49:19 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,5 +29,16 @@
 #include <curses.h>				// tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs (ou <termcap.h>)
 #include <readline/readline.h>	// readline
 #include <readline/history.h>	// add_history, rl_clear_history, etc.
+
+
+// Commands
+void	do_commands(char *input);
+void	handle_commands(char *input);
+int		ft_echo(char **commands);
+
+// Utils
+int		ft_strcmp(char *s1, char *s2);
+char	**ft_split(char const *s, char c);
+int		count_words(char *str);
 
 #endif
