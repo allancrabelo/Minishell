@@ -11,9 +11,11 @@ HEADERS     := $(addprefix ${HEADDIR}, ${HEADLIST})
 
 SRCSDIR     :=	./src/
 SRCSLIST    :=	main.c \
+				signals.c \
 				cmd/handle_commands.c \
 				executor/echo/ft_echo.c \
-				signals.c
+				utils/echo_utils.c \
+				utils/echo_utils2.c \
 
 SRCS        := $(addprefix ${SRCSDIR}, ${SRCSLIST})
 

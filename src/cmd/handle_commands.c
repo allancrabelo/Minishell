@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_commands.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aaugusto <aaugusto@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 00:20:45 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/21 18:28:13 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/08/21 23:09:23 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@ void	handle_commands(char *input)
 {
 	char **commands;
 
-	commands = ft_split(input, ' ');
+	commands = ft_split_ws(input);
 
 	if (!commands || !commands[0])
 		return ;

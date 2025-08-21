@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aaugusto <aaugusto@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 17:05:28 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/21 17:45:57 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/08/21 23:27:36 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,11 @@ int		ft_echo(char **commands);
 void	sighandler(int signal);
 void	signal_init(void);
 
+// [Utils]:
+// Echo:
+char	**ft_split_ws(const char *s);
+int		is_ws(char c);
+int		count_words(const char *s);
+int		word_len(const char *s);
+char	*dup_word(const char *s, int len);
 #endif
