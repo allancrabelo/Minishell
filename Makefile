@@ -10,9 +10,9 @@ HEADERS		:= $(addprefix ${HEADDIR}, ${HEADLIST})
 
 SRCSDIR		:= ./src/
 SRCSLIST	:= main.c \
-				handle_commands.c \
-				utils.c \
-				ft_echo.c 
+				cmd/handle_commands.c \
+				utils/utils.c \
+				executor/echo/ft_echo.c 
 SRCS		:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
 
 OBJSDIR		:= ./obj/

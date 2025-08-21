@@ -1,24 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   handle_commands.c                                  :+:      :+:    :+:   */
+/*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaugusto <aaugusto@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/21 00:20:45 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/21 00:46:44 by aaugusto         ###   ########.fr       */
+/*   Created: 2025/08/21 00:27:39 by aaugusto          #+#    #+#             */
+/*   Updated: 2025/08/21 14:59:44 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../../includes/minishell.h"
 
-void	handle_commands(char *input)
+int	ft_echo(char **commands)
 {
-	char **commands;
+	int	i;
 
-	commands = ft_split(input, ' ');
-	if (!commands || !commands[0])
-		return ;
-	if (ft_strcmp(commands[0], "echo") == 0)
-		ft_echo(commands);
+	i = 1;
+	while (commands[i])
+	{
+		printf("%s", commands[i]);
+		if (commands[i + 1])
+			printf(" ");
+		i++;
+	}
+	printf("\n");
+	return (0);
 }
