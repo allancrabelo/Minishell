@@ -6,7 +6,7 @@
 /*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 17:05:28 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/21 15:27:12 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/08/21 17:45:57 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,9 @@
 void	do_commands(char *input);
 void	handle_commands(char *input);
 int		ft_echo(char **commands);
+
+// Signals
+void	sighandler(int signal);
+void	signal_init(void);
 
 #endif

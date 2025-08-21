@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaugusto <aaugusto@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 16:13:56 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/04/09 09:59:10 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/08/21 18:35:34 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static void	fill_arr(char const *s, char c, char **arr)
 char	**ft_split(char const *s, char c)
 {
 	size_t	arr_size;
-	char	**arr;	
+	char	**arr;
 
 	if (s == NULL)
 		return (NULL);

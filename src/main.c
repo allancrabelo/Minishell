@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaugusto <aaugusto@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 17:08:05 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/21 00:19:55 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/08/21 18:21:05 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,9 @@ int	main(int argc, char **argv)
 {
 	(void)argc;
 	(void)argv;
-
 	if (argc != 1 || argv[1])
-		return (printf (BOLD SRED "[ERROR] Usage: ./minishell\n" SRESET), 2);
+		return (printf ( "[ERROR] Usage: ./minishell\n" SRESET), 127);
+	signal_init();
 	main_loop();
 	exit(EXIT_SUCCESS);
 }

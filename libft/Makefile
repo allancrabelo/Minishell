@@ -6,7 +6,7 @@
 #    By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/23 00:58:27 by aaugusto          #+#    #+#              #
-#    Updated: 2025/08/11 18:40:22 by aaugusto         ###   ########.fr        #
+#    Updated: 2025/08/21 16:15:19 by aaugusto         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,7 +52,8 @@ SRCS	:=	ft_atoi.c \
 				get_next_line.c \
 				ft_printf.c \
 				ft_printf_hex.c \
-				ft_printf_utils.c
+				ft_printf_utils.c \
+				ft_isspace.c 
 
 OBJS	:= $(SRCS:.c=.o)
 RM		:= rm -f

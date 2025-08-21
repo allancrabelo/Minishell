@@ -9,11 +9,12 @@ HEADDIR     := ./includes/
 HEADLIST    := minishell.h
 HEADERS     := $(addprefix ${HEADDIR}, ${HEADLIST})
 
-SRCSDIR     := ./src/
-SRCSLIST    := main.c \
-               cmd/handle_commands.c \
-               utils/utils.c \
-               executor/echo/ft_echo.c
+SRCSDIR     :=	./src/
+SRCSLIST    :=	main.c \
+				cmd/handle_commands.c \
+				executor/echo/ft_echo.c \
+				signals.c
+
 SRCS        := $(addprefix ${SRCSDIR}, ${SRCSLIST})
 
 OBJSDIR     := ./obj/
@@ -45,7 +46,8 @@ ${OBJSDIR}%.o: ${SRCSDIR}%.c ${HEADERS}
 	${CC} ${CFLAGS} ${DEBUGFLAGS} -c $< -o $@
 
 ${LIBFT}:
-	@make -C ${LIBFTDIR}
+	@echo "${CYAN}Compiling libft ...${RESET}"
+	@make -C ${LIBFTDIR} --no-print-directory
 
 # ============================
 # Cleaning
@@ -54,13 +56,14 @@ clean:
 	@echo ""
 	@echo "${RED}Deleting ${NAME} Objects ...${RESET}"
 	${RM} -r ${OBJSDIR}
-	@make -C ${LIBFTDIR} clean
+	@make -C ${LIBFTDIR} clean --no-print-directory --quiet
 
-fclean: clean
+fclean:
 	@echo ""
 	@echo "${RED}Deleting ${NAME} Executable ...${RESET}"
 	${RM} ${NAME}
-	@make -C ${LIBFTDIR} fclean
+	@${RM} -r ${OBJSDIR}
+	@make -C ${LIBFTDIR} fclean --no-print-directory --quiet
 
 re: fclean all
 
