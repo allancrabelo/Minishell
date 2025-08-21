@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaugusto <aaugusto@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 17:05:28 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/21 00:49:19 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/08/21 15:27:12 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINISHELL_H
 
 // Includes
+#include "../libft/libft.h"
 #include <stdio.h>				// printf, perror
 #include <stdlib.h>				// malloc, free, exit
 #include <unistd.h>				// write, access, read, close, fork, chdir, unlink, execve, dup, dup2, pipe, isatty, ttyname, ttyslot, getcwd
@@ -30,15 +31,9 @@
 #include <readline/readline.h>	// readline
 #include <readline/history.h>	// add_history, rl_clear_history, etc.
 
-
 // Commands
 void	do_commands(char *input);
 void	handle_commands(char *input);
 int		ft_echo(char **commands);
-
-// Utils
-int		ft_strcmp(char *s1, char *s2);
-char	**ft_split(char const *s, char c);
-int		count_words(char *str);
 
 #endif
