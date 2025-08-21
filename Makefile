@@ -45,8 +45,7 @@ ${OBJSDIR}%.o: ${SRCSDIR}%.c ${HEADERS}
 	${CC} ${CFLAGS} ${DEBUGFLAGS} -c $< -o $@
 
 ${LIBFT}:
-	@echo "${CYAN}Compiling libft ...${RESET}"
-	@make -C ${LIBFTDIR} --no-print-directory
+	@make -C ${LIBFTDIR}
 
 # ============================
 # Cleaning
@@ -55,13 +54,13 @@ clean:
 	@echo ""
 	@echo "${RED}Deleting ${NAME} Objects ...${RESET}"
 	${RM} -r ${OBJSDIR}
-	@make -C ${LIBFTDIR} clean --no-print-directory
+	@make -C ${LIBFTDIR} clean
 
 fclean: clean
 	@echo ""
 	@echo "${RED}Deleting ${NAME} Executable ...${RESET}"
 	${RM} ${NAME}
-	@make -C ${LIBFTDIR} fclean --no-print-directory
+	@make -C ${LIBFTDIR} fclean
 
 re: fclean all
 
