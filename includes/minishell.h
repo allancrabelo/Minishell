@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaugusto <aaugusto@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 17:05:28 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/21 23:27:36 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/08/22 18:35:57 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,26 @@
 #include <curses.h>				// tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs (ou <termcap.h>)
 #include <readline/readline.h>	// readline
 #include <readline/history.h>	// add_history, rl_clear_history, etc.
+
+// Structs
+typedef enum e_token_type
+{
+	WORD,
+}				t_token_type;
+
+typedef struct s_token
+{
+	char			*data;
+	t_token_type	type;
+	struct s_token	*next;
+}				t_token;
+
+typedef struct s_mini
+{
+
+	t_token	token;
+}				t_mini;
+
 
 // Commands
 void	do_commands(char *input);
