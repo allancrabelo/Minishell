@@ -1,34 +1,34 @@
-NAME        := minishell
-CC          := cc
-RM          := rm -f
+NAME		:= minishell
+CC			:= cc
+RM			:= rm -f
 
-CFLAGS      := -Wall -Wextra -Werror
-DEBUGFLAGS  := -g
+CFLAGS		:= -Wall -Wextra -Werror
+DEBUGFLAGS	:= -g
 
-HEADDIR     := ./includes/
-HEADLIST    := minishell.h
-HEADERS     := $(addprefix ${HEADDIR}, ${HEADLIST})
+HEADDIR		:= ./includes/
+HEADLIST	:= minishell.h
+HEADERS		:= $(addprefix ${HEADDIR}, ${HEADLIST})
 
-SRCSDIR     :=	./src/
-SRCSLIST    :=	main.c \
-				signals.c \
-				cmd/handle_commands.c \
-				executor/echo/ft_echo.c \
-				utils/echo_utils.c \
-				utils/echo_utils2.c \
+VPATH		:=	src src/utils src/executor src/cmd src/executor/echo
 
-SRCS        := $(addprefix ${SRCSDIR}, ${SRCSLIST})
+SRCSLIST	:=	main \
+				signals \
+				handle_commands \
+				ft_echo \
+				echo_utils \
+				echo_utils2 \
 
-OBJSDIR     := ./obj/
-OBJSLIST    := ${SRCSLIST:.c=.o}
-OBJS        := $(addprefix ${OBJSDIR}, ${OBJSLIST})
+SRCS		:= $(addsuffix .c, ${SRCSLIST})
 
-LIBFTDIR    := ./libft/
-LIBFT       := ${LIBFTDIR}libft.a
+OBJSDIR		:= ./obj/
+OBJS		:= ${SRCS:%.c=${OBJSDIR}%.o}
 
-CYAN        := \033[96m
-RED         := \033[91m
-RESET       := \033[0m
+LIBFTDIR	:= ./libft/
+LIBFT		:= ${LIBFTDIR}libft.a
+
+CYAN		:= \033[96m
+RED			:= \033[91m
+RESET		:= \033[0m
 
 # ============================
 # Default build
@@ -42,10 +42,10 @@ ${NAME}: ${OBJS} ${LIBFT}
 	@echo ""
 	@echo "${CYAN}${NAME} Ready to use${RESET}"
 
-${OBJSDIR}%.o: ${SRCSDIR}%.c ${HEADERS}
+${OBJSDIR}%.o: %.c ${HEADERS}
 	@echo "${CYAN}Compiling $< ...${RESET}"
 	@mkdir -p $(dir $@)
-	${CC} ${CFLAGS} ${DEBUGFLAGS} -c $< -o $@
+	${CC} ${CFLAGS} -I${HEADDIR} ${DEBUGFLAGS} -c $< -o $@
 
 ${LIBFT}:
 	@echo "${CYAN}Compiling libft ...${RESET}"
