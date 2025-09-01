@@ -17,6 +17,7 @@ SRCSLIST	:=	main \
 				ft_echo \
 				echo_utils \
 				echo_utils2 \
+				tokenizer \
 
 SRCS		:= $(addsuffix .c, ${SRCSLIST})
 

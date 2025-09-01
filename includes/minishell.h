@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 17:05:28 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/22 18:35:57 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/09/01 17:02:56 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@
 typedef enum e_token_type
 {
 	WORD,
+	OPERATOR
 }				t_token_type;
 
 typedef struct s_token
@@ -46,14 +47,14 @@ typedef struct s_token
 
 typedef struct s_mini
 {
-
 	t_token	token;
+	int		quote;
 }				t_mini;
 
 
 // Commands
-void	do_commands(char *input);
-void	handle_commands(char *input);
+void	do_commands(t_mini *mini, char *input);
+void	handle_commands(t_mini *mini, char *input);
 int		ft_echo(char **commands);
 
 // Signals
@@ -67,4 +68,8 @@ int		is_ws(char c);
 int		count_words(const char *s);
 int		word_len(const char *s);
 char	*dup_word(const char *s, int len);
+
+
+void	ft_tokenizer(t_mini *mini, char *input, t_token **tokens);
+
 #endif

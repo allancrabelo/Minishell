@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaugusto <aaugusto@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 23:13:58 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/21 23:21:24 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/09/01 14:07:51 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
