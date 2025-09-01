@@ -6,7 +6,7 @@
 /*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 17:05:28 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/09/01 17:02:56 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/09/01 19:00:52 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ typedef struct s_token
 
 typedef struct s_mini
 {
-	t_token	token;
+	t_token	*token;
 	int		quote;
 }				t_mini;
 
@@ -69,7 +69,6 @@ int		count_words(const char *s);
 int		word_len(const char *s);
 char	*dup_word(const char *s, int len);
 
-
-void	ft_tokenizer(t_mini *mini, char *input, t_token **tokens);
+void	ft_tokenizer(t_mini *mini, char *input);
 
 #endif

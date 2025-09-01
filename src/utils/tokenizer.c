@@ -30,7 +30,7 @@ t_token *new_token(const char *value, size_t len, t_token_type type)
 	return (t);
 }
 
-void add_token(t_token **head, const char *value, size_t len, t_token_type type)
+void add_token(t_mini *mini, const char *value, size_t len, t_token_type type)
 {
 	t_token *new;
 	t_token *cur;
@@ -38,11 +38,11 @@ void add_token(t_token **head, const char *value, size_t len, t_token_type type)
 	if (!value || !*value || len == 0)
 		return ;
 	new = new_token(value, len, type);
-	if (!*head)
-		*head = new;
+	if (mini->token == NULL)
+		mini->token = new;
 	else
 	{
-		cur = *head;
+		cur = mini->token;
 		while (cur->next)
 			cur = cur->next;
 		cur->next = new;
@@ -58,9 +58,10 @@ void	handle_quote(t_mini *mini, const char c)
 	return ;
 }
 
-void	last_token(t_mini *mini, t_token **tokens, char *start, size_t len)
+void	last_token(t_mini *mini, char *start, size_t len)
 {
 	char	*input;
+	char	*new_start;
 
 	if (!len)
 		return ;
@@ -68,13 +69,24 @@ void	last_token(t_mini *mini, t_token **tokens, char *start, size_t len)
 	{
 		input = readline(SYELLOW "> " SRESET);
 		if (!input)
-			break ;
-		do_commands(mini, input);
+			return ;
+		new_start = malloc(len + ft_strlen(input) + 2);
+		if (!new_start)
+			return ; //handle malloc
+		ft_memcpy(new_start, start, len);
+		new_start[len] = '\n';
+		ft_memcpy(new_start + len + 1, input, ft_strlen(input));
+		new_start[len + 1 + ft_strlen(input)] = '\0';
+		free (input);
+		mini->quote = 0;
+		do_commands(mini, new_start);
+		free (new_start);
+		return ;
 	}
-	add_token(tokens, start, len, WORD);
+	add_token(mini, start, len, WORD);
 }
 
-void	ft_tokenizer(t_mini *mini, char *input, t_token **tokens)
+void	ft_tokenizer(t_mini *mini, char *input)
 {
 	size_t	len;
 	char	*start;
@@ -85,7 +97,7 @@ void	ft_tokenizer(t_mini *mini, char *input, t_token **tokens)
 	{
 		if (!mini->quote && ft_isspace(*input))
 		{
-			add_token(tokens, start, len, WORD);
+			add_token(mini, start, len, WORD);
 			input ++;
 			start = input;
 			len = 0;
@@ -96,5 +108,5 @@ void	ft_tokenizer(t_mini *mini, char *input, t_token **tokens)
 		len++;
 		input++;
 	}
-	last_token(mini, tokens, start, len);
+	last_token(mini, start, len);
 }
