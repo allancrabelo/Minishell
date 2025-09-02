@@ -6,7 +6,7 @@
 /*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 17:08:05 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/09/01 19:03:28 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/09/02 08:17:53 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static void	main_loop(t_mini *mini)
 	char	*input;
 	while (1)
 	{
-		input = readline(SYELLOW "minishell> " SRESET);
+		input = readline(LINE);
 		if (!input)
 			return ;
 		else
