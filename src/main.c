@@ -6,7 +6,7 @@
 /*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 17:08:05 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/09/02 08:17:53 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/09/09 17:06:29 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ int	main(int argc, char **argv)
 		return (printf ( "[ERROR] Usage: ./minishell\n" SRESET), 127);
 	signal_init();
 	mini.token = NULL;
-	mini.quote = 0;
 	main_loop(&mini);
 	exit(EXIT_SUCCESS);
 }

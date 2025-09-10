@@ -11,6 +11,7 @@ HEADERS		:= $(addprefix ${HEADDIR}, ${HEADLIST})
 
 VPATH		:=	src src/utils src/executor src/cmd src/executor/echo src/parse
 
+
 SRCSLIST	:=	main \
 				signals \
 				handle_commands \
@@ -18,8 +19,7 @@ SRCSLIST	:=	main \
 				echo_utils \
 				echo_utils2 \
 				tokenizer \
-				tokenizer_utils \
-				operator
+				tokenizer_utils
 
 SRCS		:= $(addsuffix .c, ${SRCSLIST})
 

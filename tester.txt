@@ -1,0 +1,50 @@
+# simple command
+echo hello world
+
+# quotes
+echo "hello world"
+echo 'single quoted string'
+echo "word" after quotes
+echo "a 'nested' test"
+echo 'a "nested" test'
+echo "one quote '"
+echo 'one quote "'
+echo "unterminated double quote
+echo 'unterminated single quote
+echo quote in"si"de a w'or'd
+
+# operators
+ls | grep .c
+ls || echo fail
+make && echo success
+(cat file.txt)
+(((echo nested)))
+ls > out.txt
+ls >> append.txt
+cat < in.txt
+cat << EOF
+
+# variables
+echo $HOME
+echo "$HOME"
+echo '$HOME'
+echo "value: $USER and $? last status"
+echo text$USERmore
+
+# combinations
+echo "hello $USER" | grep hello
+echo "start" && echo "end"
+echo "$UNSETVAR"
+echo "path: $PATH" > outfile
+(echo one; echo two) | cat -n
+
+# tricky spaces
+echo "   spaced   "
+echo ""  # empty quotes
+echo ''  # empty single quotes
+
+# edge cases
+$
+echo $
+echo "$"
+echo "unfinished $"

@@ -1,79 +1,106 @@
 #include "../includes/minishell.h"
 
-void	skip_whitespace(const char **input)
+int	is_op(const char *input, size_t i)
 {
-	while (**input && ft_isspace(**input))
-		(*input)++;
+	if (input[i] == '\0')
+		return (0);
+	if (input[i] == '(')
+		return (TOKEN_LPAREN);
+	if (input[i] == ')')
+		return (TOKEN_RPAREN);
+	if (input[i] == '|' && input[i + 1] && input[i + 1] == '|')
+		return (TOKEN_OR);
+	if (input[i] == '&' && input[i + 1] && input[i + 1] == '&')
+		return (TOKEN_AND);
+	if (input[i] == '|')
+		return (TOKEN_PIPE);
+	if (input[i] == '>' && input[i + 1] && input[i + 1] == '>')
+		return (TOKEN_REDIRECT_APPEND);
+	if (input[i] == '>')
+		return (TOKEN_REDIRECT_OUT);
+	if (input[i] == '<' && input[i + 1] && input[i + 1] == '<')
+		return (TOKEN_HEREDOC);
+	if (input[i] == '<')
+		return (TOKEN_REDIRECT_IN);
+	return (0);
 }
 
-size_t	get_word_length(const char *input)
+size_t	expand_var(t_mini *mini, size_t *i)	// Implement expand variables
 {
-	size_t		total_len;
-	size_t		part_len;
-	const char	*ptr;
+	size_t	start;
 
-	total_len = 0;
-	ptr = input;
-	while (*ptr && !ft_isspace(*ptr) && !is_operator_char(*ptr))
+	start = *i;
+	while (ft_isalnum(mini->input[*i]) || mini->input[*i] == '_')
+		(*i)++;
+	return (*i - start);
+}
+
+size_t	handle_quotes(t_mini *mini, size_t *i, char quote)
+{
+	size_t	len;
+
+	(*i)++;
+	len = 0;
+	while (mini->input[*i] && mini->input[*i] != quote)
 	{
-		if (*ptr == '\'' || *ptr == '"')
-			part_len = handle_quoted_section(&ptr, *ptr);
+/* 		if (quote == '"' && mini->input[*i] == '$')
+			len += 1;//expand_var(mini, i);
 		else
-			part_len = handle_unquoted_section(&ptr);
-		total_len += part_len;
+			len++; */
+		(*i)++;
+		len++;
 	}
-	return (total_len);
+	if (mini->input[*i] == quote)
+		(*i)++;
+	return (len);
 }
 
-void	advance_through_word(const char **input)
+size_t	get_word_len(t_mini *mini, size_t len, size_t i)
 {
-	while (**input && !ft_isspace(**input) && !is_operator_char(**input))
+	size_t	word_len;
+
+	word_len = 0;
+	while (i < len && !ft_isspace(mini->input[i]) && !is_op(mini->input, i))
 	{
-		if (**input == '\'' || **input == '"')
+		if (mini->input[i] == '\'' || mini->input[i] == '"')
 		{
-			handle_quoted_section(input, **input);
-			continue ;
+			word_len += handle_quotes(mini, &i, mini->input[i]);
 		}
-		handle_unquoted_section(input);
+		/* else if (mini->input[i] == '$')
+			word_len += 1;//expand_var(mini, &i); */
+		else
+		{
+			word_len++;
+			i++;
+		}
 	}
+	return (word_len);
 }
 
-char	*ft_strndup(const char *str, size_t len)
+int	check_validity(char *input)
 {
-	char	*dst;
 	size_t	i;
-
-	dst = malloc(len + 1);
-	if (!dst)
-		return (NULL);
-	i = 0;
-	while (i < len && str[i])
-	{
-		dst[i] = str[i];
-		i++;
-	}
-	dst[i] = '\0';
-	return (dst);
-}
-
-int	check_quotes_validity(const char *input)
-{
 	int		single_quote;
 	int		double_quote;
-	size_t	i;
+	int		balance;
 
+	i = 0;
+	balance = 0;
 	single_quote = 0;
 	double_quote = 0;
-	i = 0;
 	while (input[i])
 	{
 		if (input[i] == '\'' && !double_quote)
 			single_quote = !single_quote;
 		else if (input[i] == '"' && !single_quote)
 			double_quote = !double_quote;
+		if (input[i] == '(')
+			balance ++;
+		else if (input[i] == ')')
+			balance --;
+		if (balance < 0)
+			return (0);
 		i++;
 	}
-	if (single_quote || double_quote)
-		return (0);
-	return (1);
+	return (!single_quote && !double_quote && balance == 0);
 }
