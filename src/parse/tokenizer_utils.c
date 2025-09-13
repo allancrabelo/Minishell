@@ -25,7 +25,7 @@ int	is_op(const char *input, size_t i)
 	return (0);
 }
 
-size_t	expand_var(t_mini *mini, size_t *i)	// Implement expand variables
+size_t	expand_var(t_mini *mini, size_t *i) //	Implement expand variables
 {
 	size_t	start;
 
@@ -55,7 +55,7 @@ size_t	handle_quotes(t_mini *mini, size_t *i, char quote)
 	return (len);
 }
 
-size_t	get_word_len(t_mini *mini, size_t len, size_t i)
+size_t	get_word_len(t_mini *mini, size_t len, size_t i) //	Implement exp var
 {
 	size_t	word_len;
 

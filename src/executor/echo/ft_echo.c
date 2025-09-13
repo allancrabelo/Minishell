@@ -6,49 +6,57 @@
 /*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 00:27:39 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/09/01 14:35:40 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/09/13 19:45:38 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
 
-char	flag_verification( char *commands)
+char	flag_verification(t_token **cur)
 {
 	char	ret;
-	int		i;
+	size_t	i;
 
-	i = 0;
 	ret = 0;
-	if (commands[i] == '-')
+	while (*cur)
+	{
+		i = 0;
+		if ((*cur)->data[i] != '-')
+			break ;
 		i++;
-	else
-		return (0);
-	while (commands[i] == 'n' || (commands[i] >= 9 && commands[i] <= 13))
-		i++;
-	if (commands[i] == '\0')
+		if ((*cur)->data[i] == '\0')
+			break ;
+		while ((*cur)->data[i] == 'n')
+			i++;
+		if ((*cur)->data[i] != '\0')
+			break ;
 		ret = 'n';
+		*cur = (*cur)->next;
+	}
 	return (ret);
 }
 
-int	ft_echo(char **commands) //TODO: Lidar com as aspas
+int	ft_echo(t_mini *mini, t_token *echo) //	CUIDADO BONUS
 {
-	int	i;
-	int	flag;
+	int		flag;
+	t_token	*cur;
 
-	i = 1;
-	flag = flag_verification(commands[1]);
-	if (flag)
-		while (commands[i] && flag_verification(commands[i]))
-			i++;
-	while (commands[i])
+	(void) mini;
+	cur = echo->next;
+	flag = flag_verification(&cur);
+	while (cur)
 	{
-		printf("%s", commands[i]);
-		if (commands[i + 1])
+		if (cur->type > TOKEN_PIPE) //		TODO Handle Operator
+		{
+			cur = cur->next->next;
+			continue ;
+		}
+		printf("%s", cur->data);
+		if (cur->next)
 			printf(" ");
-		i++;
+		cur = cur->next;
 	}
-	if (flag == 'n')
-		return (0);
-	printf("\n");
+	if (!flag)
+		printf("\n");
 	return (0);
 }

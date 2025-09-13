@@ -13,23 +13,12 @@ echo "unterminated double quote
 echo 'unterminated single quote
 echo quote in"si"de a w'or'd
 
-# operators
-ls | grep .c
-ls || echo fail
-make && echo success
-(cat file.txt)
-(((echo nested)))
-ls > out.txt
-ls >> append.txt
-cat < in.txt
-cat << EOF
-
 # variables
 echo $HOME
 echo "$HOME"
 echo '$HOME'
 echo "value: $USER and $? last status"
-echo text$USERmore
+echo hello$USERworld
 
 # combinations
 echo "hello $USER" | grep hello
@@ -48,3 +37,37 @@ $
 echo $
 echo "$"
 echo "unfinished $"
+
+# simple redirection
+echo hello world > file1
+>file2 echo hello world
+echo hello > file3 world
+echo -n hello > file4
+echo -n hello world > file5
+echo hello -n world > file6
+
+# append redirection
+echo hello >> file7
+echo -n hello >> file8
+>>file9 echo hello world
+echo hello >>file9 world
+
+# multiple redirections
+echo hello > file10 > file11
+echo hello >> file12 > file13
+>file14 >file15 echo hello world
+
+# mixing output and arguments
+echo > file16 hello world
+echo hello > file17 world > file18
+echo -n > file19 hello
+
+# stderr redirection
+echo hello 1> file20
+echo hello 2> file21
+echo hello 1> file22 2> file23
+
+# edge cases
+echo > file24
+echo -nnnn -nnn > file25
+echo -n > file26 ""

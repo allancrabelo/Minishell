@@ -6,7 +6,7 @@
 /*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 17:08:05 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/09/09 17:06:29 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/09/13 20:14:24 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	do_commands(t_mini *mini, char *input)
 static void	main_loop(t_mini *mini)
 {
 	char	*input;
+
 	while (1)
 	{
 		input = readline(LINE);
@@ -40,7 +41,7 @@ int	main(int argc, char **argv)
 	(void)argc;
 	(void)argv;
 	if (argc != 1 || argv[1])
-		return (printf ( "[ERROR] Usage: ./minishell\n" SRESET), 127);
+		return (printf("[ERROR] Usage: ./minishell\n" SRESET), 127);
 	signal_init();
 	mini.token = NULL;
 	main_loop(&mini);

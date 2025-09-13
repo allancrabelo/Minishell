@@ -6,7 +6,7 @@
 /*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 17:05:28 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/09/10 13:05:57 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/09/13 19:50:51 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,34 +57,26 @@ typedef struct s_token
 
 typedef struct s_mini
 {
-	t_token	*token;
-	t_token_type type;
-	char	*input;
-}			t_mini;
+	t_token			*token;
+	t_token_type	type;
+	char			*input;
+}	t_mini;
 
 // Commands
 void	do_commands(t_mini *mini, char *input);
 void	handle_commands(t_mini *mini, char *input);
-int		ft_echo(char **commands);
+//int		ft_echo(char **commands);
+int		ft_echo(t_mini *mini, t_token *echo);
 
 // Signals
 void	sighandler(int signal);
 void	signal_init(void);
 
-// [Utils]:
-// Echo:
-char	**ft_split_ws(const char *s);
-int		is_ws(char c);
-int		count_words(const char *s);
-int		word_len(const char *s);
-char	*dup_word(const char *s, int len);
-
 //void	ft_tokenizer(t_mini *mini, char *input);
-int				ft_tokenizer(t_mini *mini, char *input);
-void			free_tokens(t_token **token);
-int				check_validity(char *input);
-size_t			get_word_len(t_mini *mini, size_t len, size_t i);
-int				is_op(const char *input, size_t i);
-
+int		ft_tokenizer(t_mini *mini, char *input);
+void	free_tokens(t_token **token);
+int		check_validity(char *input);
+size_t	get_word_len(t_mini *mini, size_t len, size_t i);
+int		is_op(const char *input, size_t i);
 
 #endif

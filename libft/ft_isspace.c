@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_isspace.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 16:08:53 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/08/21 16:10:26 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/09/13 19:53:02 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_isspace (int c)
+int	ft_isspace(int c)
 {
 	if ((c >= 9 && c <= 13) || c == ' ')
 		return (1);

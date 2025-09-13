@@ -4,6 +4,7 @@ RM			:= rm -f
 
 CFLAGS		:= -Wall -Wextra -Werror
 DEBUGFLAGS	:= -g
+VALFLAGS	:= --suppressions=readline.supp
 
 HEADDIR		:= ./includes/
 HEADLIST	:= minishell.h
@@ -36,6 +37,7 @@ RESET		:= \033[0m
 # ============================
 # Default build
 # ============================
+
 all: ${NAME}
 
 ${NAME}: ${OBJS} ${LIBFT}
@@ -57,6 +59,7 @@ ${LIBFT}:
 # ============================
 # Cleaning
 # ============================
+
 clean:
 	@echo ""
 	@echo "${RED}Deleting ${NAME} Objects ...${RESET}"
@@ -75,8 +78,12 @@ re: fclean all
 # ============================
 # Extra targets
 # ============================
+
 run: ${NAME}
 	./${NAME}
+
+valgrind: ${NAME}
+	valgrind ${VALFLAGS} ./${NAME}
 
 debug: CFLAGS += -g -fsanitize=address -fno-omit-frame-pointer
 debug: re
