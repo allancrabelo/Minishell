@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_commands.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 00:20:45 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/09/13 19:48:52 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/09/15 16:12:32 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	handle_commands(t_mini *mini, char *input)
 {
 	t_token	*cur;
 
-	if (input[0] == '#')
+	if (input[0] == '#') //TODO usar para teste
 	{
 		printf(BOLD SCYAN "%s\n" SRESET, input);
 		return ;
@@ -46,7 +46,7 @@ void	handle_commands(t_mini *mini, char *input)
 	{
 		if (ft_strcmp("echo", cur->data) == 0)
 		{
-			ft_echo(mini, cur);
+			mini->exit_status = ft_echo(mini, cur);
 		}
 		cur = cur->next;
 	}
