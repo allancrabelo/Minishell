@@ -4,7 +4,10 @@ RM			:= rm -f
 
 CFLAGS		:= -Wall -Wextra -Werror
 DEBUGFLAGS	:= -g
-VALFLAGS	:= --suppressions=readline.supp
+VALFLAGS	:=	--leak-check=full \
+				--show-leak-kinds=all \
+				--track-origins=yes \
+				--suppressions=readline.supp
 
 HEADDIR		:= ./includes/
 HEADLIST	:= minishell.h
@@ -17,8 +20,6 @@ SRCSLIST	:=	main \
 				signals \
 				handle_commands \
 				ft_echo \
-				echo_utils \
-				echo_utils2 \
 				tokenizer \
 				tokenizer_utils
 
@@ -82,8 +83,9 @@ re: fclean all
 run: ${NAME}
 	./${NAME}
 
-valgrind: ${NAME}
-	valgrind ${VALFLAGS} ./${NAME}
+valgrind: $(NAME)
+	@echo "{\n   leak readline\n   Memcheck:Leak\n...\n   fun:readline\n}\n{\n   leak add_history\n   Memcheck:Leak\n...\n   fun:add_history\n}" > readline.supp
+	@valgrind $(VALFLAGS) ./$(NAME)
 
 debug: CFLAGS += -g -fsanitize=address -fno-omit-frame-pointer
 debug: re

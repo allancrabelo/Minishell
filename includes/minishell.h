@@ -6,7 +6,7 @@
 /*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 17:05:28 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/09/13 19:50:51 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/09/15 17:08:33 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	signal_init(void);
 
 //void	ft_tokenizer(t_mini *mini, char *input);
 int		ft_tokenizer(t_mini *mini, char *input);
-void	free_tokens(t_token **token);
+void	free_tokens(t_mini *mini);
 int		check_validity(char *input);
 size_t	get_word_len(t_mini *mini, size_t len, size_t i);
 int		is_op(const char *input, size_t i);

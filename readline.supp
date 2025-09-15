@@ -1,15 +1,12 @@
 {
-	readline_leak
-	Memcheck:Leak
-	fun:malloc
-	fun:xmalloc
-	fun:_rl_add_history
-	...
+   leak readline
+   Memcheck:Leak
+...
+   fun:readline
 }
-
 {
-	readline
-	Memcheck:Leak
-	...
-	obj:/usr/lib/libreadline.so*
+   leak add_history
+   Memcheck:Leak
+...
+   fun:add_history
 }

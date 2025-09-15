@@ -6,20 +6,20 @@
 /*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 00:20:45 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/09/13 19:48:52 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/09/15 17:09:24 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 #include "../../includes/colors.h"
 
-void	free_tokens(t_token **token)
+void	free_tokens(t_mini *mini)
 {
 	t_token	*cur;
 	t_token	*tmp;
 
-	cur = *token;
-	*token = NULL;
+	cur = mini->token;
+	mini->token = NULL;
 	while (cur)
 	{
 		tmp = cur->next;
@@ -27,6 +27,7 @@ void	free_tokens(t_token **token)
 		free(cur);
 		cur = tmp;
 	}
+	free(mini->input);
 }
 
 void	handle_commands(t_mini *mini, char *input)
@@ -50,5 +51,5 @@ void	handle_commands(t_mini *mini, char *input)
 		}
 		cur = cur->next;
 	}
-	free_tokens(&mini->token);
+	free_tokens(mini);
 }
