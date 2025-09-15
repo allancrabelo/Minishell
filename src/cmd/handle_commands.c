@@ -6,7 +6,7 @@
 /*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 00:20:45 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/09/15 17:09:24 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/09/15 17:45:49 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	handle_commands(t_mini *mini, char *input)
 {
 	t_token	*cur;
 
-	if (input[0] == '#')
+	if (input[0] == '#') //TODO usar para teste
 	{
 		printf(BOLD SCYAN "%s\n" SRESET, input);
 		return ;
@@ -47,7 +47,7 @@ void	handle_commands(t_mini *mini, char *input)
 	{
 		if (ft_strcmp("echo", cur->data) == 0)
 		{
-			ft_echo(mini, cur);
+			mini->exit_status = ft_echo(mini, cur);
 		}
 		cur = cur->next;
 	}

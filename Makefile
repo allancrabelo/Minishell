@@ -13,7 +13,7 @@ HEADDIR		:= ./includes/
 HEADLIST	:= minishell.h
 HEADERS		:= $(addprefix ${HEADDIR}, ${HEADLIST})
 
-VPATH		:=	src src/utils src/executor src/cmd src/executor/echo src/parse
+VPATH		:=	src src/utils src/executor src/cmd src/executor/echo src/parse src/expander
 
 
 SRCSLIST	:=	main \
@@ -21,7 +21,10 @@ SRCSLIST	:=	main \
 				handle_commands \
 				ft_echo \
 				tokenizer \
-				tokenizer_utils
+				tokenizer_utils \
+				variable_expanser \
+				expander_utils \
+				environment_utils
 
 SRCS		:= $(addsuffix .c, ${SRCSLIST})
 

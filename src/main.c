@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 17:08:05 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/09/13 20:14:24 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/09/15 13:56:14 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static void	main_loop(t_mini *mini)
 	}
 }
 
-int	main(int argc, char **argv)
+int	main(int argc, char **argv, char **envp)
 {
 	t_mini	mini;
 
@@ -44,6 +44,8 @@ int	main(int argc, char **argv)
 		return (printf("[ERROR] Usage: ./minishell\n" SRESET), 127);
 	signal_init();
 	mini.token = NULL;
+	mini.envp = envp;
+	mini.exit_status = 0;
 	main_loop(&mini);
 	exit(EXIT_SUCCESS);
 }
