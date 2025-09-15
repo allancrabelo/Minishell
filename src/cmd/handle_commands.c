@@ -6,7 +6,7 @@
 /*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 00:20:45 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/09/15 17:45:49 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/09/15 19:23:49 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ void	free_tokens(t_mini *mini)
 		free(cur);
 		cur = tmp;
 	}
-	free(mini->input);
+	if (mini->input)
+		free(mini->input);
 }
 
 void	handle_commands(t_mini *mini, char *input)
@@ -49,6 +50,12 @@ void	handle_commands(t_mini *mini, char *input)
 		{
 			mini->exit_status = ft_echo(mini, cur);
 		}
+		else if (ft_strcmp("exit", cur->data) == 0)
+		{
+			mini->exit_status = ft_exit(mini);
+		}
+		else if (ft_strcmp("pwd", cur->data) == 0)
+			mini->exit_status = ft_pwd();
 		cur = cur->next;
 	}
 	free_tokens(mini);

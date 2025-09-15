@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 17:08:05 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/09/15 13:56:14 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/09/15 19:06:20 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,10 @@ static void	main_loop(t_mini *mini)
 	{
 		input = readline(LINE);
 		if (!input)
+		{
+			write(1, "exit\n", 5); // Verify output
 			return ;
+		}
 		else
 			do_commands(mini, input);
 		free (input);
@@ -47,5 +50,6 @@ int	main(int argc, char **argv, char **envp)
 	mini.envp = envp;
 	mini.exit_status = 0;
 	main_loop(&mini);
+	rl_clear_history();
 	exit(EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 17:05:28 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/09/15 17:46:19 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/09/15 19:26:15 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,9 @@
 
 # define LINE SYELLOW "minishell> " SRESET
 
+# ifndef FD_MAX
+#  define FD_MAX 1024
+# endif
 // Structs
 typedef enum e_token_type
 {
@@ -69,6 +72,8 @@ void	do_commands(t_mini *mini, char *input);
 void	handle_commands(t_mini *mini, char *input);
 //int		ft_echo(char **commands);
 int		ft_echo(t_mini *mini, t_token *echo);
+int		ft_exit(t_mini *mini);
+int		ft_pwd(void);
 
 // Signals
 void	sighandler(int signal);
