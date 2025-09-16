@@ -1,17 +1,82 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   handle_commands.c                                  :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/21 00:20:45 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/09/15 19:23:49 by mqueiros         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 #include "../../includes/colors.h"
+
+// Function to execute builtin commands
+int	execute_builtin(t_mini *mini, t_token *cmd_token, char **argv)
+{
+	(void) argv;
+	if (ft_strcmp(cmd_token->data, "echo") == 0)
+		return (ft_echo(mini, cmd_token)); // You might want to pass argv here too
+	if (ft_strcmp(cmd_token->data, "pwd") == 0)
+		return (ft_pwd());
+	if (ft_strcmp(cmd_token->data, "exit") == 0)
+		return (ft_exit(mini));
+	// TODO: Add other builtin implementations
+	// if (ft_strcmp(cmd_token->data, "cd") == 0)
+	//     return (ft_cd(mini, argv));
+	// if (ft_strcmp(cmd_token->data, "export") == 0)
+	//     return (ft_export(mini, argv));
+	// if (ft_strcmp(cmd_token->data, "unset") == 0)
+	//     return (ft_unset(mini, argv));
+	// if (ft_strcmp(cmd_token->data, "env") == 0)
+	//     return (ft_env(mini, argv));
+	return (0);
+}
+
+// Function to execute external commands using execve
+int	execute_external_command(t_mini *mini, t_token *cmd_token, char **argv)
+{
+	// TODO: Implement external command execution with execve
+	// This would involve:
+	// 1. Finding command path (using PATH environment variable)
+	// 2. Fork and execve
+	(void) mini;
+	printf("External command execution not implemented yet: %s\n", cmd_token->data);
+	printf("Arguments: ");
+	for (int i = 0; argv[i]; i++)
+		printf("[%s] ", argv[i]);
+	printf("\n");
+	return (0);
+}
+
+// Main command execution function
+int	execute_command(t_mini *mini, t_token *tokens)
+{
+	t_token	*cmd_token;
+	char	**argv;
+	int		result;
+
+	cmd_token = find_first_command(tokens);
+	if (!cmd_token)
+	{
+		printf("No command found\n");
+		return (1);
+	}
+
+	// Build argument array from tokens
+	argv = build_argv(cmd_token);
+	if (!argv)
+	{
+		printf("Failed to build argument array\n");
+		return (1);
+	}
+
+	// Check if it's a builtin command
+	if (is_builtin_command(cmd_token->data))
+	{
+		result = execute_builtin(mini, cmd_token, argv);
+	}
+	else
+	{
+		// Execute as external command with execve
+		result = execute_external_command(mini, cmd_token, argv);
+	}
+
+	// Free the argument array
+	free_argv(argv);
+	return (result);
+}
 
 void	free_tokens(t_mini *mini)
 {
@@ -44,19 +109,6 @@ void	handle_commands(t_mini *mini, char *input)
 	if (mini->token == NULL)
 		return ;
 	cur = mini->token;
-	while (cur)
-	{
-		if (ft_strcmp("echo", cur->data) == 0)
-		{
-			mini->exit_status = ft_echo(mini, cur);
-		}
-		else if (ft_strcmp("exit", cur->data) == 0)
-		{
-			mini->exit_status = ft_exit(mini);
-		}
-		else if (ft_strcmp("pwd", cur->data) == 0)
-			mini->exit_status = ft_pwd();
-		cur = cur->next;
-	}
+	execute_command(mini, cur);
 	free_tokens(mini);
 }

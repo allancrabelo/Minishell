@@ -31,6 +31,7 @@ SRCSLIST	:=	main \
 				ft_pwd \
 				tokenizer \
 				tokenizer_utils \
+				parse \
 				variable_expanser \
 				expander_utils \
 				environment_utils
@@ -95,8 +96,19 @@ re: fclean all
 run: ${NAME}
 	./${NAME}
 
-valgrind: $(NAME)
-	@echo "{\n   leak readline\n   Memcheck:Leak\n...\n   fun:readline\n}\n{\n   leak add_history\n   Memcheck:Leak\n...\n   fun:add_history\n}" > readline.supp
+val: $(NAME)
+	@echo "{" > readline.supp
+	@echo "	leak readline" >> readline.supp
+	@echo "	Memcheck:Leak" >> readline.supp
+	@echo "..." >> readline.supp
+	@echo "	fun:readline" >> readline.supp
+	@echo "}" >> readline.supp
+	@echo "{" >> readline.supp
+	@echo "	leak add_history" >> readline.supp
+	@echo "	Memcheck:Leak" >> readline.supp
+	@echo "..." >> readline.supp
+	@echo "	fun:add_history" >> readline.supp
+	@echo "}" >> readline.supp
 	@valgrind $(VALFLAGS) ./$(NAME)
 
 debug: CFLAGS += -g -fsanitize=address -fno-omit-frame-pointer

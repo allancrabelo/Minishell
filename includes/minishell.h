@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/20 17:05:28 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/09/15 19:26:15 by mqueiros         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -46,9 +34,9 @@ typedef enum e_token_type
 	TOKEN_AND,
 	TOKEN_PIPE,
 	TOKEN_REDIRECT_IN,
+	TOKEN_HEREDOC,
 	TOKEN_REDIRECT_OUT,
-	TOKEN_REDIRECT_APPEND,
-	TOKEN_HEREDOC
+	TOKEN_REDIRECT_APPEND
 }	t_token_type;
 
 typedef struct s_token
@@ -57,6 +45,23 @@ typedef struct s_token
 	t_token_type	type;
 	struct s_token	*next;
 }				t_token;
+
+typedef struct s_redir
+{
+	t_token_type		type;
+	char				*file;
+	int					fd;
+	struct s_redir		*next;
+}	t_redir;
+
+typedef struct s_cmd
+{
+	char				**argv;
+	int					argc;
+	t_redir				*redirects;
+	struct s_cmd		*next;
+}	t_cmd;
+
 
 typedef struct s_mini
 {
@@ -98,5 +103,19 @@ void	ft_itoa_alternative(int n, char *dst);
 
 //Environment Utils
 char	*get_env_var(t_mini *mini, char *var_name);
+
+//Command parsing
+t_cmd	*parse_command(t_token *tokens);
+void	free_cmd(t_cmd *cmd);
+void	free_redirects(t_redir *redirects);
+t_redir	*create_redirect(t_token_type type, char *file);
+void	add_redirect_to_cmd(t_cmd *cmd, t_redir *redirect);
+int		build_cmd_argv(t_cmd *cmd, t_token *tokens);
+int		count_command_args(t_token *cmd_token);
+t_token	*find_first_command(t_token *tokens);
+int		is_builtin_command(char *cmd);
+char	**build_argv(t_token *cmd_token);
+void	free_argv(char **argv);
+void	print_cmd(t_cmd *cmd);
 
 #endif

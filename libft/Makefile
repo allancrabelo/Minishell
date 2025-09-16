@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+         #
+#    By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/23 00:58:27 by aaugusto          #+#    #+#              #
-#    Updated: 2025/08/21 16:15:19 by aaugusto         ###   ########.fr        #
+#    Updated: 2025/09/16 09:45:53 by mqueiros         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,6 +33,7 @@ SRCS	:=	ft_atoi.c \
 				ft_putnbr_fd.c \
 				ft_putstr_fd.c \
 				ft_split.c \
+				ft_free_split.c \
 				ft_strchr.c \
 				ft_strdup.c \
 				ft_striteri.c \
