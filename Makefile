@@ -83,7 +83,8 @@ clean:
 fclean:
 	@echo ""
 	@echo "${RED}Deleting ${NAME} Executable ...${RESET}"
-	${RM} ${NAME}
+	@${RM} ${NAME}
+	@${RM} readline.supp
 	@${RM} -r ${OBJSDIR}
 	@make -C ${LIBFTDIR} fclean --no-print-directory --quiet
 
