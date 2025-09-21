@@ -21,6 +21,8 @@
 
 
 # define LINE SYELLOW "minishell> " SRESET
+# define COMMAND_NOT_FOUND 127
+# define COMMAND_DENIED_OR_FAILED 126
 
 # ifndef FD_MAX
 #  define FD_MAX 1024
@@ -136,5 +138,10 @@ int		count_pipes(t_token	*token);
 void	single_command(t_mini *mini,t_token *cmd_start,int i, int cmds);
 void	setup_redirections(t_mini *mini,int i, int cmds);
 void	close_pipes(t_mini *mini);
+
+//External Commands
+int		execute_external(t_mini *mini, char **argv);
+char	*find_command_path(t_mini *mini, char *cmd);
+void	print_command_error(char *cmd, char *error);
 
 #endif

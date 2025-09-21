@@ -32,8 +32,19 @@ int	count_pipes(t_token	*token)
 
 void	setup_redirections(t_mini *mini,int i, int cmds)
 {
+	int	pipe_index;
+
 	if (cmds == 1)
 		return ;
+	pipe_index = 0;
+	while (pipe_index < mini->pipe_count)
+	{
+		if (pipe_index != i - 1)
+			close(mini->pipes[pipe_index][0]);
+		if (pipe_index != i)
+			close(mini->pipes[pipe_index][1]);
+		pipe_index++;
+	}
 	if (i > 0)
 	{
 		dup2(mini->pipes[i - 1][0], STDIN_FILENO);
@@ -59,7 +70,10 @@ void	single_command(t_mini *mini,t_token *cmd_start,int i, int cmds)
 	close_pipes(mini);
 	argv = cmd->argv;
 	if (!argv || !argv[0])
+	{
+		free_cmd(cmd);
 		exit (EXIT_SUCCESS);
+	}
 	if (is_builtin_command(argv[0]))
 	{
 		exit_code = execute_builtin(mini, cmd_start, argv);
@@ -68,7 +82,7 @@ void	single_command(t_mini *mini,t_token *cmd_start,int i, int cmds)
 	}
 	else
 	{
-		//tenho de tratar comandos externos???????????????
+		exit_code = execute_external(mini, argv); //tenho de tratar comandos externos???????????????
 		free_cmd(cmd);
 		exit(0);
 	}

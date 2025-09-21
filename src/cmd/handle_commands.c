@@ -27,17 +27,26 @@ int	execute_builtin(t_mini *mini, t_token *cmd_token, char **argv)
 // Function to execute external commands using execve
 int	execute_external_command(t_mini *mini, t_token *cmd_token, char **argv)
 {
-	// TODO: Implement external command execution with execve
-	// This would involve:
-	// 1. Finding command path (using PATH environment variable)
-	// 2. Fork and execve
-	(void) mini;
-	printf("External command execution not implemented yet: %s\n", cmd_token->data);
-	printf("Arguments: ");
-	for (int i = 0; argv[i]; i++)
-		printf("[%s] ", argv[i]);
-	printf("\n");
-	return (0);
+	pid_t	pid;
+	int		exit_code;
+	int		status;
+
+	(void)cmd_token;
+	pid = fork();
+	if (pid == 0)
+	{
+		exit_code = execute_external(mini, argv);
+		exit(exit_code);
+	}
+	else if (pid < 0)
+		return (perror("fork"), 1);
+	else
+	{
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			return (WEXITSTATUS(status));
+		return (1);
+	}
 }
 
 // Main command execution function

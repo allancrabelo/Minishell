@@ -38,6 +38,7 @@ SRCSLIST	:=	main \
 				environment_utils \
 				pipes_utils \
 				pipes_executor \
+				external_commands
 
 SRCS		:= $(addsuffix .c, ${SRCSLIST})
 
@@ -86,7 +87,7 @@ clean:
 fclean:
 	@echo ""
 	@echo "${RED}Deleting ${NAME} Executable ...${RESET}"
-	${RM} ${NAME}
+	@${RM} ${NAME}
 	@${RM} -r ${OBJSDIR}
 	@make -C ${LIBFTDIR} fclean --no-print-directory --quiet
 
