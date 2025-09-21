@@ -19,6 +19,7 @@
 # include <readline/readline.h>	// readline
 # include <readline/history.h>	// add_history, rl_clear_history, etc.
 
+
 # define LINE SYELLOW "minishell> " SRESET
 
 # ifndef FD_MAX
@@ -66,15 +67,21 @@ typedef struct s_cmd
 typedef struct s_mini
 {
 	t_token			*token;
-	t_token_type	type;
-	char			*input;
 	char			**envp;
 	int				exit_status;
+	char			*input;
+	t_token_type	type;
+	int				pipe_count;
+	int				**pipes;
+	pid_t			*child_pids;
+	int				child_count;
 }	t_mini;
 
 // Commands
 void	do_commands(t_mini *mini, char *input);
 void	handle_commands(t_mini *mini, char *input);
+int		execute_builtin(t_mini *mini, t_token *cmd_token, char **argv);
+
 //int		ft_echo(char **commands);
 int		ft_echo(t_mini *mini, t_token *echo);
 int		ft_exit(t_mini *mini);
@@ -117,5 +124,17 @@ int		is_builtin_command(char *cmd);
 char	**build_argv(t_token *cmd_token);
 void	free_argv(char **argv);
 void	print_cmd(t_cmd *cmd);
+
+//[Pipes]:
+// Pipes Executor
+int		create_pipes(t_mini *mini);
+int		execute_pipeline(t_mini *mini);
+
+// Pipes Utils
+int		has_pipe(char *input);
+int		count_pipes(t_token	*token);
+void	single_command(t_mini *mini,t_token *cmd_start,int i, int cmds);
+void	setup_redirections(t_mini *mini,int i, int cmds);
+void	close_pipes(t_mini *mini);
 
 #endif

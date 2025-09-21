@@ -108,7 +108,21 @@ void	handle_commands(t_mini *mini, char *input)
 	ft_tokenizer(mini, input);
 	if (mini->token == NULL)
 		return ;
-	cur = mini->token;
-	execute_command(mini, cur);
+	// Identidificar o PIPE
+	if (has_pipe(input))
+	{
+		if (!create_pipes(mini))
+		{
+			ft_putstr_fd("minishell: Pipe creation failed\n", 2);
+			free_tokens(mini);
+			return ;
+		}
+		execute_pipeline(mini);
+	}
+	else
+	{
+		cur = mini->token;
+		execute_command(mini, cur);
+	}
 	free_tokens(mini);
 }

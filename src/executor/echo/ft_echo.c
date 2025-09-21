@@ -32,7 +32,7 @@ int	ft_echo(t_mini *mini, t_token *echo) //	CUIDADO BONUS
 	(void) mini;
 	cur = echo->next;
 	flag = flag_verification(&cur);
-	while (cur)
+	while (cur && cur->type != TOKEN_PIPE)
 	{
 		if (cur->type > TOKEN_PIPE) //		TODO Handle Operator
 		{
@@ -40,7 +40,7 @@ int	ft_echo(t_mini *mini, t_token *echo) //	CUIDADO BONUS
 			continue ;
 		}
 		printf("%s", cur->data);
-		if (cur->next)
+		if (cur->next && cur->next->type != TOKEN_PIPE)
 			printf(" ");
 		cur = cur->next;
 	}
