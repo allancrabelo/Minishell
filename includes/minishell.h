@@ -101,9 +101,11 @@ size_t	get_word_len(t_mini *mini, size_t len, size_t i);
 int		is_op(const char *input, size_t i);
 
 //Expansion
-size_t	expand_var_in_tokenizer(t_mini *mini, size_t *i);
-char	*extract_var_name_special(t_mini *mini, size_t *i);
+char	*extract_var_name(t_mini *mini, size_t *i);
 char	*expand_variable(t_mini *mini, char *var_name);
+int		is_special_var(char c);
+char	*get_env_var(t_mini *mini, char *var_name);
+size_t	expand_var_in_tokenizer(t_mini *mini, size_t *i);
 
 //Expansion Utils
 int		is_special_var(char c);

@@ -5,6 +5,8 @@ char	*fill_token_data(t_mini *mini, size_t *i, size_t len)
 	char	*dst;
 	size_t	j;
 	int		quote;
+	char	*var_name;
+	char	*expanded_value;
 
 	dst = malloc(len + 1);
 	if (!dst)
@@ -14,11 +16,27 @@ char	*fill_token_data(t_mini *mini, size_t *i, size_t len)
 	while (j < len && mini->input[*i])
 	{
 		if ((mini->input[*i] == '\'' || mini->input[*i] == '"') && quote == 0)
-			quote = mini->input[(*i)++];
-		else if (mini->input[*i] == quote && quote)
+		{
+			quote = mini->input[*i];
+			(*i)++;
+		}
+		else if (mini->input[*i] == quote && quote != 0)
 		{
 			quote = 0;
 			(*i)++;
+		}
+		else if (mini->input[*i] == '$' && quote != '\'')
+		{
+			(*i)++;
+			var_name = extract_var_name(mini, i);
+			expanded_value = expand_variable(mini, var_name);
+			free(var_name);
+			if (expanded_value)
+			{
+				ft_strlcpy(&dst[j], expanded_value, len - j + 1);
+				j += ft_strlen(expanded_value);
+				free(expanded_value);
+			}
 		}
 		else
 			dst[j++] = mini->input[(*i)++];
