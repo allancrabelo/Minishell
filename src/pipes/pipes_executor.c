@@ -50,7 +50,7 @@ int	execute_pipeline(t_mini *mini)
 		mini->child_pids[i] = fork();
 		if (mini->child_pids[i] == 0)
 			single_command(mini, cmd_start, i, cmd_count);
-		else if(mini->child_pids < 0)
+		else if (mini->child_pids[i] < 0)
 			return (perror("fork"), 1);
 		while (current && current->type != TOKEN_PIPE)
 			current = current->next;

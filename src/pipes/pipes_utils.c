@@ -50,7 +50,7 @@ void	setup_redirections(t_mini *mini,int i, int cmds)
 		dup2(mini->pipes[i - 1][0], STDIN_FILENO);
 		close(mini->pipes[i - 1][0]);
 	}
-	if (i > cmds - 1)
+	if (i < cmds - 1)
 	{
 		dup2(mini->pipes[i][1], STDOUT_FILENO);
 		close(mini->pipes[i][1]);
