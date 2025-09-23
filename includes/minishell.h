@@ -57,15 +57,22 @@ typedef struct s_redir
 typedef struct s_cmd
 {
 	char				**argv;
-	int					argc;
 	t_redir				*redirects;
 	struct s_cmd		*next;
 }	t_cmd;
 
+typedef	struct s_ast
+{
+	int				type;
+	struct	s_ast	*left;
+	struct	s_ast	*right;
+	char			**args;
+}	t_ast;
 
 typedef struct s_mini
 {
 	t_token			*token;
+	t_ast			*ast;
 	t_token_type	type;
 	char			*input;
 	char			**envp;

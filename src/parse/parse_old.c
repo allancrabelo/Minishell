@@ -103,7 +103,7 @@ t_token	*find_first_command(t_token *tokens)
 	cur = tokens;
 	while (cur)
 	{
-		if (is_redirect_token(cur->type))
+		if (cur->type >= TOKEN_REDIRECT_IN)
 		{
 			cur = cur->next;
 			if (cur)
@@ -248,21 +248,6 @@ int	build_cmd_argv(t_cmd *cmd, t_token *tokens)
 	return (1);
 }
 
-// Function to create and initialize a new command
-t_cmd	*create_cmd(void)
-{
-	t_cmd	*cmd;
-
-	cmd = malloc(sizeof(t_cmd));
-	if (!cmd)
-		return (NULL);
-	cmd->argv = NULL;
-	cmd->argc = 0;
-	cmd->redirects = NULL;
-	cmd->next = NULL;
-	return (cmd);
-}
-
 // Main function to parse a command from tokens
 t_cmd	*parse_command(t_token *tokens)
 {
@@ -270,9 +255,10 @@ t_cmd	*parse_command(t_token *tokens)
 
 	if (!tokens)
 		return (NULL);
-	cmd = create_cmd();
+	cmd = malloc(sizeof(t_cmd));
 	if (!cmd)
 		return (NULL);
+	*cmd = (t_cmd){0};
 	if (!build_cmd_argv(cmd, tokens))
 	{
 		free_cmd(cmd);
@@ -312,59 +298,3 @@ void	free_argv(char **argv)
 	free(argv);
 }
 
-// Helper function to print command name
-static void	print_cmd_name(t_cmd *cmd)
-{
-	printf("Command: ");
-	if (cmd->argv && cmd->argv[0])
-		printf("%s", cmd->argv[0]);
-	else
-		printf("(no command)");
-	printf("\n");
-}
-
-// Helper function to print arguments
-static void	print_cmd_args(t_cmd *cmd)
-{
-	int	i;
-
-	printf("Arguments: ");
-	if (cmd->argv)
-	{
-		i = 0;
-		while (cmd->argv[i])
-		{
-			printf("[%s] ", cmd->argv[i]);
-			i++;
-		}
-	}
-	printf("\n");
-}
-
-// Helper function to print redirections
-static void	print_cmd_redirections(t_cmd *cmd)
-{
-	t_redir	*redir;
-
-	printf("Redirections:\n");
-	redir = cmd->redirects;
-	while (redir)
-	{
-		printf("  Type: %d, File: %s\n", redir->type, redir->file);
-		redir = redir->next;
-	}
-}
-
-// Example usage function for testing
-void	print_cmd(t_cmd *cmd)
-{
-	if (!cmd)
-	{
-		printf("Command: NULL\n");
-		return ;
-	}
-	print_cmd_name(cmd);
-	print_cmd_args(cmd);
-	print_cmd_redirections(cmd);
-	printf("---\n");
-}

@@ -35,6 +35,7 @@ int	main(int argc, char **argv, char **envp)
 		return (printf("[ERROR] Usage: ./minishell\n" SRESET), 127);
 	signal_init();
 	mini.token = NULL;
+	mini.ast = NULL;
 	mini.envp = envp;
 	mini.exit_status = 0;
 	main_loop(&mini);
