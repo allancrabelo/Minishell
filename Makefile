@@ -31,7 +31,7 @@ SRCSLIST	:=	main \
 				ft_pwd \
 				tokenizer \
 				tokenizer_utils \
-				parse \
+				parser \
 				variable_expanser \
 				expander_utils \
 				environment_utils

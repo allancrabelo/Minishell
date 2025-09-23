@@ -2,7 +2,7 @@
 #include "../../includes/minishell.h"
 #include "../../includes/colors.h"
 
-// Function to execute builtin commands
+/* // Function to execute builtin commands
 int	execute_builtin(t_mini *mini, t_token *cmd_token, char **argv)
 {
 	(void) argv;
@@ -76,7 +76,7 @@ int	execute_command(t_mini *mini, t_token *tokens)
 	// Free the argument array
 	free_argv(argv);
 	return (result);
-}
+} */
 
 void	free_tokens(t_mini *mini)
 {
@@ -109,6 +109,10 @@ void	handle_commands(t_mini *mini, char *input)
 	if (mini->token == NULL)
 		return ;
 	cur = mini->token;
-	execute_command(mini, cur);
-	free_tokens(mini);
+	printf("TREE");
+	(void) cur;
+	//execute_command(mini, cur);
+	if (mini->ast)
+		free_ast(mini->ast);
+	mini->ast = NULL;
 }
