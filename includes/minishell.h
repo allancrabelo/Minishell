@@ -24,9 +24,9 @@
 # define COMMAND_NOT_FOUND 127
 # define COMMAND_DENIED_OR_FAILED 126
 
-# ifndef FD_MAX
-#  define FD_MAX 1024
-# endif
+	# ifndef FD_MAX
+		#  define FD_MAX 1024
+	# endif
 // Structs
 typedef enum e_token_type
 {
@@ -84,10 +84,14 @@ void	do_commands(t_mini *mini, char *input);
 void	handle_commands(t_mini *mini, char *input);
 int		execute_builtin(t_mini *mini, t_token *cmd_token, char **argv);
 
+// [BUILTINS]:
 //int		ft_echo(char **commands);
 int		ft_echo(t_mini *mini, t_token *echo);
 int		ft_exit(t_mini *mini);
 int		ft_pwd(void);
+
+//Env:
+int	ft_env(t_mini *mini);
 
 // Signals
 void	sighandler(int signal);

@@ -8,9 +8,9 @@ int	execute_builtin(t_mini *mini, t_token *cmd_token, char **argv)
 	(void) argv;
 	if (ft_strcmp(cmd_token->data, "echo") == 0)
 		return (ft_echo(mini, cmd_token)); // You might want to pass argv here too
-	if (ft_strcmp(cmd_token->data, "pwd") == 0)
+	else if (ft_strcmp(cmd_token->data, "pwd") == 0)
 		return (ft_pwd());
-	if (ft_strcmp(cmd_token->data, "exit") == 0)
+	else if (ft_strcmp(cmd_token->data, "exit") == 0)
 		return (ft_exit(mini));
 	// TODO: Add other builtin implementations
 	// if (ft_strcmp(cmd_token->data, "cd") == 0)
@@ -19,8 +19,8 @@ int	execute_builtin(t_mini *mini, t_token *cmd_token, char **argv)
 	//     return (ft_export(mini, argv));
 	// if (ft_strcmp(cmd_token->data, "unset") == 0)
 	//     return (ft_unset(mini, argv));
-	// if (ft_strcmp(cmd_token->data, "env") == 0)
-	//     return (ft_env(mini, argv));
+	else if (ft_strcmp(cmd_token->data, "env") == 0)
+		return (ft_env(mini));
 	return (0);
 }
 

@@ -19,9 +19,10 @@ VPATH		:=	src src/utils \
 				src/executor/echo \
 				src/executor/exit \
 				src/executor/pwd \
+				src/executor/env \
 				src/parse \
 				src/expander \
-				src/pipes
+				src/pipes 
 
 
 SRCSLIST	:=	main \
@@ -30,6 +31,7 @@ SRCSLIST	:=	main \
 				ft_echo \
 				ft_exit \
 				ft_pwd \
+				ft_env \
 				tokenizer \
 				tokenizer_utils \
 				parse \
