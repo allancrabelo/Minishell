@@ -58,18 +58,22 @@ typedef struct s_redir
 	struct s_redir		*next;
 }	t_redir;
 
-typedef struct s_cmd
+typedef	struct s_ast
 {
-	char				**argv;
-	int					argc;
-	t_redir				*redirects;
-	struct s_cmd		*next;
-}	t_cmd;
-
+	int				type;
+	struct	s_ast	*left;
+	struct	s_ast	*right;
+	char			**args;
+	int				arg_count;
+	t_redir			*redir;
+}	t_ast;
 
 typedef struct s_mini
 {
 	t_token			*token;
+	t_ast			*ast;
+	t_token_type	type;
+	char			*input;
 	char			**envp;
 	int				exit_status;
 	char			*input;
@@ -129,18 +133,9 @@ void	ft_itoa_alternative(int n, char *dst);
 char	*get_env_var(t_mini *mini, char *var_name);
 
 //Command parsing
-t_cmd	*parse_command(t_token *tokens);
-void	free_cmd(t_cmd *cmd);
-void	free_redirects(t_redir *redirects);
-t_redir	*create_redirect(t_token_type type, char *file);
-void	add_redirect_to_cmd(t_cmd *cmd, t_redir *redirect);
-int		build_cmd_argv(t_cmd *cmd, t_token *tokens);
-int		count_command_args(t_token *cmd_token);
-t_token	*find_first_command(t_token *tokens);
-int		is_builtin_command(char *cmd);
-char	**build_argv(t_token *cmd_token);
-void	free_argv(char **argv);
-void	print_cmd(t_cmd *cmd);
+int	build_ast(t_mini *mini);
+void	free_ast(t_ast *node);
+void	free_redir(t_redir *redir);
 
 //[Pipes]:
 // Pipes Executor

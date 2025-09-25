@@ -106,7 +106,7 @@ int	ft_tokenizer(t_mini *mini, char *input)
 {
 	size_t	i;
 	size_t	len;
-	size_t	wd_len;
+	size_t	word_len;
 
 	mini->input = ft_strdup(input);
 	i = 0;
@@ -119,12 +119,14 @@ int	ft_tokenizer(t_mini *mini, char *input)
 			i++;
 		if (tokenize_op(mini, &i))
 			continue ;
-		wd_len = get_word_len(mini, len, i);
-		if (wd_len > 0)
-			add_token(mini, &i, wd_len, TOKEN_WORD);
+		word_len = get_word_len(mini, len, i);
+		if (word_len > 0)
+			add_token(mini, &i, word_len, TOKEN_WORD);
 		else
 			i++;
 		i++;
 	}
+	if (mini->token != NULL)
+		return (build_ast(mini));
 	return (1);
 }

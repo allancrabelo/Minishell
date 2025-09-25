@@ -37,7 +37,7 @@ SRCSLIST	:=	main \
 				redirections_executor \
 				tokenizer \
 				tokenizer_utils \
-				parse \
+				parser \
 				variable_expanser \
 				expander_utils \
 				environment_utils \

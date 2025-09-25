@@ -95,7 +95,7 @@ int	execute_command(t_mini *mini, t_token *tokens)
 	restore_fd(stdin, stdout);
 	free_cmd(cmd);
 	return (result);
-}
+} */
 
 void	free_tokens(t_mini *mini)
 {
