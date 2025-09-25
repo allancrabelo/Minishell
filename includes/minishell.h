@@ -19,11 +19,15 @@
 # include <readline/readline.h>	// readline
 # include <readline/history.h>	// add_history, rl_clear_history, etc.
 
-# define LINE SYELLOW "minishell> " SRESET
 
-# ifndef FD_MAX
-#  define FD_MAX 1024
-# endif
+# define LINE SYELLOW "minishell> " SRESET
+# define COMMAND_NOT_FOUND 127
+# define COMMAND_DENIED_OR_FAILED 126
+
+
+	# ifndef FD_MAX
+		#  define FD_MAX 1024
+	# endif
 // Structs
 typedef enum e_token_type
 {
@@ -66,19 +70,37 @@ typedef struct s_cmd
 typedef struct s_mini
 {
 	t_token			*token;
-	t_token_type	type;
-	char			*input;
 	char			**envp;
 	int				exit_status;
+	char			*input;
+	t_token_type	type;
+	int				pipe_count;
+	int				**pipes;
+	pid_t			*child_pids;
+	int				child_count;
 }	t_mini;
 
 // Commands
 void	do_commands(t_mini *mini, char *input);
 void	handle_commands(t_mini *mini, char *input);
+int		execute_builtin(t_mini *mini, t_token *cmd_token, char **argv, t_redir *redirects);
+
+// [BUILTINS]:
 //int		ft_echo(char **commands);
 int		ft_echo(t_mini *mini, t_token *echo);
 int		ft_exit(t_mini *mini);
 int		ft_pwd(void);
+
+//Env:
+int		ft_env(t_mini *mini);
+
+// Redirects:
+int		redirect_in(t_redir *redirect);
+int		redirect_out(t_redir *redirect);
+int		redirect_append(t_redir *redirect);
+int		apply_redirections(t_redir *redirections);
+int		backup_fd(int *stdin, int *stdout);
+void	restore_fd(int	stdin, int stdout);
 
 // Signals
 void	sighandler(int signal);
@@ -92,9 +114,11 @@ size_t	get_word_len(t_mini *mini, size_t len, size_t i);
 int		is_op(const char *input, size_t i);
 
 //Expansion
-size_t	expand_var_in_tokenizer(t_mini *mini, size_t *i);
-char	*extract_var_name_special(t_mini *mini, size_t *i);
+char	*extract_var_name(t_mini *mini, size_t *i);
 char	*expand_variable(t_mini *mini, char *var_name);
+int		is_special_var(char c);
+char	*get_env_var(t_mini *mini, char *var_name);
+size_t	expand_var_in_tokenizer(t_mini *mini, size_t *i);
 
 //Expansion Utils
 int		is_special_var(char c);
@@ -117,5 +141,22 @@ int		is_builtin_command(char *cmd);
 char	**build_argv(t_token *cmd_token);
 void	free_argv(char **argv);
 void	print_cmd(t_cmd *cmd);
+
+//[Pipes]:
+// Pipes Executor
+int		create_pipes(t_mini *mini);
+int		execute_pipeline(t_mini *mini);
+
+// Pipes Utils
+int		has_pipe(char *input);
+int		count_pipes(t_token	*token);
+void	single_command(t_mini *mini,t_token *cmd_start,int i, int cmds);
+void	setup_redirections(t_mini *mini,int i, int cmds);
+void	close_pipes(t_mini *mini);
+
+//External Commands
+int		execute_external(t_mini *mini, char **argv);
+char	*find_command_path(t_mini *mini, char *cmd);
+void	print_command_error(char *cmd, char *error);
 
 #endif

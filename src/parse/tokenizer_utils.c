@@ -1,4 +1,4 @@
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 int	is_op(const char *input, size_t i)
 {
@@ -43,12 +43,13 @@ size_t	handle_quotes(t_mini *mini, size_t *i, char quote)
 	len = 0;
 	while (mini->input[*i] && mini->input[*i] != quote)
 	{
-/* 		if (quote == '"' && mini->input[*i] == '$')
-			len += 1;//expand_var(mini, i);
+	if (quote == '"' && mini->input[*i] == '$')
+			len += expand_var_in_tokenizer(mini, i);//expand_var(mini, i);
 		else
-			len++; */
-		(*i)++;
-		len++;
+		{
+			len++;
+			(*i)++;
+		}
 	}
 	if (mini->input[*i] == quote)
 		(*i)++;
@@ -63,10 +64,8 @@ size_t	get_word_len(t_mini *mini, size_t len, size_t i) //	Implement exp var
 	while (i < len && !ft_isspace(mini->input[i]) && !is_op(mini->input, i))
 	{
 		if (mini->input[i] == '\'' || mini->input[i] == '"')
-		{
 			word_len += handle_quotes(mini, &i, mini->input[i]);
-		}
-		else if (mini->input[i] == '$' && mini->input[i + 1] != '\0')
+		else if (mini->input[i] == '$')
 				word_len += expand_var_in_tokenizer(mini, &i);//expand_var(mini, &i);
 		else
 		{
