@@ -25,20 +25,6 @@ int	apply_redirections(t_redir *redirections)
 	return (0);
 }
 
-/* void	restore_fd(int stdin, int stdout)
-{
-	if (stdin != -1)
-	{
-		dup2(stdin, STDIN_FILENO);
-		close (stdin);
-	}
-	if (stdout != -1)
-	{
-		dup2(stdout, STDOUT_FILENO);
-		close (stdout);
-	}
-} */
-
 int	backup_fd(int *stdin, int *stdout)
 {
 	*stdin = dup(STDIN_FILENO);
