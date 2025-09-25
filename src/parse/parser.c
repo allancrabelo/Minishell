@@ -72,67 +72,42 @@ static void	free_args(char **args, int count)
 	free(args);
 }
 
-static void	append_redir(t_redir **list, t_redir *new_redir)
-{
-	t_redir *cur;
-
-	if (!new_redir)
-		return;
-	if (!*list)
-		*list = new_redir;
-	else
-	{
-		cur = *list;
-		while (cur->next)
-			cur = cur->next;
-		cur->next = new_redir;
-	}
-}
-
-static t_ast	*parse_command_error(char **args, int count, t_redir *redir)
-{
-	free_args(args, count);
-	if (redir)
-		free_redir(redir);
-	return (NULL);
-}
-
-static int	handle_redir(t_token **tokens, t_redir **redir, char **args, int count)
-{
-	t_redir	*new_redir = NULL;
-
-	if (!create_redirect_ast(tokens, &new_redir))
-		return (parse_command_error(args, count, *redir), 0);
-	append_redir(redir, new_redir);
-	return (1);
-}
-
 t_ast	*parse_command(t_token **tokens)
 {
 	int		count;
 	char	**args;
 	t_redir	*redir;
-	int		total;
 
-	count = 0;
-	redir = NULL;
-	total = count_args(*tokens);
-	args = malloc((total + 1) * sizeof(char *));
+	count = count_args(*tokens);
+	args = malloc((count + 1) * sizeof(char *));
 	if (!args)
 		return (NULL);
+	count = 0;
+	redir = NULL;
 	while (*tokens)
 	{
 		if ((*tokens)->type == TOKEN_WORD)
 		{
 			args[count] = ft_strdup((*tokens)->data);
-			if (!args[count++])
-				return (parse_command_error(args, count, redir));
+			if (!args[count])
+			{
+				free_args(args, count);
+				if (redir)
+					free_redir(redir);
+				return (NULL);
+			}
+			count++;
 			*tokens = (*tokens)->next;
 		}
 		else if ((*tokens)->type >= TOKEN_REDIRECT_IN)
 		{
-			if (!handle_redir(tokens, &redir, args, count))
+			if (!create_redirect_ast(tokens, &redir))
+			{
+				free_args(args, count);
+				if (redir)
+					free_redir(redir);
 				return (NULL);
+			}
 		}
 		else
 			break ;
@@ -180,7 +155,7 @@ int	build_ast(t_mini *mini)
 	mini->ast = parse_pipeline(&cur);
 	if (!mini->ast)
 		return (free_ast(mini->ast), 1);
-	free_tokens(mini);
+	// free_tokens(mini); //TODO free this when ast is working
 	return (0);
 }
 
