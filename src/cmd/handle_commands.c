@@ -3,29 +3,43 @@
 #include "../../includes/colors.h"
 
 // Function to execute builtin commands
-int	execute_builtin(t_mini *mini, t_token *cmd_token, char **argv)
+int	execute_builtin(t_mini *mini, t_token *cmd_token, char **argv, t_redir *redirects)
 {
+	int	result;
+	int	stdin_backup;
+	int	stdout_backup;
+
 	(void) argv;
+	if (backup_fd(&stdin_backup, &stdout_backup) == -1)
+		return (1);
+	if (apply_redirections(redirects) == -1)
+	{
+		restore_fd(stdin_backup, stdout_backup);
+		return(1);
+	}
 	if (ft_strcmp(cmd_token->data, "echo") == 0)
-		return (ft_echo(mini, cmd_token)); // You might want to pass argv here too
+		result = ft_echo(mini, cmd_token); // You might want to pass argv here too
 	else if (ft_strcmp(cmd_token->data, "pwd") == 0)
-		return (ft_pwd());
+		result = ft_pwd();
 	else if (ft_strcmp(cmd_token->data, "exit") == 0)
-		return (ft_exit(mini));
+		result = ft_exit(mini);
 	// TODO: Add other builtin implementations
 	// if (ft_strcmp(cmd_token->data, "cd") == 0)
-	//     return (ft_cd(mini, argv));
+	//     result = ft_cd(mini, argv));
 	// if (ft_strcmp(cmd_token->data, "export") == 0)
-	//     return (ft_export(mini, argv));
+	//     result = ft_export(mini, argv));
 	// if (ft_strcmp(cmd_token->data, "unset") == 0)
-	//     return (ft_unset(mini, argv));
+	//     result = ft_unset(mini, argv));
 	else if (ft_strcmp(cmd_token->data, "env") == 0)
-		return (ft_env(mini));
-	return (0);
+		result = ft_env(mini);
+	else
+		result = 0;
+	restore_fd(stdin_backup, stdout_backup);
+	return (result);
 }
 
 // Function to execute external commands using execve
-int	execute_external_command(t_mini *mini, t_token *cmd_token, char **argv)
+int	execute_external_command(t_mini *mini, t_token *cmd_token, char **argv, t_redir *redirects)
 {
 	pid_t	pid;
 	int		exit_code;
@@ -35,6 +49,8 @@ int	execute_external_command(t_mini *mini, t_token *cmd_token, char **argv)
 	pid = fork();
 	if (pid == 0)
 	{
+		if (apply_redirections(redirects) == -1)
+			exit(1);
 		exit_code = execute_external(mini, argv);
 		exit(exit_code);
 	}
@@ -53,37 +69,31 @@ int	execute_external_command(t_mini *mini, t_token *cmd_token, char **argv)
 int	execute_command(t_mini *mini, t_token *tokens)
 {
 	t_token	*cmd_token;
-	char	**argv;
+	t_cmd	*cmd;
 	int		result;
+	int		stdin;
+	int		stdout;
 
+	cmd = parse_command(tokens);
 	cmd_token = find_first_command(tokens);
-	if (!cmd_token)
+	if (!cmd)
+		return (printf("minishell: syntax error\n"), 1);
+	if (!cmd_token || !cmd->argv || !cmd->argv[0])
+		return (free_cmd(cmd), 0);
+	if (backup_fd(&stdin, &stdout) == -1)
+		return (free_cmd(cmd), 1);
+	if (apply_redirections(cmd->redirects) == -1)
 	{
-		printf("No command found\n");
-		return (1);
+		restore_fd(stdin, stdout);
+		free_cmd(cmd);
+		return (-1);
 	}
-
-	// Build argument array from tokens
-	argv = build_argv(cmd_token);
-	if (!argv)
-	{
-		printf("Failed to build argument array\n");
-		return (1);
-	}
-
-	// Check if it's a builtin command
 	if (is_builtin_command(cmd_token->data))
-	{
-		result = execute_builtin(mini, cmd_token, argv);
-	}
+		result = execute_builtin(mini, cmd_token, cmd->argv, cmd->redirects);
 	else
-	{
-		// Execute as external command with execve
-		result = execute_external_command(mini, cmd_token, argv);
-	}
-
-	// Free the argument array
-	free_argv(argv);
+		result = execute_external_command(mini, cmd_token, cmd->argv, cmd->redirects);
+	restore_fd(stdin, stdout);
+	free_cmd(cmd);
 	return (result);
 }
 

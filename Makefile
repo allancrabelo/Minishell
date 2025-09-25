@@ -20,6 +20,7 @@ VPATH		:=	src src/utils \
 				src/executor/exit \
 				src/executor/pwd \
 				src/executor/env \
+				src/executor/redirections \
 				src/parse \
 				src/expander \
 				src/pipes 
@@ -32,6 +33,8 @@ SRCSLIST	:=	main \
 				ft_exit \
 				ft_pwd \
 				ft_env \
+				redirections \
+				redirections_executor \
 				tokenizer \
 				tokenizer_utils \
 				parse \

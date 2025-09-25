@@ -24,6 +24,7 @@
 # define COMMAND_NOT_FOUND 127
 # define COMMAND_DENIED_OR_FAILED 126
 
+
 	# ifndef FD_MAX
 		#  define FD_MAX 1024
 	# endif
@@ -82,7 +83,7 @@ typedef struct s_mini
 // Commands
 void	do_commands(t_mini *mini, char *input);
 void	handle_commands(t_mini *mini, char *input);
-int		execute_builtin(t_mini *mini, t_token *cmd_token, char **argv);
+int		execute_builtin(t_mini *mini, t_token *cmd_token, char **argv, t_redir *redirects);
 
 // [BUILTINS]:
 //int		ft_echo(char **commands);
@@ -91,7 +92,15 @@ int		ft_exit(t_mini *mini);
 int		ft_pwd(void);
 
 //Env:
-int	ft_env(t_mini *mini);
+int		ft_env(t_mini *mini);
+
+// Redirects:
+int		redirect_in(t_redir *redirect);
+int		redirect_out(t_redir *redirect);
+int		redirect_append(t_redir *redirect);
+int		apply_redirections(t_redir *redirections);
+int		backup_fd(int *stdin, int *stdout);
+void	restore_fd(int	stdin, int stdout);
 
 // Signals
 void	sighandler(int signal);

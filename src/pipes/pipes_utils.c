@@ -60,31 +60,34 @@ void	setup_redirections(t_mini *mini,int i, int cmds)
 void	single_command(t_mini *mini,t_token *cmd_start,int i, int cmds)
 {
 	t_cmd	*cmd;
-	char	**argv;
 	int		exit_code;
 
 	cmd = parse_command(cmd_start);
 	if (!cmd)
 		exit(EXIT_FAILURE);
 	setup_redirections(mini, i, cmds);
+	if (apply_redirections(cmd->redirects) == -1)
+	{
+		free_cmd(cmd);
+		exit(1);
+	}
 	close_pipes(mini);
-	argv = cmd->argv;
-	if (!argv || !argv[0])
+	if (!cmd->argv || !cmd->argv[0])
 	{
 		free_cmd(cmd);
 		exit (EXIT_SUCCESS);
 	}
-	if (is_builtin_command(argv[0]))
+	if (is_builtin_command(cmd->argv[0]))
 	{
-		exit_code = execute_builtin(mini, cmd_start, argv);
+		exit_code = execute_builtin(mini, cmd_start, cmd->argv, cmd->redirects);
 		free_cmd(cmd);
 		exit(exit_code);
 	}
 	else
 	{
-		exit_code = execute_external(mini, argv); //tenho de tratar comandos externos???????????????
+		exit_code = execute_external(mini, cmd->argv);
 		free_cmd(cmd);
-		exit(0);
+		exit(exit_code);
 	}
 }
 
