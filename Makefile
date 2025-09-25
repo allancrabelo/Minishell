@@ -38,7 +38,7 @@ SRCSLIST	:=	main \
 				tokenizer \
 				tokenizer_utils \
 				parser \
-				variable_expanser \
+				variable_expander \
 				expander_utils \
 				environment_utils \
 				pipes_utils \

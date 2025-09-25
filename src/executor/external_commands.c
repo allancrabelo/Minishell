@@ -53,7 +53,6 @@ int	execute_external(t_mini *mini, char **argv)
 
 	if (!argv || !argv[0])
 		return (1);
-	
 	cmd_path = find_command_path(mini, argv[0]);
 	if (!cmd_path)
 	{

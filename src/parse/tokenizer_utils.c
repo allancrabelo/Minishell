@@ -43,7 +43,7 @@ size_t	handle_quotes(t_mini *mini, size_t *i, char quote)
 	len = 0;
 	while (mini->input[*i] && mini->input[*i] != quote)
 	{
-	if (quote == '"' && mini->input[*i] == '$')
+		if (quote == '"' && mini->input[*i] == '$')
 			len += expand_var_in_tokenizer(mini, i);//expand_var(mini, i);
 		else
 		{
@@ -66,7 +66,7 @@ size_t	get_word_len(t_mini *mini, size_t len, size_t i) //	Implement exp var
 		if (mini->input[i] == '\'' || mini->input[i] == '"')
 			word_len += handle_quotes(mini, &i, mini->input[i]);
 		else if (mini->input[i] == '$')
-				word_len += expand_var_in_tokenizer(mini, &i);//expand_var(mini, &i);
+			word_len += expand_var_in_tokenizer(mini, &i);//expand_var(mini, &i);
 		else
 		{
 			word_len++;

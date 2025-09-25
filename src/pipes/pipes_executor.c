@@ -1,4 +1,4 @@
-#include "../../includes/minishell.h"
+/* #include "../../includes/minishell.h"
 
 int	create_pipes(t_mini *mini)
 {
@@ -73,3 +73,4 @@ int	execute_pipeline(t_mini *mini)
 	free (mini->child_pids);
 	return (0);
 }
+ */

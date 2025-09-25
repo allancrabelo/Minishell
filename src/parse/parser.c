@@ -48,8 +48,9 @@ int	create_redirect_ast(t_token **tokens, t_redir **redir)
 
 t_ast	*create_command(char **args, int arg_count, t_redir *redir)
 {
-	t_ast	*node = malloc(sizeof(t_ast));
+	t_ast	*node;
 
+	node = malloc(sizeof(t_ast));
 	if (!node)
 		return (NULL);
 	node->type = 1;
@@ -63,10 +64,11 @@ t_ast	*create_command(char **args, int arg_count, t_redir *redir)
 
 static void	free_args(char **args, int count)
 {
-	int i = 0;
+	int	i;
 
+	i = 0;
 	if (!args)
-		return;
+		return ;
 	while (i < count)
 		free(args[i++]);
 	free(args);
@@ -119,14 +121,14 @@ t_ast	*parse_command(t_token **tokens)
 t_ast	*create_pipe(t_ast *left, t_ast *right)
 {
 	t_ast	*node;
-	
+
 	node = malloc(sizeof(t_ast));
 	if (!node)
 		return (NULL);
 	node->type = 0;
 	node->left = left;
 	node->right = right;
-	node->args	= NULL;
+	node->args = NULL;
 	node->arg_count = 0;
 	node->redir = NULL;
 	return (node);
@@ -161,7 +163,8 @@ int	build_ast(t_mini *mini)
 
 void	free_redir(t_redir *redir)
 {
-	t_redir *tmp;
+	t_redir	*tmp;
+
 	while (redir)
 	{
 		tmp = redir->next;
@@ -174,9 +177,10 @@ void	free_redir(t_redir *redir)
 
 void	free_ast(t_ast *node)
 {
-	int i;
+	int	i;
+
 	if (!node)
-		return;
+		return ;
 	free_ast(node->left);
 	free_ast(node->right);
 	if (node->args)

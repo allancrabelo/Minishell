@@ -19,15 +19,14 @@
 # include <readline/readline.h>	// readline
 # include <readline/history.h>	// add_history, rl_clear_history, etc.
 
-
 # define LINE SYELLOW "minishell> " SRESET
 # define COMMAND_NOT_FOUND 127
 # define COMMAND_DENIED_OR_FAILED 126
 
+# ifndef FD_MAX
+#  define FD_MAX 1024
+# endif
 
-	# ifndef FD_MAX
-		#  define FD_MAX 1024
-	# endif
 // Structs
 typedef enum e_token_type
 {
@@ -58,11 +57,11 @@ typedef struct s_redir
 	struct s_redir		*next;
 }	t_redir;
 
-typedef	struct s_ast
+typedef struct s_ast
 {
 	int				type;
-	struct	s_ast	*left;
-	struct	s_ast	*right;
+	struct s_ast	*left;
+	struct s_ast	*right;
 	char			**args;
 	int				arg_count;
 	t_redir			*redir;
@@ -70,14 +69,12 @@ typedef	struct s_ast
 
 typedef struct s_mini
 {
-	t_token			*token;
 	t_ast			*ast;
 	t_token_type	type;
+	t_token			*token;
 	char			*input;
 	char			**envp;
 	int				exit_status;
-	char			*input;
-	t_token_type	type;
 	int				pipe_count;
 	int				**pipes;
 	pid_t			*child_pids;
@@ -87,11 +84,11 @@ typedef struct s_mini
 // Commands
 void	do_commands(t_mini *mini, char *input);
 void	handle_commands(t_mini *mini, char *input);
-int		execute_builtin(t_mini *mini, t_token *cmd_token, char **argv, t_redir *redirects);
+int		execute_builtin(t_mini *mini, char **argv, t_redir *redir);
 
 // [BUILTINS]:
 //int		ft_echo(char **commands);
-int		ft_echo(t_mini *mini, t_token *echo);
+int		ft_echo(t_ast *node);
 int		ft_exit(t_mini *mini);
 int		ft_pwd(void);
 
@@ -103,19 +100,22 @@ int		redirect_in(t_redir *redirect);
 int		redirect_out(t_redir *redirect);
 int		redirect_append(t_redir *redirect);
 int		apply_redirections(t_redir *redirections);
-int		backup_fd(int *stdin, int *stdout);
-void	restore_fd(int	stdin, int stdout);
+// int		backup_fd(int *stdin, int *stdout);
+// void	restore_fd(int stdin, int stdout);
 
 // Signals
 void	sighandler(int signal);
 void	signal_init(void);
 
+// Tokenizer
 //void	ft_tokenizer(t_mini *mini, char *input);
 int		ft_tokenizer(t_mini *mini, char *input);
 void	free_tokens(t_mini *mini);
 int		check_validity(char *input);
 size_t	get_word_len(t_mini *mini, size_t len, size_t i);
 int		is_op(const char *input, size_t i);
+int		build_ast(t_mini *mini);
+int		is_builtin_command(char *cmd);
 
 //Expansion
 char	*extract_var_name(t_mini *mini, size_t *i);
@@ -133,21 +133,21 @@ void	ft_itoa_alternative(int n, char *dst);
 char	*get_env_var(t_mini *mini, char *var_name);
 
 //Command parsing
-int	build_ast(t_mini *mini);
+int		build_ast(t_mini *mini);
 void	free_ast(t_ast *node);
 void	free_redir(t_redir *redir);
 
-//[Pipes]:
+/* //[Pipes]:
 // Pipes Executor
 int		create_pipes(t_mini *mini);
-int		execute_pipeline(t_mini *mini);
+int		execute_pipeline(t_mini *mini); */
 
-// Pipes Utils
-int		has_pipe(char *input);
-int		count_pipes(t_token	*token);
-void	single_command(t_mini *mini,t_token *cmd_start,int i, int cmds);
-void	setup_redirections(t_mini *mini,int i, int cmds);
-void	close_pipes(t_mini *mini);
+// // Pipes Utils
+// int		has_pipe(char *input);
+// int		count_pipes(t_token	*token);
+// void	single_command(t_mini *mini, t_token *cmd_start, int i, int cmds);
+// void	setup_redirections(t_mini *mini, int i, int cmds);
+// void	close_pipes(t_mini *mini);
 
 //External Commands
 int		execute_external(t_mini *mini, char **argv);

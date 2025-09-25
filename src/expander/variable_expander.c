@@ -14,7 +14,8 @@ char	*extract_var_name(t_mini *mini, size_t *i)
 		(*i)++;
 		return (var_name);
 	}
-	while (mini->input[*i] && (ft_isalnum(mini->input[*i]) || mini->input[*i] == '_'))
+	while (mini->input[*i] && (ft_isalnum(mini->input[*i])
+			|| mini->input[*i] == '_'))
 	{
 		(*i)++;
 		len++;

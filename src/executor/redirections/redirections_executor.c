@@ -2,7 +2,7 @@
 
 int	apply_redirections(t_redir *redirections)
 {
-	t_redir *cur;
+	t_redir	*cur;
 	int		result;
 
 	if (!redirections)
@@ -25,8 +25,7 @@ int	apply_redirections(t_redir *redirections)
 	return (0);
 }
 
-
-void	restore_fd(int	stdin, int stdout)
+/* void	restore_fd(int stdin, int stdout)
 {
 	if (stdin != -1)
 	{
@@ -38,16 +37,15 @@ void	restore_fd(int	stdin, int stdout)
 		dup2(stdout, STDOUT_FILENO);
 		close (stdout);
 	}
-}
+} */
 
 int	backup_fd(int *stdin, int *stdout)
 {
 	*stdin = dup(STDIN_FILENO);
 	*stdout = dup(STDOUT_FILENO);
-
 	if (*stdin == -1 || *stdout == -1)
 	{
-		restore_fd(*stdin, *stdout);
+		// restore_fd(*stdin, *stdout);
 		return (-1);
 	}
 	return (0);

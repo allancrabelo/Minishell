@@ -1,50 +1,70 @@
 #include "../../../includes/minishell.h"
 
-char	flag_verification(t_token **cur)
+char	flag_verification(char	**args, int *i)
 {
 	char	ret;
-	size_t	i;
+	size_t	j;
 
 	ret = 0;
-	while (*cur)
+	while (args[*i])
 	{
-		i = 0;
-		if ((*cur)->data[i] != '-')
+		j = 0;
+		if (args[*i][j] != '-')
 			break ;
-		i++;
-		if ((*cur)->data[i] == '\0')
+		j++;
+		if (args[*i][j] == '\0')
 			break ;
-		while ((*cur)->data[i] == 'n')
-			i++;
-		if ((*cur)->data[i] != '\0')
+		while (args[*i][j] == 'n')
+			j++;
+		if (args[*i][j] != '\0')
 			break ;
 		ret = 'n';
-		*cur = (*cur)->next;
+		(*i)++;
 	}
 	return (ret);
 }
 
-int	ft_echo(t_mini *mini, t_token *echo) //	CUIDADO BONUS
+int	ft_echo(t_ast *node)
 {
 	int		flag;
-	t_token	*cur;
+	char	**args;
+	int		i;
+	int		fd;
+	t_redir	*redir;
 
-	(void) mini;
-	cur = echo->next;
-	flag = flag_verification(&cur);
-	while (cur && cur->type != TOKEN_PIPE)
+	i = 1;
+	args = node->args;
+	flag = flag_verification(args, &i); // TODO: implement flag_verification if needed
+
+	// Find last output redirection, if any
+	fd = STDOUT_FILENO;
+	redir = node->redir;
+	while (redir)
 	{
-		if (cur->type > TOKEN_PIPE) //		TODO Handle Operator
+		if (redir->type == TOKEN_REDIRECT_OUT || redir->type == TOKEN_REDIRECT_APPEND)
 		{
-			cur = cur->next->next;
-			continue ;
+			if (fd != STDOUT_FILENO)
+				close(fd);
+			fd = open(redir->file,
+				redir->type == TOKEN_REDIRECT_OUT
+					? O_WRONLY | O_CREAT | O_TRUNC
+					: O_WRONLY | O_CREAT | O_APPEND,
+				0644);
+			if (fd < 0)
+				return (perror(redir->file), 1);
 		}
-		printf("%s", cur->data);
-		if (cur->next && cur->next->type != TOKEN_PIPE)
-			printf(" ");
-		cur = cur->next;
+		redir = redir->next;
+	}
+	while (i < node->arg_count)
+	{
+		write(fd, args[i], ft_strlen(args[i]));
+		if (i != node->arg_count - 1)
+			write(fd, " ", 1);
+		i++;
 	}
 	if (!flag)
-		printf("\n");
+		write(fd, "\n", 1);
+	if (fd != STDOUT_FILENO)
+		close(fd);
 	return (0);
 }

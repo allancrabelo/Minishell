@@ -17,7 +17,7 @@ int	redirect_in(t_redir *redirect)
 			ft_putstr_fd(": Failed to open file\n", 2);
 		return (-1);
 	}
-	if(dup2(fd, STDIN_FILENO) == -1)
+	if (dup2(fd, STDIN_FILENO) == -1)
 	{
 		close(fd);
 		return (-1);

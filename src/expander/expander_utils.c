@@ -42,7 +42,7 @@ char	*expand_exit_status(t_mini *mini)
 char	*expand_special_var(t_mini *mini, char var_char)
 {
 	if (var_char == '?')
-		return(expand_exit_status(mini));
+		return (expand_exit_status(mini));
 	return (NULL);
 }
 

@@ -16,18 +16,17 @@ char	*ft_strcpy(char *dest, char *src)
 
 char	*get_env_var(t_mini *mini, char *var_name)
 {
-	int	i;
+	int		i;
 	size_t	name_len;
 
 	if (!var_name || !mini->envp)
 		return (NULL);
-	
 	name_len = ft_strlen(var_name);
 	i = 0;
 	while (mini->envp[i])
 	{
-		if (ft_strncmp(mini->envp[i], var_name, name_len) == 0 && 
-			mini->envp[i][name_len] == '=')
+		if (ft_strncmp(mini->envp[i], var_name, name_len) == 0
+			&& mini->envp[i][name_len] == '=')
 		{
 			return (&mini->envp[i][name_len + 1]);
 		}

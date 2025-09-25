@@ -1,51 +1,73 @@
-
 #include "../../includes/minishell.h"
 #include "../../includes/colors.h"
 
+int	is_builtin_command(char *cmd)
+{
+	if (!cmd)
+		return (0);
+	if (ft_strcmp(cmd, "echo") == 0)
+		return (1);
+	if (ft_strcmp(cmd, "cd") == 0)
+		return (1);
+	if (ft_strcmp(cmd, "pwd") == 0)
+		return (1);
+	if (ft_strcmp(cmd, "export") == 0)
+		return (1);
+	if (ft_strcmp(cmd, "unset") == 0)
+		return (1);
+	if (ft_strcmp(cmd, "env") == 0)
+		return (1);
+	if (ft_strcmp(cmd, "exit") == 0)
+		return (1);
+	return (0);
+}
+
 // Function to execute builtin commands
-int	execute_builtin(t_mini *mini, t_token *cmd_token, char **argv, t_redir *redirects)
+int	execute_builtin(t_mini *mini, char **argv, t_redir *redir)
 {
 	int	result;
-	int	stdin_backup;
-	int	stdout_backup;
+	// int	stdin_backup;
+	// int	stdout_backup;
 
 	(void) argv;
-	if (backup_fd(&stdin_backup, &stdout_backup) == -1)
+	(void) redir;
+/* 	if (backup_fd(&stdin_backup, &stdout_backup) == -1)
 		return (1);
-	if (apply_redirections(redirects) == -1)
+	if (apply_redirections(redir) == -1)
 	{
 		restore_fd(stdin_backup, stdout_backup);
-		return(1);
-	}
-	if (ft_strcmp(cmd_token->data, "echo") == 0)
-		result = ft_echo(mini, cmd_token); // You might want to pass argv here too
-	else if (ft_strcmp(cmd_token->data, "pwd") == 0)
-		result = ft_pwd();
-	else if (ft_strcmp(cmd_token->data, "exit") == 0)
-		result = ft_exit(mini);
-	// TODO: Add other builtin implementations
-	// if (ft_strcmp(cmd_token->data, "cd") == 0)
-	//     result = ft_cd(mini, argv));
-	// if (ft_strcmp(cmd_token->data, "export") == 0)
-	//     result = ft_export(mini, argv));
-	// if (ft_strcmp(cmd_token->data, "unset") == 0)
-	//     result = ft_unset(mini, argv));
-	else if (ft_strcmp(cmd_token->data, "env") == 0)
-		result = ft_env(mini);
+		return (1);
+	} */
+	if (ft_strcmp(mini->ast->args[0], "echo") == 0)
+		result = ft_echo(mini->ast); // You might want to pass argv here too
 	else
 		result = 0;
-	restore_fd(stdin_backup, stdout_backup);
+/* 	else if (ft_strcmp(mini->ast, "pwd") == 0)
+		result = ft_pwd();
+	else if (ft_strcmp(mini->ast, "exit") == 0)
+		result = ft_exit(mini);
+	// TODO: Add other builtin implementations
+	// if (ft_strcmp(mini->ast, "cd") == 0)
+	//     result = ft_cd(mini, argv));
+	// if (ft_strcmp(mini->ast, "export") == 0)
+	//     result = ft_export(mini, argv));
+	// if (ft_strcmp(mini->ast, "unset") == 0)
+	//     result = ft_unset(mini, argv));
+	else if (ft_strcmp(mini->ast, "env") == 0)
+		result = ft_env(mini);
+	else
+		result = 0; */
+	// restore_fd(stdin_backup, stdout_backup);
 	return (result);
 }
 
 // Function to execute external commands using execve
-int	execute_external_command(t_mini *mini, t_token *cmd_token, char **argv, t_redir *redirects)
+int	execute_external_command(t_mini *mini, char **argv, t_redir *redirects)
 {
 	pid_t	pid;
 	int		exit_code;
 	int		status;
 
-	(void)cmd_token;
 	pid = fork();
 	if (pid == 0)
 	{
@@ -66,36 +88,34 @@ int	execute_external_command(t_mini *mini, t_token *cmd_token, char **argv, t_re
 }
 
 // Main command execution function
-int	execute_command(t_mini *mini, t_token *tokens)
+int	execute_command(t_mini *mini)
 {
-	t_token	*cmd_token;
-	t_cmd	*cmd;
+	t_ast	*cmd;
 	int		result;
-	int		stdin;
-	int		stdout;
 
-	cmd = parse_command(tokens);
+/* 	cmd = parse_command(tokens);
 	cmd_token = find_first_command(tokens);
 	if (!cmd)
 		return (printf("minishell: syntax error\n"), 1);
-	if (!cmd_token || !cmd->argv || !cmd->argv[0])
+	if (!cmd_token || !cmd->args || !cmd->args[0])
 		return (free_cmd(cmd), 0);
 	if (backup_fd(&stdin, &stdout) == -1)
 		return (free_cmd(cmd), 1);
-	if (apply_redirections(cmd->redirects) == -1)
+	if (apply_redirections(cmd->redir) == -1)
 	{
 		restore_fd(stdin, stdout);
 		free_cmd(cmd);
 		return (-1);
-	}
-	if (is_builtin_command(cmd_token->data))
-		result = execute_builtin(mini, cmd_token, cmd->argv, cmd->redirects);
+	} */
+	cmd = mini->ast;
+	if (is_builtin_command(cmd->args[0]))
+		result = execute_builtin(mini, cmd->args, cmd->redir);
 	else
-		result = execute_external_command(mini, cmd_token, cmd->argv, cmd->redirects);
-	restore_fd(stdin, stdout);
-	free_cmd(cmd);
+		result = execute_external_command(mini, cmd->args, mini->ast->redir);
+	// restore_fd(stdin, stdout);
+	// free_cmd(cmd);
 	return (result);
-} */
+}
 
 void	free_tokens(t_mini *mini)
 {
@@ -117,8 +137,6 @@ void	free_tokens(t_mini *mini)
 
 void	handle_commands(t_mini *mini, char *input)
 {
-	t_token	*cur;
-
 	if (input[0] == '#') //TODO usar para teste
 	{
 		printf(BOLD SCYAN "%s\n" SRESET, input);
@@ -127,21 +145,7 @@ void	handle_commands(t_mini *mini, char *input)
 	ft_tokenizer(mini, input);
 	if (mini->token == NULL)
 		return ;
-	// Identidificar o PIPE
-	if (has_pipe(input))
-	{
-		if (!create_pipes(mini))
-		{
-			ft_putstr_fd("minishell: Pipe creation failed\n", 2);
-			free_tokens(mini);
-			return ;
-		}
-		execute_pipeline(mini);
-	}
-	else
-	{
-		cur = mini->token;
-		execute_command(mini, cur);
-	}
+	execute_command(mini);
+	//close(mini->ast->redir->fd);
 	free_tokens(mini);
 }
