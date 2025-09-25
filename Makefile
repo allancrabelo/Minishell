@@ -20,10 +20,8 @@ VPATH		:=	src src/utils \
 				src/executor/exit \
 				src/executor/pwd \
 				src/executor/env \
-				src/executor/redirections \
 				src/parse \
 				src/expander \
-				src/pipes 
 
 
 SRCSLIST	:=	main \
@@ -33,17 +31,10 @@ SRCSLIST	:=	main \
 				ft_exit \
 				ft_pwd \
 				ft_env \
-				redirections \
-				redirections_executor \
 				tokenizer \
 				tokenizer_utils \
 				parser \
-				variable_expander \
-				expander_utils \
-				environment_utils \
-				pipes_utils \
-				pipes_executor \
-				external_commands
+				external_commands \
 
 SRCS		:= $(addsuffix .c, ${SRCSLIST})
 

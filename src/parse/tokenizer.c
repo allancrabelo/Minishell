@@ -28,8 +28,8 @@ char	*fill_token_data(t_mini *mini, size_t *i, size_t len)
 		else if (mini->input[*i] == '$' && quote != '\'')
 		{
 			(*i)++;
-			var_name = extract_var_name(mini, i);
-			expanded_value = expand_variable(mini, var_name);
+			var_name = "Teste";
+			expanded_value = "Teste";
 			free(var_name);
 			if (expanded_value)
 			{

@@ -34,9 +34,7 @@ int	ft_echo(t_ast *node)
 
 	i = 1;
 	args = node->args;
-	flag = flag_verification(args, &i); // TODO: implement flag_verification if needed
-
-	// Find last output redirection, if any
+	flag = flag_verification(args, &i);
 	fd = STDOUT_FILENO;
 	redir = node->redir;
 	while (redir)
