@@ -1,6 +1,45 @@
 #include "../includes/minishell.h"
 
-int	count_args(t_token *tokens)
+static void	free_args(char **args)
+{
+	int	i;
+
+	i = 0;
+	if (!args)
+		return ;
+	while (args[i])
+		free(args[i++]);
+	free(args);
+}
+
+static void	free_redir(t_redir *redir)
+{
+	t_redir	*tmp;
+
+	while (redir)
+	{
+		tmp = redir->next;
+		if (redir->file)
+			free(redir->file);
+		free(redir);
+		redir = tmp;
+	}
+}
+
+void	free_ast(t_ast *node)
+{
+	if (!node)
+		return ;
+	free_ast(node->left);
+	free_ast(node->right);
+	if (node->args)
+		free_args(node->args);
+	if (node->redir)
+		free_redir(node->redir);
+	free(node);
+}
+
+int	count_cmd_args(t_token *tokens)
 {
 	int	count;
 
@@ -24,35 +63,50 @@ int	count_args(t_token *tokens)
 	return (count);
 }
 
-int	create_redirect_ast(t_token **tokens, t_redir **redir)
+static int	add_redir_to_list(t_redir **redir, t_redir *new_redir)
 {
-	if (!(*tokens)->next || (*tokens)->next->type != TOKEN_WORD)
-	{
-		printf("Error: expected filename after redirection\n");
-		return (0);
-	}
-	*redir = malloc(sizeof(t_redir));
+	t_redir	*current;
+
 	if (!*redir)
-		return (0);
-	(*redir)->type = (*tokens)->type;
-	(*redir)->file = ft_strdup((*tokens)->next->data);
-	if (!(*redir)->file)
+		*redir = new_redir;
+	else
 	{
-		free(*redir);
-		return (0);
+		current = *redir;
+		while (current->next)
+			current = current->next;
+		current->next = new_redir;
 	}
-	(*redir)->next = NULL;
-	(*tokens) = (*tokens)->next->next;
 	return (1);
 }
 
-t_ast	*create_command(char **args, int arg_count, t_redir *redir)
+int	parse_redir(t_token **tokens, t_redir **redir)
+{
+	t_redir	*new_redir;
+
+	if (!(*tokens)->next || (*tokens)->next->type != TOKEN_WORD)
+		return (printf("Error: expected filename after redirection\n"), 0);
+	new_redir = malloc(sizeof(t_redir));
+	if (!new_redir)
+		return (0);
+	new_redir->type = (*tokens)->type;
+	new_redir->file = ft_strdup((*tokens)->next->data);
+	if (!new_redir->file)
+		return (free(new_redir), 0);
+	new_redir->next = NULL;
+	add_redir_to_list(redir, new_redir);
+	*tokens = (*tokens)->next;
+	if (*tokens)
+		*tokens = (*tokens)->next;
+	return (1);
+}
+
+t_ast	*build_cmd_node(char **args, int arg_count, t_redir *redir)
 {
 	t_ast	*node;
 
 	node = malloc(sizeof(t_ast));
 	if (!node)
-		return (NULL);
+		return (free_args(args), free_redir(redir), NULL);
 	node->type = 1;
 	node->left = NULL;
 	node->right = NULL;
@@ -62,16 +116,25 @@ t_ast	*create_command(char **args, int arg_count, t_redir *redir)
 	return (node);
 }
 
-static void	free_args(char **args, int count)
+static char	**init_args_array(int count)
 {
-	int	i;
+	char	**args;
 
-	i = 0;
+	args = malloc((count + 1) * sizeof(char *));
 	if (!args)
-		return ;
-	while (i < count)
-		free(args[i++]);
-	free(args);
+		return (NULL);
+	ft_memset(args, 0, (count + 1) * sizeof(char *));
+	return (args);
+}
+
+static int	handle_word_token(t_token **tokens, char **args, int *count)
+{
+	args[*count] = ft_strdup((*tokens)->data);
+	if (!args[*count])
+		return (0);
+	(*count)++;
+	*tokens = (*tokens)->next;
+	return (1);
 }
 
 t_ast	*parse_command(t_token **tokens)
@@ -80,45 +143,29 @@ t_ast	*parse_command(t_token **tokens)
 	char	**args;
 	t_redir	*redir;
 
-	count = count_args(*tokens);
-	args = malloc((count + 1) * sizeof(char *));
-	if (!args)
-		return (NULL);
+	count = count_cmd_args(*tokens);
+	args = init_args_array(count);
 	count = 0;
 	redir = NULL;
 	while (*tokens)
 	{
 		if ((*tokens)->type == TOKEN_WORD)
 		{
-			args[count] = ft_strdup((*tokens)->data);
-			if (!args[count])
-			{
-				free_args(args, count);
-				if (redir)
-					free_redir(redir);
-				return (NULL);
-			}
-			count++;
-			*tokens = (*tokens)->next;
+			if (!handle_word_token(tokens, args, &count))
+				return (free_args(args), free_redir(redir), NULL);
 		}
 		else if ((*tokens)->type >= TOKEN_REDIRECT_IN)
 		{
-			if (!create_redirect_ast(tokens, &redir))
-			{
-				free_args(args, count);
-				if (redir)
-					free_redir(redir);
-				return (NULL);
-			}
+			if (!parse_redir(tokens, &redir))
+				return (free_args(args), free_redir(redir), NULL);
 		}
 		else
 			break ;
 	}
-	args[count] = NULL;
-	return (create_command(args, count, redir));
+	return (build_cmd_node(args, count, redir));
 }
 
-t_ast	*create_pipe(t_ast *left, t_ast *right)
+t_ast	*build_pipe_node(t_ast *left, t_ast *right)
 {
 	t_ast	*node;
 
@@ -134,7 +181,7 @@ t_ast	*create_pipe(t_ast *left, t_ast *right)
 	return (node);
 }
 
-t_ast	*parse_pipeline(t_token **tokens)
+t_ast	*parse_pipeline(t_mini *mini, t_token **tokens)
 {
 	t_ast	*left;
 	t_ast	*right;
@@ -143,8 +190,8 @@ t_ast	*parse_pipeline(t_token **tokens)
 	if (*tokens && (*tokens)->type == TOKEN_PIPE)
 	{
 		*tokens = (*tokens)->next;
-		right = parse_pipeline(tokens);
-		return (create_pipe(left, right));
+		right = parse_pipeline(mini, tokens);
+		return (build_pipe_node(left, right));
 	}
 	return (left);
 }
@@ -154,46 +201,8 @@ int	build_ast(t_mini *mini)
 	t_token	*cur;
 
 	cur = mini->token;
-	mini->ast = parse_pipeline(&cur);
+	mini->ast = parse_pipeline(mini, &cur);
 	if (!mini->ast)
-		return (free_ast(mini->ast), 1);
-	// free_tokens(mini); //TODO free this when ast is working
+		return (1);
 	return (0);
-}
-
-void	free_redir(t_redir *redir)
-{
-	t_redir	*tmp;
-
-	while (redir)
-	{
-		tmp = redir->next;
-		if (redir->file)
-			free(redir->file);
-		free(redir);
-		redir = tmp;
-	}
-}
-
-void	free_ast(t_ast *node)
-{
-	int	i;
-
-	if (!node)
-		return ;
-	free_ast(node->left);
-	free_ast(node->right);
-	if (node->args)
-	{
-		i = 0;
-		while (node->args[i])
-		{
-			free(node->args[i]);
-			i++;
-		}
-		free(node->args);
-	}
-	if (node->redir)
-		free_redir(node->redir);
-	free(node);
 }

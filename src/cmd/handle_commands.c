@@ -23,14 +23,12 @@ int	is_builtin_command(char *cmd)
 }
 
 // Function to execute builtin commands
-int	execute_builtin(t_mini *mini, char **argv, t_redir *redir)
+int	execute_builtin(t_mini *mini, t_ast *node, t_redir *redir)
 {
 	int	result;
 	// int	stdin_backup;
 	// int	stdout_backup;
 
-	(void) argv;
-	(void) redir;
 /* 	if (backup_fd(&stdin_backup, &stdout_backup) == -1)
 		return (1);
 	if (apply_redirections(redir) == -1)
@@ -38,8 +36,8 @@ int	execute_builtin(t_mini *mini, char **argv, t_redir *redir)
 		restore_fd(stdin_backup, stdout_backup);
 		return (1);
 	} */
-	if (ft_strcmp(mini->ast->args[0], "echo") == 0)
-		result = ft_echo(mini->ast); // You might want to pass argv here too
+	if (ft_strcmp(node->args[0], "echo") == 0)
+		result = ft_echo(node); // You might want to pass argv here too
 	else
 		result = 0;
 /* 	else if (ft_strcmp(mini->ast, "pwd") == 0)
@@ -108,8 +106,10 @@ int	execute_command(t_mini *mini)
 		return (-1);
 	} */
 	cmd = mini->ast;
+	while (cmd->left)
+		cmd = cmd->left;
 	if (is_builtin_command(cmd->args[0]))
-		result = execute_builtin(mini, cmd->args, cmd->redir);
+		result = execute_builtin(mini, cmd, cmd->redir);
 	else
 		result = execute_external_command(mini, cmd->args, mini->ast->redir);
 	// restore_fd(stdin, stdout);
@@ -143,9 +143,10 @@ void	handle_commands(t_mini *mini, char *input)
 		return ;
 	}
 	ft_tokenizer(mini, input);
-	if (mini->token == NULL)
+	free_tokens(mini);
+	if (mini->ast == NULL)
 		return ;
 	execute_command(mini);
 	//close(mini->ast->redir->fd);
-	free_tokens(mini);
+	free_ast(mini->ast);
 }
