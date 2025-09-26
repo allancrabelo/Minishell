@@ -33,6 +33,7 @@ SRCSLIST	:=	main \
 				ft_exit \
 				ft_pwd \
 				ft_env \
+				heredoc \
 				redirections \
 				redirections_executor \
 				tokenizer \

@@ -90,6 +90,9 @@ int	parse_redir(t_token **tokens, t_redir **redir)
 		return (0);
 	new_redir->type = (*tokens)->type;
 	new_redir->file = ft_strdup((*tokens)->next->data);
+	new_redir->heredoc_delimeter = NULL;
+	if (new_redir->type == TOKEN_HEREDOC)
+		new_redir->heredoc_delimeter = ft_strdup((*tokens)->next->data);
 	if (!new_redir->file)
 		return (free(new_redir), 0);
 	new_redir->next = NULL;

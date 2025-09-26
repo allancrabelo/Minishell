@@ -52,7 +52,6 @@ int	execute_pipe_node(t_mini *mini, t_ast *node)
 		execute_right_pipe(mini, node->right, pipefd);
 	else if (pid_right < 0)
 	{
-
 		close(pipefd[0]);
 		close(pipefd[1]);
 		kill(pid_left, SIGTERM);

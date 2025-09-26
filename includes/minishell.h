@@ -51,10 +51,11 @@ typedef struct s_token
 
 typedef struct s_redir
 {
-	t_token_type		type;
-	char				*file;
-	int					fd;
-	struct s_redir		*next;
+	t_token_type	type;
+	char			*file;
+	char			*heredoc_delimeter;
+	int				fd;
+	struct s_redir	*next;
 }	t_redir;
 
 typedef struct s_ast
@@ -87,7 +88,7 @@ void	handle_commands(t_mini *mini, char *input);
 int		execute_builtin(t_mini *mini, t_ast *node, t_redir *redir);
 void	execute_ast_node(t_mini *mini, t_ast *node);
 int		execute_external(t_mini *mini, char **argv);
-int		execute_command(t_mini *mini, t_ast *node);
+int 	execute_command(t_mini *mini, t_ast *node);
 int		execute_external_command(t_mini *mini, t_ast *node, t_redir *redirects);
 
 // [BUILTINS]:
@@ -107,9 +108,14 @@ int		apply_redirections(t_redir *redirections);
 int		backup_fd(int *stdin_backup, int *stdout_backup);
 void	restore_fd(int stdin_backup, int stdout_backup);
 
+// Heredoc:
+int		redirect_heredoc(t_redir *redirect);
+
 // Signals
 void	sighandler(int signal);
 void	signal_init(void);
+void	heredoc_sighandler(int signal);
+void	setup_heredoc_signals(void);
 
 // Tokenizer
 //void	ft_tokenizer(t_mini *mini, char *input);
