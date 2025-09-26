@@ -47,7 +47,6 @@ int	execute_pipe_node(t_mini *mini, t_ast *node)
 		close(pipefd[1]);
 		return (perror("fork left"), 1);
 	}
-	ft_putnbr_fd(mini->exit_status, pipefd[1]);
 	pid_right = fork();
 	if (pid_right == 0)
 		execute_right_pipe(mini, node->right, pipefd);
