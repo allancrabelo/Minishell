@@ -1,76 +1,71 @@
-/* #include "../../includes/minishell.h"
+#include "../../includes/minishell.h"
 
-int	create_pipes(t_mini *mini)
+static void	execute_left_pipe(t_mini *mini, t_ast *left, int pipefd[2])
 {
-	int	i;
-
-	mini->pipe_count = count_pipes(mini->token);
-	if (mini->pipe_count == 0)
-		return (1);
-	mini->pipes = malloc(sizeof(int *) * mini->pipe_count);
-	if (!mini->pipes)
-		return (0);
-	i = 0;
-	while (i < mini->pipe_count)
+	close(pipefd[0]);
+	dup2(pipefd[1], STDOUT_FILENO);
+	close(pipefd[1]);
+	if (apply_redirections(left->redir) == -1)
 	{
-		mini->pipes[i] = malloc(sizeof(int) * 2);
-		if (!mini->pipes[i] || pipe(mini->pipes[i]) == -1)
-		{
-			while (--i >= 0)
-			{
-				close(mini->pipes[i][0]);
-				close(mini->pipes[i][1]);
-				free(mini->pipes[i]);
-			}
-			free (mini->pipes);
-			return (0);
-		}
-		i++;
+		mini->exit_status = 1;
+		exit(1);
 	}
-	return (1);
+	execute_ast_node(mini, left);
+	exit(mini->exit_status);
 }
 
-int	execute_pipeline(t_mini *mini)
+static void	execute_right_pipe(t_mini *mini, t_ast *right, int pipefd[2])
 {
-	int		cmd_count;
-	int		i;
-	t_token	*current;
-	t_token	*cmd_start;
-	int		status;
-
-	i = 0;
-	current = mini->token;
-	cmd_start = current;
-	cmd_count = mini->pipe_count + 1;
-	mini->child_pids = malloc(sizeof(pid_t) * cmd_count);
-	if (!mini->child_pids)
-		return (1);
-	while (i < cmd_count)
+	close(pipefd[1]);
+	dup2(pipefd[0], STDIN_FILENO);
+	close(pipefd[0]);
+	if (apply_redirections(right->redir) == -1)
 	{
-		mini->child_pids[i] = fork();
-		if (mini->child_pids[i] == 0)
-			single_command(mini, cmd_start, i, cmd_count);
-		else if (mini->child_pids[i] < 0)
-			return (perror("fork"), 1);
-		while (current && current->type != TOKEN_PIPE)
-			current = current->next;
-		if (current && current->type == TOKEN_PIPE)
-		{
-			current = current->next;
-			cmd_start = current;
-		}
-		i++;
+		mini->exit_status = 1;
+		exit(1);
 	}
-	close_pipes(mini);
-	i = 0;
-	while (i < cmd_count)
-	{
-		waitpid(mini->child_pids[i], &status, 0);
-		if (WIFEXITED(status))
-			mini->exit_status = WEXITSTATUS(status);
-		i++;
-	}
-	free (mini->child_pids);
-	return (0);
+	execute_ast_node(mini, right);
+	exit(mini->exit_status);
 }
- */
+
+int	execute_pipe_node(t_mini *mini, t_ast *node)
+{
+	int		pipefd[2];
+	pid_t	pid_left;
+	pid_t	pid_right;
+	int		status_left;
+	int		status_right;
+
+	if (pipe(pipefd) == -1)
+		return (perror("pipe"), 1);
+	pid_left = fork();
+	if (pid_left == 0)
+		execute_left_pipe(mini, node->left, pipefd);
+	else if (pid_left < 0)
+	{
+		close(pipefd[0]);
+		close(pipefd[1]);
+		return (perror("fork left"), 1);
+	}
+	ft_putnbr_fd(mini->exit_status, pipefd[1]);
+	pid_right = fork();
+	if (pid_right == 0)
+		execute_right_pipe(mini, node->right, pipefd);
+	else if (pid_right < 0)
+	{
+
+		close(pipefd[0]);
+		close(pipefd[1]);
+		kill(pid_left, SIGTERM);
+		return (perror("fork right"), 1);
+	}
+	close(pipefd[0]);
+	close(pipefd[1]);
+	waitpid(pid_left, &status_left, 0);
+	waitpid(pid_right, &status_right, 0);
+	if (WIFEXITED(status_right))
+		mini->exit_status = WEXITSTATUS(status_right);
+	else if (WIFSIGNALED(status_right))
+		mini->exit_status = 128 + WTERMSIG(status_right);
+	return (mini->exit_status);
+}

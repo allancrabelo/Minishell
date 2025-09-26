@@ -1,22 +1,21 @@
 #include "../../includes/minishell.h"
 #include "../../includes/colors.h"
 
-static void	execute_ast_node(t_mini *mini, t_ast *node)
+void	execute_ast_node(t_mini *mini, t_ast *node)
 {
 	if (!node)
 		return ;
 
-	// Execute left subtree first (for pipes)
-	if (node->left)
-		execute_ast_node(mini, node->left);
-
-	// Execute current node if it's a command
-	if (node->type == 1) // Command node
-		execute_command(mini);
-
-	// Execute right subtree
-	if (node->right)
-		execute_ast_node(mini, node->right);
+	if (node->type == 0)
+	{
+		execute_pipe_node(mini, node);
+		return;
+	}
+	if (node->type == 1)
+	{
+		execute_command(mini, node);
+		return ;
+	}
 }
 
 int	is_builtin_command(char *cmd)
@@ -44,18 +43,22 @@ int	is_builtin_command(char *cmd)
 int	execute_builtin(t_mini *mini, t_ast *node, t_redir *redir)
 {
 	int	result;
-	// int	stdin_backup;
-	// int	stdout_backup;
+	int	stdin_backup;
+	int	stdout_backup;
 
-/* 	if (backup_fd(&stdin_backup, &stdout_backup) == -1)
+	(void)mini;
+	if (backup_fd(&stdin_backup, &stdout_backup) == -1)
 		return (1);
 	if (apply_redirections(redir) == -1)
 	{
+		mini->exit_status = 1;
 		restore_fd(stdin_backup, stdout_backup);
 		return (1);
-	} */
+	}
 	if (ft_strcmp(node->args[0], "echo") == 0)
-		result = ft_echo(node); // You might want to pass argv here too
+		result = ft_echo(node);
+	else if (ft_strcmp(node->args[0], "env") == 0)
+		result = ft_env(mini);
 	else
 		result = 0;
 /* 	else if (ft_strcmp(mini->ast, "pwd") == 0)
@@ -69,16 +72,15 @@ int	execute_builtin(t_mini *mini, t_ast *node, t_redir *redir)
 	//     result = ft_export(mini, argv));
 	// if (ft_strcmp(mini->ast, "unset") == 0)
 	//     result = ft_unset(mini, argv));
-	else if (ft_strcmp(mini->ast, "env") == 0)
-		result = ft_env(mini);
+
 	else
 		result = 0; */
-	// restore_fd(stdin_backup, stdout_backup);
+	restore_fd(stdin_backup, stdout_backup);
 	return (result);
 }
 
 // Function to execute external commands using execve
-int	execute_external_command(t_mini *mini, char **argv, t_redir *redirects)
+int	execute_external_command(t_mini *mini, t_ast *node, t_redir *redirects)
 {
 	pid_t	pid;
 	int		exit_code;
@@ -89,7 +91,7 @@ int	execute_external_command(t_mini *mini, char **argv, t_redir *redirects)
 	{
 		if (apply_redirections(redirects) == -1)
 			exit(1);
-		exit_code = execute_external(mini, argv);
+		exit_code = execute_external(mini, node->args);
 		exit(exit_code);
 	}
 	else if (pid < 0)
@@ -104,35 +106,14 @@ int	execute_external_command(t_mini *mini, char **argv, t_redir *redirects)
 }
 
 // Main command execution function
-int	execute_command(t_mini *mini)
+int execute_command(t_mini *mini, t_ast *node)
 {
-	t_ast	*cmd;
-	int		result;
-
-/* 	cmd = parse_command(tokens);
-	cmd_token = find_first_command(tokens);
-	if (!cmd)
-		return (printf("minishell: syntax error\n"), 1);
-	if (!cmd_token || !cmd->args || !cmd->args[0])
-		return (free_cmd(cmd), 0);
-	if (backup_fd(&stdin, &stdout) == -1)
-		return (free_cmd(cmd), 1);
-	if (apply_redirections(cmd->redir) == -1)
-	{
-		restore_fd(stdin, stdout);
-		free_cmd(cmd);
-		return (-1);
-	} */
-	cmd = mini->ast;
-	while (cmd->left)
-		cmd = cmd->left;
-	if (is_builtin_command(cmd->args[0]))
-		result = execute_builtin(mini, cmd, cmd->redir);
+	if (!node || !node->args || !node->args[0])
+		return (0);
+	if (is_builtin_command(node->args[0]))
+		return (execute_builtin(mini, node, node->redir));
 	else
-		result = execute_external_command(mini, cmd->args, mini->ast->redir);
-	// restore_fd(stdin, stdout);
-	// free_cmd(cmd);
-	return (result);
+		return (execute_external_command(mini, node, node->redir));
 }
 
 void	free_tokens(t_mini *mini)

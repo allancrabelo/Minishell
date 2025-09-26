@@ -49,25 +49,16 @@ void	print_command_error(char *cmd, char *error)
 
 int	execute_external(t_mini *mini, char **argv)
 {
-	char	*cmd_path;
+	char *full_path;
 
-	if (!argv || !argv[0])
-		return (1);
-	cmd_path = find_command_path(mini, argv[0]);
-	if (!cmd_path)
+	full_path = find_command_path(mini, argv[0]);
+	if (!full_path)
 	{
 		print_command_error(argv[0], "command not found");
-		return (COMMAND_NOT_FOUND);
+		return (127);
 	}
-	if (execve(cmd_path, argv, mini->envp) == -1)
-	{
-		if (errno == EACCES)
-			print_command_error(argv[0], "Permission denied");
-		else
-			print_command_error(argv[0], "execution failed");
-		free(cmd_path);
-		return (COMMAND_DENIED_OR_FAILED);
-	}
-	free(cmd_path);
-	return (0);
+	execve(full_path, argv, mini->envp);
+	print_command_error(argv[0], strerror(errno));
+	free(full_path);
+	return (126);
 }

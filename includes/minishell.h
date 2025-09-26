@@ -84,7 +84,11 @@ typedef struct s_mini
 // Commands
 void	do_commands(t_mini *mini, char *input);
 void	handle_commands(t_mini *mini, char *input);
-int		execute_builtin(t_mini *mini, char **argv, t_redir *redir);
+int		execute_builtin(t_mini *mini, t_ast *node, t_redir *redir);
+void	execute_ast_node(t_mini *mini, t_ast *node);
+int		execute_external(t_mini *mini, char **argv);
+int		execute_command(t_mini *mini, t_ast *node);
+int		execute_external_command(t_mini *mini, t_ast *node, t_redir *redirects);
 
 // [BUILTINS]:
 //int		ft_echo(char **commands);
@@ -100,8 +104,8 @@ int		redirect_in(t_redir *redirect);
 int		redirect_out(t_redir *redirect);
 int		redirect_append(t_redir *redirect);
 int		apply_redirections(t_redir *redirections);
-// int		backup_fd(int *stdin, int *stdout);
-// void	restore_fd(int stdin, int stdout);
+int		backup_fd(int *stdin_backup, int *stdout_backup);
+void	restore_fd(int stdin_backup, int stdout_backup);
 
 // Signals
 void	sighandler(int signal);
@@ -136,17 +140,9 @@ char	*get_env_var(t_mini *mini, char *var_name);
 int		build_ast(t_mini *mini);
 void	free_ast(t_ast *node);
 
-/* //[Pipes]:
+//[Pipes]
 // Pipes Executor
-int		create_pipes(t_mini *mini);
-int		execute_pipeline(t_mini *mini); */
-
-// // Pipes Utils
-// int		has_pipe(char *input);
-// int		count_pipes(t_token	*token);
-// void	single_command(t_mini *mini, t_token *cmd_start, int i, int cmds);
-// void	setup_redirections(t_mini *mini, int i, int cmds);
-// void	close_pipes(t_mini *mini);
+int		execute_pipe_node(t_mini *mini, t_ast *node);
 
 //External Commands
 int		execute_external(t_mini *mini, char **argv);

@@ -25,27 +25,27 @@ int	apply_redirections(t_redir *redirections)
 	return (0);
 }
 
-/* void	restore_fd(int stdin, int stdout)
+void	restore_fd(int stdin_backup, int stdout_backup)
 {
-	if (stdin != -1)
+	if (stdin_backup != -1)
 	{
-		dup2(stdin, STDIN_FILENO);
-		close (stdin);
+		dup2(stdin_backup, STDIN_FILENO);
+		close (stdin_backup);
 	}
-	if (stdout != -1)
+	if (stdout_backup != -1)
 	{
-		dup2(stdout, STDOUT_FILENO);
-		close (stdout);
+		dup2(stdout_backup, STDOUT_FILENO);
+		close (stdout_backup);
 	}
-} */
+}
 
-int	backup_fd(int *stdin, int *stdout)
+int	backup_fd(int *stdin_backup, int *stdout_backup)
 {
-	*stdin = dup(STDIN_FILENO);
-	*stdout = dup(STDOUT_FILENO);
-	if (*stdin == -1 || *stdout == -1)
+	*stdin_backup = dup(STDIN_FILENO);
+	*stdout_backup = dup(STDOUT_FILENO);
+	if (*stdin_backup == -1 || *stdout_backup == -1)
 	{
-		// restore_fd(*stdin, *stdout);
+		restore_fd(*stdin_backup, *stdout_backup);
 		return (-1);
 	}
 	return (0);
