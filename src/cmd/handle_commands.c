@@ -1,6 +1,24 @@
 #include "../../includes/minishell.h"
 #include "../../includes/colors.h"
 
+static void	execute_ast_node(t_mini *mini, t_ast *node)
+{
+	if (!node)
+		return ;
+
+	// Execute left subtree first (for pipes)
+	if (node->left)
+		execute_ast_node(mini, node->left);
+
+	// Execute current node if it's a command
+	if (node->type == 1) // Command node
+		execute_command(mini);
+
+	// Execute right subtree
+	if (node->right)
+		execute_ast_node(mini, node->right);
+}
+
 int	is_builtin_command(char *cmd)
 {
 	if (!cmd)
@@ -143,10 +161,13 @@ void	handle_commands(t_mini *mini, char *input)
 		return ;
 	}
 	ft_tokenizer(mini, input);
-	free_tokens(mini);
-	if (mini->ast == NULL)
+	if (mini->token == NULL)
 		return ;
-	execute_command(mini);
-	//close(mini->ast->redir->fd);
-	free_ast(mini->ast);
+	execute_ast_node(mini, mini->ast);
+	free_tokens(mini);
+	if (mini->ast)
+	{
+		free_ast(mini->ast);
+		mini->ast = NULL;
+	}
 }

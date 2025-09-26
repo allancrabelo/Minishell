@@ -86,7 +86,7 @@ ${LIBFT}:
 clean:
 	@echo ""
 	@echo "${RED}Deleting ${NAME} Objects ...${RESET}"
-	${RM} -r ${OBJSDIR}
+	@${RM} -r ${OBJSDIR}
 	@make -C ${LIBFTDIR} clean --no-print-directory --quiet
 
 fclean:
