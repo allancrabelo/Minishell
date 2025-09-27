@@ -3,3 +3,5 @@
 
 # Minishell
 A recreation of Bash in C. Features command execution, custom parser, pipes, redirections, heredocs, environment variable handling, built-in commands (cd, echo, export, etc.), and full signal management (e.g., Ctrl+C). Built as a team project with focus on performance, modularity, memory safety, and clean architecture.
+
+![Alt](https://repobeats.axiom.co/api/embed/be53a800c941ce8e886287edb88ad22311d6a860.svg "Repobeats analytics image")
