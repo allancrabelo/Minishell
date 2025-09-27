@@ -1,5 +1,6 @@
 #include "../../../includes/minishell.h"
 
+
 int	apply_redirections(t_redir *redirections)
 {
 	t_redir	*cur;
@@ -32,12 +33,12 @@ void	restore_fd(int stdin_backup, int stdout_backup)
 	if (stdin_backup != -1)
 	{
 		dup2(stdin_backup, STDIN_FILENO);
-		close (stdin_backup);
+		close(stdin_backup);
 	}
 	if (stdout_backup != -1)
 	{
 		dup2(stdout_backup, STDOUT_FILENO);
-		close (stdout_backup);
+		close(stdout_backup);
 	}
 }
 

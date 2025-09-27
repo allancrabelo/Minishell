@@ -51,7 +51,8 @@ int	execute_builtin(t_mini *mini, t_ast *node, t_redir *redir)
 		return (1);
 	if (apply_redirections(redir) == -1)
 	{
-		mini->exit_status = 1;
+		if (mini->exit_status == 0)
+			mini->exit_status = 1;
 		restore_fd(stdin_backup, stdout_backup);
 		return (1);
 	}
@@ -123,10 +124,13 @@ void	free_tokens(t_mini *mini)
 
 	cur = mini->token;
 	mini->token = NULL;
+	if (!cur)
+		return ;
 	while (cur)
 	{
 		tmp = cur->next;
-		free(cur->data);
+		if (cur->data)
+			free(cur->data);
 		free(cur);
 		cur = tmp;
 	}
@@ -136,15 +140,20 @@ void	free_tokens(t_mini *mini)
 
 void	handle_commands(t_mini *mini, char *input)
 {
+	int	original_status;
+
 	if (input[0] == '#') //TODO usar para teste
 	{
 		printf(BOLD SCYAN "%s\n" SRESET, input);
 		return ;
 	}
+	original_status = mini->exit_status;
 	ft_tokenizer(mini, input);
 	if (mini->token == NULL)
 		return ;
 	execute_ast_node(mini, mini->ast);
+	if (mini->exit_status == 0)
+		mini->exit_status = original_status;
 	free_tokens(mini);
 	if (mini->ast)
 	{

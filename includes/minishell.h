@@ -116,6 +116,7 @@ void	sighandler(int signal);
 void	signal_init(void);
 void	heredoc_sighandler(int signal);
 void	setup_heredoc_signals(void);
+void	wait_update_main(int pid, int *status);
 
 // Tokenizer
 //void	ft_tokenizer(t_mini *mini, char *input);

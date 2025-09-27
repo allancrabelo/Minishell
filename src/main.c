@@ -16,8 +16,9 @@ static void	main_loop(t_mini *mini)
 		input = readline(LINE);
 		if (!input)
 		{
-			write(1, "exit\n", 5); // Verify output
-			return ;
+			write(1, "exit\n", 5); // Check outpu
+			free_tokens(mini);
+			break;
 		}
 		else
 			do_commands(mini, input);

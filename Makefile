@@ -93,7 +93,6 @@ fclean:
 	@echo ""
 	@echo "${RED}Deleting ${NAME} Executable ...${RESET}"
 	@${RM} ${NAME}
-	@${RM} readline.supp
 	@${RM} -r ${OBJSDIR}
 	@make -C ${LIBFTDIR} fclean --no-print-directory --quiet
 
@@ -106,20 +105,8 @@ re: fclean all
 run: ${NAME}
 	./${NAME}
 
-val: $(NAME)
-	@echo "{" > readline.supp
-	@echo "	leak readline" >> readline.supp
-	@echo "	Memcheck:Leak" >> readline.supp
-	@echo "..." >> readline.supp
-	@echo "	fun:readline" >> readline.supp
-	@echo "}" >> readline.supp
-	@echo "{" >> readline.supp
-	@echo "	leak add_history" >> readline.supp
-	@echo "	Memcheck:Leak" >> readline.supp
-	@echo "..." >> readline.supp
-	@echo "	fun:add_history" >> readline.supp
-	@echo "}" >> readline.supp
-	@valgrind $(VALFLAGS) ./$(NAME)
+val: re
+	valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline_supression ./minishell
 
 debug: CFLAGS += -g -fsanitize=address -fno-omit-frame-pointer
 debug: re
