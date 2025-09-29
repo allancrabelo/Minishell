@@ -27,6 +27,7 @@
 #  define FD_MAX 1024
 # endif
 
+extern volatile sig_atomic_t	g_signal;
 // Structs
 typedef enum e_token_type
 {

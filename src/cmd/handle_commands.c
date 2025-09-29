@@ -100,6 +100,7 @@ int	execute_external_command(t_mini *mini, t_ast *node, t_redir *redirects)
 	else
 	{
 		waitpid(pid, &status, 0);
+		mini->exit_status = status;
 		if (WIFEXITED(status))
 			return (WEXITSTATUS(status));
 		return (1);

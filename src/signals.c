@@ -1,9 +1,10 @@
 #include "../includes/minishell.h"
 
+volatile sig_atomic_t	g_signal = 0;
 
 void	sighandler(int signal)
 {
-	(void)signal;
+	g_signal = 128 + WTERMSIG(signal);
 	write(1, "\n", 1);
 	rl_replace_line("", 0);
 	rl_on_new_line();
