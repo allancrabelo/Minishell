@@ -1,4 +1,4 @@
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 char	*ft_strcpy(char *dest, char *src)
 {

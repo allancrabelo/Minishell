@@ -5,7 +5,7 @@ void	execute_ast_node(t_mini *mini, t_ast *node)
 {
 	if (!node)
 		return ;
-
+	execute_ast_node(mini, node->left);
 	if (node->type == 0)
 	{
 		execute_pipe_node(mini, node);
@@ -13,9 +13,11 @@ void	execute_ast_node(t_mini *mini, t_ast *node)
 	}
 	if (node->type == 1)
 	{
-		execute_command(mini, node);
+		mini->exit_status = execute_command(mini, node);
 		return ;
 	}
+	execute_ast_node(mini, node->right);
+
 }
 
 int	is_builtin_command(char *cmd)
@@ -49,10 +51,10 @@ int	execute_builtin(t_mini *mini, t_ast *node, t_redir *redir)
 	(void)mini;
 	if (backup_fd(&stdin_backup, &stdout_backup) == -1)
 		return (1);
-	if (apply_redirections(redir) == -1)
+	if (apply_redirections(redir, mini) == -1)
 	{
-		if (mini->exit_status == 0)
-			mini->exit_status = 1;
+		// if (mini->exit_status == 0)
+		// 	mini->exit_status = 1;
 		restore_fd(stdin_backup, stdout_backup);
 		return (1);
 	}
@@ -60,15 +62,16 @@ int	execute_builtin(t_mini *mini, t_ast *node, t_redir *redir)
 		result = ft_echo(node);
 	else if (ft_strcmp(node->args[0], "env") == 0)
 		result = ft_env(mini);
+	else if (ft_strcmp(node->args[0], "exit") == 0)
+		result = ft_exit(mini);
+	else if (ft_strcmp(node->args[0], "cd") == 0)
+		result = ft_cd(mini, node);
 	else
 		result = 0;
 /* 	else if (ft_strcmp(mini->ast, "pwd") == 0)
 		result = ft_pwd();
-	else if (ft_strcmp(mini->ast, "exit") == 0)
-		result = ft_exit(mini);
 	// TODO: Add other builtin implementations
-	// if (ft_strcmp(mini->ast, "cd") == 0)
-	//     result = ft_cd(mini, argv));
+
 	// if (ft_strcmp(mini->ast, "export") == 0)
 	//     result = ft_export(mini, argv));
 	// if (ft_strcmp(mini->ast, "unset") == 0)
@@ -88,9 +91,11 @@ int	execute_external_command(t_mini *mini, t_ast *node, t_redir *redirects)
 	int		status;
 
 	pid = fork();
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, SIG_IGN);
 	if (pid == 0)
 	{
-		if (apply_redirections(redirects) == -1)
+		if (apply_redirections(redirects, mini) == -1)
 			exit(1);
 		exit_code = execute_external(mini, node->args);
 		exit(exit_code);
@@ -103,7 +108,7 @@ int	execute_external_command(t_mini *mini, t_ast *node, t_redir *redirects)
 		mini->exit_status = status;
 		if (WIFEXITED(status))
 			return (WEXITSTATUS(status));
-		return (1);
+		return (signal_init(),1);
 	}
 }
 
@@ -141,20 +146,15 @@ void	free_tokens(t_mini *mini)
 
 void	handle_commands(t_mini *mini, char *input)
 {
-	int	original_status;
-
 	if (input[0] == '#') //TODO usar para teste
 	{
 		printf(BOLD SCYAN "%s\n" SRESET, input);
 		return ;
 	}
-	original_status = mini->exit_status;
 	ft_tokenizer(mini, input);
 	if (mini->token == NULL)
 		return ;
 	execute_ast_node(mini, mini->ast);
-	if (mini->exit_status == 0)
-		mini->exit_status = original_status;
 	free_tokens(mini);
 	if (mini->ast)
 	{

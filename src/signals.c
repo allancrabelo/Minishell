@@ -1,4 +1,4 @@
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 volatile sig_atomic_t	g_signal = 0;
 
@@ -15,6 +15,7 @@ void	signal_init(void)
 {
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, sighandler);
+	signal(SIGTSTP, SIG_IGN);
 }
 
 void	wait_update_main(int pid, int *status)
@@ -27,6 +28,7 @@ void	wait_update_main(int pid, int *status)
 void	heredoc_sighandler(int signal)
 {
 	(void)signal;
+	g_signal = 130;
 	write(1, "\n", 1);
 	exit(130);
 }

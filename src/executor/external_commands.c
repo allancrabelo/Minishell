@@ -41,8 +41,9 @@ char	*find_command_path(t_mini *mini, char *cmd)
 
 void	print_command_error(char *cmd, char *error)
 {
+	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(cmd, 2);
-	ft_putstr_fd(":", 2);
+	ft_putstr_fd(": ", 2);
 	ft_putstr_fd(error, 2);
 	ft_putstr_fd("\n", 2);
 }

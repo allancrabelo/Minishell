@@ -76,6 +76,7 @@ typedef struct s_mini
 	t_token			*token;
 	char			*input;
 	char			**envp;
+	int				env_size;
 	int				exit_status;
 	int				pipe_count;
 	int				**pipes;
@@ -101,16 +102,19 @@ int		ft_pwd(void);
 //Env:
 int		ft_env(t_mini *mini);
 
+// Cd:
+int		ft_cd(t_mini *mini, t_ast *node);
+
 // Redirects:
 int		redirect_in(t_redir *redirect);
 int		redirect_out(t_redir *redirect);
 int		redirect_append(t_redir *redirect);
-int		apply_redirections(t_redir *redirections);
+int		apply_redirections(t_redir *redirections, t_mini *mini);
 int		backup_fd(int *stdin_backup, int *stdout_backup);
 void	restore_fd(int stdin_backup, int stdout_backup);
 
 // Heredoc:
-int		redirect_heredoc(t_redir *redirect);
+int		redirect_heredoc(t_redir *redirect, t_mini *mini);
 
 // Signals
 void	sighandler(int signal);

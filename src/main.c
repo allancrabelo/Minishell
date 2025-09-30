@@ -1,4 +1,4 @@
-#include "../includes/minishell.h"
+#include "minishell.h"
 #include "../includes/colors.h"
 
 void	do_commands(t_mini *mini, char *input)
@@ -15,7 +15,11 @@ static char *make_prompt(t_mini *mini)
 
 	status = mini->exit_status;
 	if (g_signal)
+	{
 		status = g_signal;
+		mini->exit_status = g_signal;
+		g_signal = 0;
+	}
 	num = ft_itoa(status);
 	buf[0] = '\0';
 	if (status == 0)
@@ -31,7 +35,7 @@ static char *make_prompt(t_mini *mini)
 		ft_strlcat(buf, "]\001" SBYELLOW "\002 minishell$\001" SRESET "\002 ", sizeof(buf));
 	}
 	free (num);
-	return (buf); // static -> safe to return
+	return (buf);
 }
 
 static void	main_loop(t_mini *mini)
@@ -40,6 +44,7 @@ static void	main_loop(t_mini *mini)
 
 	while (1)
 	{
+		signal_init();
 		input = readline(make_prompt(mini));
 		if (g_signal)
 		{
@@ -48,7 +53,7 @@ static void	main_loop(t_mini *mini)
 		}
 		if (!input)
 		{
-			write(1, "exit\n", 5); // Check output
+			write(1, "exit\n", 5);
 			break;
 		}
 		do_commands(mini, input);
@@ -69,7 +74,8 @@ int	main(int argc, char **argv, char **envp)
 	mini.ast = NULL;
 	mini.envp = envp;
 	mini.exit_status = 0;
+	g_signal = 0;
 	main_loop(&mini);
 	rl_clear_history();
-	exit(mini.exit_status);
+	exit(mini.exit_status); //TODO:Exit status pode sair com erros deveria ser return(0)?
 }

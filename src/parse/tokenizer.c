@@ -1,4 +1,4 @@
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 char	*fill_token_data(t_mini *mini, size_t *i, size_t len)
 {

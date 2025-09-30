@@ -5,7 +5,7 @@ static void	execute_left_pipe(t_mini *mini, t_ast *left, int pipefd[2])
 	close(pipefd[0]);
 	dup2(pipefd[1], STDOUT_FILENO);
 	close(pipefd[1]);
-	if (apply_redirections(left->redir) == -1)
+	if (apply_redirections(left->redir, mini) == -1)
 	{
 		mini->exit_status = 1;
 		exit(1);
@@ -19,7 +19,7 @@ static void	execute_right_pipe(t_mini *mini, t_ast *right, int pipefd[2])
 	close(pipefd[1]);
 	dup2(pipefd[0], STDIN_FILENO);
 	close(pipefd[0]);
-	if (apply_redirections(right->redir) == -1)
+	if (apply_redirections(right->redir, mini) == -1)
 	{
 		mini->exit_status = 1;
 		exit(1);

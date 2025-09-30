@@ -20,6 +20,7 @@ VPATH		:=	src src/utils \
 				src/executor/exit \
 				src/executor/pwd \
 				src/executor/env \
+				src/executor/cd \
 				src/executor/redirections \
 				src/parse \
 				src/expander \
@@ -33,6 +34,7 @@ SRCSLIST	:=	main \
 				ft_exit \
 				ft_pwd \
 				ft_env \
+				ft_cd \
 				heredoc \
 				redirections \
 				redirections_executor \

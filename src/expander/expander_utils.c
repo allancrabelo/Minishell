@@ -1,4 +1,4 @@
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 void	ft_itoa_alternative(int n, char *dst)
 {

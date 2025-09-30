@@ -1,7 +1,7 @@
 #include "../../../includes/minishell.h"
 
 
-int	apply_redirections(t_redir *redirections)
+int	apply_redirections(t_redir *redirections, t_mini *mini)
 {
 	t_redir	*cur;
 	int		result;
@@ -18,7 +18,7 @@ int	apply_redirections(t_redir *redirections)
 		else if (cur->type == TOKEN_REDIRECT_APPEND)
 			result = redirect_append(cur);
 		else if (cur->type == TOKEN_HEREDOC)
-			result = redirect_heredoc(cur);
+			result = redirect_heredoc(cur, mini);
 		else
 			result = -1;
 		if (result == -1)
