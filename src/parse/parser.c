@@ -79,12 +79,15 @@ static int	add_redir_to_list(t_redir **redir, t_redir *new_redir)
 	return (1);
 }
 
-int	parse_redir(t_token **tokens, t_redir **redir)
+int	parse_redir(t_mini *mini, t_token **tokens, t_redir **redir)
 {
 	t_redir	*new_redir;
 
 	if (!(*tokens)->next || (*tokens)->next->type != TOKEN_WORD)
+	{
+		mini->exit_status = 2;
 		return (printf("Error: expected filename after redirection\n"), 0);
+	}
 	new_redir = malloc(sizeof(t_redir));
 	if (!new_redir)
 		return (0);
@@ -140,7 +143,7 @@ static int	handle_word_token(t_token **tokens, char **args, int *count)
 	return (1);
 }
 
-t_ast	*parse_command(t_token **tokens)
+t_ast	*parse_command(t_mini *mini, t_token **tokens)
 {
 	int		count;
 	char	**args;
@@ -159,7 +162,7 @@ t_ast	*parse_command(t_token **tokens)
 		}
 		else if ((*tokens)->type >= TOKEN_REDIRECT_IN)
 		{
-			if (!parse_redir(tokens, &redir))
+			if (!parse_redir(mini, tokens, &redir))
 				return (free_args(args), free_redir(redir), NULL);
 		}
 		else
@@ -189,7 +192,7 @@ t_ast	*parse_pipeline(t_mini *mini, t_token **tokens)
 	t_ast	*left;
 	t_ast	*right;
 
-	left = parse_command(tokens);
+	left = parse_command(mini, tokens);
 	if (*tokens && (*tokens)->type == TOKEN_PIPE)
 	{
 		*tokens = (*tokens)->next;
