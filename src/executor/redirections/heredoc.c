@@ -9,7 +9,6 @@ static char	*read_heredoc_input(char *delimeter, int *interrupted)
 	content = ft_strdup("");
 	if (!content)
 		return (NULL);
-	setup_heredoc_signals();
 	while (1)
 	{
 		line = readline("> ");
@@ -53,9 +52,9 @@ static int	create_heredoc_file(char *delimiter, t_mini *mini)
 
 	interrupted = 0;
 	pid = fork();
+	setup_heredoc_signals();
 	if (pid == 0)
 	{
-		// Child process for heredoc
 		fd = open("/tmp/minishell_heredoc", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (fd == -1)
 			exit(1);
@@ -71,25 +70,23 @@ static int	create_heredoc_file(char *delimiter, t_mini *mini)
 	}
 	else if (pid > 0)
 	{
-		// Parent process
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
 		{
-			// Heredoc was interrupted by Ctrl+C
-			mini->exit_status = 128 + g_signal; // Set exit status directly
-			signal_init(); // Restore original signals
+			mini->exit_status = 128 + g_signal;
+			signal_init();
 			return (-1);
 		}
 		else if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 		{
-			mini->exit_status = 128 + g_signal; // Set exit status directly
-			signal_init(); // Restore original signals
+			mini->exit_status = 128 + g_signal;
+			signal_init();
 			return (-1);
 		}
-		
+		mini->exit_status = 128 + g_signal;
 		fd = open("/tmp/minishell_heredoc", O_RDONLY);
 		unlink("/tmp/minishell_heredoc");
-		signal_init(); // Restore original signals
+		signal_init();
 		return (fd);
 	}
 	return (-1);

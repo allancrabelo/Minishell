@@ -1,7 +1,5 @@
 #include "minishell.h"
 
-volatile sig_atomic_t	g_signal = 0;
-
 void	sighandler(int signal)
 {
 	g_signal = 128 + WTERMSIG(signal);
@@ -13,8 +11,8 @@ void	sighandler(int signal)
 
 void	signal_init(void)
 {
-	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, sighandler);
+	signal(SIGQUIT, SIG_IGN);
 	signal(SIGTSTP, SIG_IGN);
 }
 
@@ -30,7 +28,7 @@ void	heredoc_sighandler(int signal)
 	(void)signal;
 	g_signal = 130;
 	write(1, "\n", 1);
-	exit(130);
+	exit(g_signal);
 }
 
 void	setup_heredoc_signals(void)

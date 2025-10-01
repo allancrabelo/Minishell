@@ -96,7 +96,7 @@ int	execute_external_command(t_mini *mini, t_ast *node, t_redir *redirects)
 	if (pid == 0)
 	{
 		if (apply_redirections(redirects, mini) == -1)
-			exit(1);
+			exit(mini->exit_status);
 		exit_code = execute_external(mini, node->args);
 		exit(exit_code);
 	}
@@ -108,7 +108,7 @@ int	execute_external_command(t_mini *mini, t_ast *node, t_redir *redirects)
 		mini->exit_status = status;
 		if (WIFEXITED(status))
 			return (WEXITSTATUS(status));
-		return (signal_init(),1);
+		return (1);
 	}
 }
 

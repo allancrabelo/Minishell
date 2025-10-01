@@ -1,6 +1,8 @@
 #include "minishell.h"
 #include "../includes/colors.h"
 
+volatile sig_atomic_t	g_signal = 0;
+
 void	do_commands(t_mini *mini, char *input)
 {
 	add_history(input);
