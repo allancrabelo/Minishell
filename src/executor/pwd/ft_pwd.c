@@ -1,23 +1,14 @@
-#include "../../../includes/minishell.h"
+#include "minishell.h"
 
 int ft_pwd(void)
 {
-	char *cwd;
-	char *pwd_env;
+	char	pwd[4046];
 
-	pwd_env = getenv("PWD");
-	if (pwd_env && *pwd_env)
+	if(getcwd(pwd, sizeof(pwd)) == NULL)
 	{
-		printf("%s\n", pwd_env);
-		return (0);
+		perror ("minishell: pwd");
+		return (1);
 	}
-	cwd = getcwd(NULL, 0);
-	if (cwd)
-	{
-		printf("%s\n", cwd);
-		free(cwd);
-		return (0);
-	}
-	perror("pwd");
-	return (1);
+	printf("%s\n", pwd);
+	return (0);
 }
