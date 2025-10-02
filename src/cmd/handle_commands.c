@@ -5,9 +5,11 @@ void	execute_ast_node(t_mini *mini, t_ast *node)
 {
 	if (!node)
 		return ;
-	execute_ast_node(mini, node->left);
 	if (node->type == 0)
 	{
+		if (!node->left || !node->right)
+			return ; //  verificar output
+			//free(deste ponto);
 		execute_pipe_node(mini, node);
 		return;
 	}
@@ -16,6 +18,7 @@ void	execute_ast_node(t_mini *mini, t_ast *node)
 		mini->exit_status = execute_command(mini, node);
 		return ;
 	}
+	execute_ast_node(mini, node->left);
 	execute_ast_node(mini, node->right);
 
 }
