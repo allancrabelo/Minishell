@@ -34,6 +34,5 @@ void	heredoc_sighandler(int signal)
 void	setup_heredoc_signals(void)
 {
 	signal(SIGINT, heredoc_sighandler);
-	signal(SIGQUIT, SIG_IGN);
 }
 

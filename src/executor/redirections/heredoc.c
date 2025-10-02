@@ -68,25 +68,16 @@ static int	create_heredoc_file(char *delimiter, t_mini *mini)
 		close(fd);
 		exit(0);
 	}
-	else if (pid > 0)
+	if (pid > 0)
 	{
-		waitpid(pid, &status, 0);
+		wait_update_main(pid, &status);
 		if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
 		{
-			mini->exit_status = 128 + g_signal;
-			signal_init();
+			mini->exit_status = 130;
 			return (-1);
 		}
-		else if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
-		{
-			mini->exit_status = 128 + g_signal;
-			signal_init();
-			return (-1);
-		}
-		mini->exit_status = 128 + g_signal;
 		fd = open("/tmp/minishell_heredoc", O_RDONLY);
 		unlink("/tmp/minishell_heredoc");
-		signal_init();
 		return (fd);
 	}
 	return (-1);
