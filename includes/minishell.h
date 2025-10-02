@@ -97,7 +97,9 @@ int		execute_external_command(t_mini *mini, t_ast *node, t_redir *redirects);
 //int		ft_echo(char **commands);
 int		ft_echo(t_ast *node);
 int		ft_exit(t_mini *mini);
-int		ft_pwd(void);
+
+// Pwd:
+int		ft_pwd(t_mini *mini);
 
 //Env:
 int		ft_env(t_mini *mini);

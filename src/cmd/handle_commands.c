@@ -72,7 +72,7 @@ int	execute_builtin(t_mini *mini, t_ast *node, t_redir *redir)
 	else if (ft_strcmp(node->args[0], "cd") == 0)
 		result = ft_cd(mini, node);
 	else if (ft_strcmp(node->args[0], "pwd") == 0)
-		result = ft_pwd();
+		result = ft_pwd(mini);
 	else
 		result = 0;
 /*
