@@ -58,7 +58,6 @@ static int	create_heredoc_file(char *delimiter, t_mini *mini)
 		fd = open("/tmp/minishell_heredoc", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (fd == -1)
 			exit(1);
-		
 		content = read_heredoc_input(delimiter, &interrupted);
 		if (content)
 		{

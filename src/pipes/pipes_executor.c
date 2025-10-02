@@ -1,4 +1,4 @@
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 static void	execute_left_pipe(t_mini *mini, t_ast *left, int pipefd[2])
 {

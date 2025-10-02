@@ -112,14 +112,14 @@ int	execute_external_command(t_mini *mini, t_ast *node, t_redir *redirects)
 		mini->exit_status = status;
 		if (WIFEXITED(status))
 			return (WEXITSTATUS(status));
-		return (1);
+		return (g_signal);
 	}
 }
 
 // Main command execution function
 int execute_command(t_mini *mini, t_ast *node)
 {
-	if (!node || !node->args || !node->args[0])
+	if (!node || !node->args || (!node->args[0] && node->redir->type != TOKEN_HEREDOC))
 		return (0);
 	if (is_builtin_command(node->args[0]))
 		return (execute_builtin(mini, node, node->redir));

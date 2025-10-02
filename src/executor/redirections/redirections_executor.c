@@ -1,4 +1,4 @@
-#include "../../../includes/minishell.h"
+#include "minishell.h"
 
 
 int	apply_redirections(t_redir *redirections, t_mini *mini)

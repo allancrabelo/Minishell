@@ -168,6 +168,14 @@ t_ast	*parse_command(t_mini *mini, t_token **tokens)
 		else
 			break ;
 	}
+	if (count == 0 && redir != NULL && redir->type == TOKEN_HEREDOC)
+	{
+		free_args(args);
+		args = init_args_array(1);
+		if (!args)
+			return (free_redir(redir), NULL);
+		count = 0;
+	}
 	return (build_cmd_node(args, count, redir));
 }
 

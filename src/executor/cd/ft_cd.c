@@ -1,4 +1,4 @@
-#include "../../../includes/minishell.h"
+#include "minishell.h"
 
 int	ft_cd(t_mini *mini, t_ast *node)
 {
