@@ -66,10 +66,11 @@ int	execute_builtin(t_mini *mini, t_ast *node, t_redir *redir)
 		result = ft_exit(mini);
 	else if (ft_strcmp(node->args[0], "cd") == 0)
 		result = ft_cd(mini, node);
+	else if (ft_strcmp(node->args[0], "pwd") == 0)
+		result = ft_pwd();
 	else
 		result = 0;
-/* 	else if (ft_strcmp(mini->ast, "pwd") == 0)
-		result = ft_pwd();
+/*
 	// TODO: Add other builtin implementations
 
 	// if (ft_strcmp(mini->ast, "export") == 0)

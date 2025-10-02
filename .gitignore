@@ -3,3 +3,5 @@
 *.a
 minishell
 *.txt
+*.supp
+en.norm.pdf
