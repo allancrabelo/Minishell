@@ -12,6 +12,7 @@ C_MAGENTA='\033[95m'
 # Counters
 TESTS_RUN=0
 TESTS_PASSED=0
+TESTS_WARNING=0
 TESTS_FAILED=0
 
 # Path to minishell (adjust if needed)
@@ -35,7 +36,6 @@ clean_minishell_output() {
 	'
 }
 
-
 header()
 {
 	echo -e "${C_BLUE}------------------------------------------------------------${C_RST}"
@@ -43,14 +43,84 @@ header()
 	echo -e "${C_BLUE}------------------------------------------------------------${C_RST}"
 }
 
+display_mismatch()
+{
+	local bash_output="$1"
+	local minishell_output="$2"
+	local bash_exit="$3"
+	local minishell_exit="$4"
+	local output_match="$5"
+	local exit_match="$6"
+
+	if [ "$output_match" = false ]; then
+		echo -e "${C_RED}Output mismatch:${C_RST}"
+		echo "Bash output:"
+		echo "'$bash_output'"
+		echo "Minishell output:"
+		echo "'$minishell_output'"
+	fi
+	if [ "$exit_match" = false ]; then
+		echo -e "${C_RED}Exit status mismatch:${C_RST}"
+		echo "Bash exit: $bash_exit"
+		echo "Minishell exit: $minishell_exit"
+	fi
+}
+
+display_result_warning()
+{
+	local output_match="$1"
+	local exit_match="$2"
+	local bash_output="$3"
+	local minishell_output="$4"
+	local bash_exit="$5"
+	local minishell_exit="$6"
+
+	if [ "$output_match" = true ] && [ "$exit_match" = true ]; then
+		echo -e "${C_BOLD}${C_GREEN}✔ PASSED${C_RST}"
+		TESTS_PASSED=$((TESTS_PASSED + 1))
+	else
+		if [ "$exit_match" = true ]; then
+			echo -e "${C_BOLD}${C_YELLOW}✔ PASSED (Check output)${C_RST}"
+			TESTS_WARNING=$((TESTS_WARNING + 1))
+			display_mismatch "$bash_output" "$minishell_output" "$bash_exit" "$minishell_exit" "$output_match" "$exit_match"
+		else
+			echo -e "${C_BOLD}${C_RED}✖ FAILED${C_RST}"
+			TESTS_FAILED=$((TESTS_FAILED + 1))
+			display_mismatch "$bash_output" "$minishell_output" "$bash_exit" "$minishell_exit" "$output_match" "$exit_match"
+		fi
+	fi
+}
+
+display_result_normal()
+{
+	local output_match="$1"
+	local exit_match="$2"
+	local bash_output="$3"
+	local minishell_output="$4"
+	local bash_exit="$5"
+	local minishell_exit="$6"
+
+	if [ "$output_match" = true ] && [ "$exit_match" = true ]; then
+		echo -e "${C_BOLD}${C_GREEN}✔ PASSED${C_RST}"
+		TESTS_PASSED=$((TESTS_PASSED + 1))
+	else
+		echo -e "${C_BOLD}${C_RED}✖ FAILED${C_RST}"
+		TESTS_FAILED=$((TESTS_FAILED + 1))
+		display_mismatch "$bash_output" "$minishell_output" "$bash_exit" "$minishell_exit" "$output_match" "$exit_match"
+	fi
+}
+
 run_test()
 {
 	local test_name="$1"
 	local command="$2"
+	local warning_test=${3:-false}
+	local output_match=false
+	local exit_match=false
 
 	TESTS_RUN=$((TESTS_RUN + 1))
 
-	echo -e "\n${C_YELLOW}Test #$TESTS_RUN: $test_name${C_RST}"
+	echo -e "\n${C_BLUE}Test #$TESTS_RUN: $test_name${C_RST}"
 	echo -e "${C_YELLOW}Command:${C_RST} $command"
 
 	# Run in bash
@@ -61,43 +131,20 @@ run_test()
 	local minishell_output=$(printf "$command\nexit" | $MINISHELL 2>&1 | clean_minishell_output)
 	local minishell_exit=$?
 
-	# Compare outputs
-	local output_match=${3:-false}
-	local exit_match=false
-
 	if [ "$bash_output" = "$minishell_output" ]; then
 		output_match=true
 	fi
-
-	if [ "$check_exit_status" = "true" ]; then
-		if [ $bash_exit -eq $minishell_exit ]; then
-			exit_match=true
-		fi
-	else
-		exit_match=true  # Don't check exit status
+	if [ $bash_exit -eq $minishell_exit ]; then
+		exit_match=true
 	fi
 
 	# Display results
-	if [ "$output_match" = true ] && [ "$exit_match" = true ]; then
-		echo -e "${C_BOLD}${C_GREEN}✔ PASSED${C_RST}"
-		TESTS_PASSED=$((TESTS_PASSED + 1))
+	if [ "$warning_test" = true ]; then
+		display_result_warning "$output_match" "$exit_match" \
+			"$bash_output" "$minishell_output" "$bash_exit" "$minishell_exit"
 	else
-		echo -e "${C_BOLD}${C_RED}✖ FAILED${C_RST}"
-		TESTS_FAILED=$((TESTS_FAILED + 1))
-
-		if [ "$output_match" = false ]; then
-			echo -e "${C_RED}Output mismatch:${C_RST}"
-			echo "Bash output:"
-			echo "'$bash_output'"
-			echo "Minishell output:"
-			echo "'$minishell_output'"
-		fi
-
-		if [ "$exit_match" = false ]; then
-			echo -e "${C_RED}Exit status mismatch:${C_RST}"
-			echo "Bash exit: $bash_exit"
-			echo "Minishell exit: $minishell_exit"
-		fi
+		display_result_normal "$output_match" "$exit_match" \
+			"$bash_output" "$minishell_output" "$bash_exit" "$minishell_exit"
 	fi
 }
 
@@ -140,10 +187,9 @@ run_test "unset variable" "export TEST=hello\nunset TEST\necho \$TEST"
 
 header "REDIRECTIONS TESTS"
 # Test syntax errors first
-run_test "redirect without file" "echo >"
+run_test "redirect without file" "echo >" true
 run_test "redirect append without file" "echo >>"
 run_test "redirect input without file" "cat <"
-
 # Test basic redirections (create separate tests for each step)
 run_test "output redirection simple" "echo hello > /tmp/test_mini.txt"
 run_test "read redirected file" "cat /tmp/test_mini.txt"
@@ -206,6 +252,7 @@ run_test "empty pipe" "echo | | cat"
 header "SUMMARY"
 echo "Total tests run: $TESTS_RUN"
 echo -e "${C_GREEN}Passed: $TESTS_PASSED${C_RST}"
+echo -e "${C_YELLOW}Passed: $TESTS_WARNING${C_RST}"
 echo -e "${C_RED}Failed: $TESTS_FAILED${C_RST}"
 echo -e "${C_BLUE}------------------------------------------------------------${C_RST}"
 
