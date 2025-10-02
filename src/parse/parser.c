@@ -203,6 +203,12 @@ t_ast	*parse_pipeline(t_mini *mini, t_token **tokens)
 	left = parse_command(mini, tokens);
 	if (*tokens && (*tokens)->type == TOKEN_PIPE)
 	{
+		if ((!(*tokens)->next) || ((*tokens)->next && (*tokens)->next->type != TOKEN_WORD && (*tokens)->next->type <= TOKEN_PIPE))
+		{
+			printf("minishell: syntax error near unexpected token `|'\n");
+			mini->exit_status = 2;
+			return (NULL);
+		}
 		*tokens = (*tokens)->next;
 		right = parse_pipeline(mini, tokens);
 		return (build_pipe_node(left, right));

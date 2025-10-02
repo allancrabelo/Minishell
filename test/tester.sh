@@ -241,11 +241,11 @@ run_test "leading spaces" "   echo hello"
 run_test "trailing spaces" "echo hello   "
 
 header "SYNTAX ERROR TESTS"
-run_test "unclosed single quote" "echo 'hello"
-run_test "unclosed double quote" 'echo "hello'
-run_test "pipe at end" "echo hello |"
-run_test "pipe at start" "| echo hello"
-run_test "empty pipe" "echo | | cat"
+run_test "unclosed single quote" "echo 'hello" true
+run_test "unclosed double quote" 'echo "hello' true
+run_test "pipe at end" "echo hello |" true
+run_test "pipe at start" "| echo hello" true
+run_test "empty pipe" "echo | | cat" 
 
 
 

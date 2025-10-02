@@ -8,7 +8,9 @@ void	execute_ast_node(t_mini *mini, t_ast *node)
 	if (node->type == 0)
 	{
 		if (!node->left || !node->right)
+		{
 			return ; //  verificar output
+		}
 			//free(deste ponto);
 		execute_pipe_node(mini, node);
 		return;
