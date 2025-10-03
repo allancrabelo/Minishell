@@ -1,21 +1,26 @@
-#include "../../includes/minishell.h"
-#include "../../includes/colors.h"
+#include "minishell.h"
+#include "colors.h"
 
 void	execute_ast_node(t_mini *mini, t_ast *node)
 {
 	if (!node)
 		return ;
-	if (node->type == 0)
+	if (node->type == NODE_PIPE)
 	{
-		if (!node->left || !node->right)
-		{
-			return ; //  verificar output
-		}
-			//free(deste ponto);
 		execute_pipe_node(mini, node);
-		return;
+		return ;
 	}
-	if (node->type == 1)
+	if (node->type == NODE_AND)
+	{
+		execute_and_node(mini, node);
+		return ;
+	}
+	if (node->type == NODE_OR)
+	{
+		execute_or_node(mini, node);
+		return ;
+	}
+	if (node->type == NODE_CMD)
 	{
 		mini->exit_status = execute_command(mini, node);
 		return ;
@@ -96,8 +101,11 @@ int	execute_external_command(t_mini *mini, t_ast *node, t_redir *redirects)
 	if (pid == 0)
 	{
 		if (apply_redirections(redirects, mini) == -1)
-			exit(mini->exit_status);
+			exit(mini->exit_status); //TODO: When does this happen?
 		exit_code = execute_external(mini, node->args);
+		free_tokens(mini);
+		free_ast(mini->ast);
+		free_export_list(mini->export_list);
 		exit(exit_code);
 	}
 	else if (pid < 0)

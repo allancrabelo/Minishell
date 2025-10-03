@@ -29,6 +29,14 @@
 
 extern volatile sig_atomic_t	g_signal;
 // Structs
+typedef enum e_node_type
+{
+	NODE_PIPE,
+	NODE_AND,
+	NODE_OR,
+	NODE_CMD,
+}	t_node_type;
+
 typedef enum e_token_type
 {
 	TOKEN_WORD,
@@ -68,7 +76,7 @@ typedef struct s_redir
 
 typedef struct s_ast
 {
-	int				type;
+	t_node_type		type;
 	struct s_ast	*left;
 	struct s_ast	*right;
 	char			**args;
@@ -83,7 +91,7 @@ typedef struct s_mini
 	t_token			*token;
 	char			*input;
 	char			**envp;
-	t_export	*export_list;
+	t_export		*export_list;
 	int				env_size;
 	int				exit_status;
 	int				pipe_count;
@@ -183,5 +191,11 @@ int		execute_pipe_node(t_mini *mini, t_ast *node);
 int		execute_external(t_mini *mini, char **argv);
 char	*find_command_path(t_mini *mini, char *cmd);
 void	print_command_error(char *cmd, char *error);
+
+
+// BONUS
+int	execute_and_node(t_mini *mini, t_ast *node);
+int	execute_or_node(t_mini *mini, t_ast *node);
+
 
 #endif

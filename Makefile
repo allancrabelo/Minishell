@@ -25,7 +25,8 @@ VPATH		:=	src src/utils \
 				src/executor/redirections \
 				src/parse \
 				src/expander \
-				src/pipes 
+				src/pipes \
+				src/bonus
 
 
 SRCSLIST	:=	main \
@@ -48,7 +49,8 @@ SRCSLIST	:=	main \
 				expander_utils \
 				environment_utils \
 				pipes_executor \
-				external_commands
+				external_commands \
+				and_or
 
 SRCS		:= $(addsuffix .c, ${SRCSLIST})
 

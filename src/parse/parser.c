@@ -1,17 +1,5 @@
 #include "minishell.h"
 
-static void	free_args(char **args)
-{
-	int	i;
-
-	i = 0;
-	if (!args)
-		return ;
-	while (args[i])
-		free(args[i++]);
-	free(args);
-}
-
 static void	free_redir(t_redir *redir)
 {
 	t_redir	*tmp;
@@ -21,6 +9,8 @@ static void	free_redir(t_redir *redir)
 		tmp = redir->next;
 		if (redir->file)
 			free(redir->file);
+		if (redir->heredoc_delimeter)
+			free(redir->heredoc_delimeter);
 		free(redir);
 		redir = tmp;
 	}
@@ -33,7 +23,7 @@ void	free_ast(t_ast *node)
 	free_ast(node->left);
 	free_ast(node->right);
 	if (node->args)
-		free_args(node->args);
+		ft_free_split(node->args);
 	if (node->redir)
 		free_redir(node->redir);
 	free(node);
@@ -97,7 +87,7 @@ int	parse_redir(t_mini *mini, t_token **tokens, t_redir **redir)
 	if (new_redir->type == TOKEN_HEREDOC)
 		new_redir->heredoc_delimeter = ft_strdup((*tokens)->next->data);
 	if (!new_redir->file)
-		return (free(new_redir), 0);
+		return (free_redir(new_redir), 0);
 	new_redir->next = NULL;
 	add_redir_to_list(redir, new_redir);
 	*tokens = (*tokens)->next;
@@ -112,8 +102,8 @@ t_ast	*build_cmd_node(char **args, int arg_count, t_redir *redir)
 
 	node = malloc(sizeof(t_ast));
 	if (!node)
-		return (free_args(args), free_redir(redir), NULL);
-	node->type = 1;
+		return (ft_free_split(args), free_redir(redir), NULL);
+	node->type = NODE_CMD;
 	node->left = NULL;
 	node->right = NULL;
 	node->args = args;
@@ -158,19 +148,18 @@ t_ast	*parse_command(t_mini *mini, t_token **tokens)
 		if ((*tokens)->type == TOKEN_WORD)
 		{
 			if (!handle_word_token(tokens, args, &count))
-				return (free_args(args), free_redir(redir), NULL);
+				return (ft_free_split(args), free_redir(redir), NULL);
 		}
 		else if ((*tokens)->type >= TOKEN_REDIRECT_IN)
 		{
 			if (!parse_redir(mini, tokens, &redir))
-				return (free_args(args), free_redir(redir), NULL);
+				return (ft_free_split(args), free_redir(redir), NULL);
 		}
 		else
 			break ;
 	}
 	if (count == 0 && redir != NULL && redir->type == TOKEN_HEREDOC)
 	{
-		free_args(args);
 		args = init_args_array(1);
 		if (!args)
 			return (free_redir(redir), NULL);
@@ -179,14 +168,19 @@ t_ast	*parse_command(t_mini *mini, t_token **tokens)
 	return (build_cmd_node(args, count, redir));
 }
 
-t_ast	*build_pipe_node(t_ast *left, t_ast *right)
+t_ast	*build_operator_node(t_ast *left, t_ast *right, t_token_type type)
 {
 	t_ast	*node;
 
 	node = malloc(sizeof(t_ast));
 	if (!node)
 		return (NULL);
-	node->type = 0;
+	if (type == TOKEN_PIPE)
+		node->type = NODE_PIPE;
+	if (type == TOKEN_AND)
+		node->type = NODE_AND;
+	if (type == TOKEN_OR)
+		node->type = NODE_OR;
 	node->left = left;
 	node->right = right;
 	node->args = NULL;
@@ -203,21 +197,32 @@ t_ast	*parse_pipeline(t_mini *mini, t_token **tokens)
 	left = parse_command(mini, tokens);
 	if (*tokens && (*tokens)->type == TOKEN_PIPE)
 	{
-
 		*tokens = (*tokens)->next;
 		right = parse_pipeline(mini, tokens);
-		return (build_pipe_node(left, right));
+		return (build_operator_node(left, right, TOKEN_PIPE));
+	}
+	if (*tokens && (*tokens)->type == TOKEN_AND)
+	{
+		*tokens = (*tokens)->next;
+		right = parse_pipeline(mini, tokens);
+		return (build_operator_node(left, right, TOKEN_AND));
+	}
+	if (*tokens && (*tokens)->type == TOKEN_OR)
+	{
+		*tokens = (*tokens)->next;
+		right = parse_pipeline(mini, tokens);
+		return (build_operator_node(left, right, TOKEN_OR));
 	}
 	return (left);
 }
 
-static	int	verify_tokens(t_mini *mini, t_token *token)
+static	int	verify_tokens(t_mini *mini, t_token *token) // Edit to verify all tokens
 {
 	while (token)
 	{
 		if (token->type == TOKEN_PIPE)
 		{
-			if (!token->next || token->next->type == TOKEN_PIPE)
+			if (!token->next || (token->next->type <= TOKEN_PIPE && token->next->type > TOKEN_RPAREN))
 			{
 				printf("minishell: syntax error near unexpected token `|'\n");
 				mini->exit_status = 2;

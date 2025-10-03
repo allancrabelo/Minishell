@@ -57,7 +57,7 @@ static int	create_heredoc_file(char *delimiter, t_mini *mini)
 	{
 		fd = open("/tmp/minishell_heredoc", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (fd == -1)
-			exit(1);
+			exit(1);	//TODO: When does this happen?
 		content = read_heredoc_input(delimiter, &interrupted);
 		if (content)
 		{
@@ -65,6 +65,9 @@ static int	create_heredoc_file(char *delimiter, t_mini *mini)
 			free(content);
 		}
 		close(fd);
+		free_tokens(mini);
+		free_ast(mini->ast);
+		free_export_list(mini->export_list);
 		exit(0);
 	}
 	if (pid > 0)
@@ -89,7 +92,7 @@ int	redirect_heredoc(t_redir *redirect, t_mini *mini)
 	fd = create_heredoc_file(redirect->file, mini);
 	if (fd == -1)
 		return (-1);
-	
+
 	if (dup2(fd, STDIN_FILENO) == -1)
 	{
 		close(fd);

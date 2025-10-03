@@ -91,6 +91,8 @@ void	free_export_list(t_export *lst)
 {
 	t_export	*tmp;
 
+	if (!lst)
+		return ;
 	while (lst)
 	{
 		tmp = lst->next;
