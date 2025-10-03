@@ -73,18 +73,12 @@ int	execute_builtin(t_mini *mini, t_ast *node, t_redir *redir)
 		result = ft_cd(mini, node);
 	else if (ft_strcmp(node->args[0], "pwd") == 0)
 		result = ft_pwd(mini);
+	else if (ft_strcmp(node->args[0], "export") == 0)
+		result = ft_export(mini, node);
 	else
 		result = 0;
-/*
-	// TODO: Add other builtin implementations
-
-	// if (ft_strcmp(mini->ast, "export") == 0)
-	//     result = ft_export(mini, argv));
 	// if (ft_strcmp(mini->ast, "unset") == 0)
 	//     result = ft_unset(mini, argv));
-
-	else
-		result = 0; */
 	restore_fd(stdin_backup, stdout_backup);
 	return (result);
 }

@@ -18,6 +18,7 @@ VPATH		:=	src src/utils \
 				src/cmd \
 				src/executor/echo \
 				src/executor/exit \
+				src/executor/export \
 				src/executor/pwd \
 				src/executor/env \
 				src/executor/cd \
@@ -35,6 +36,8 @@ SRCSLIST	:=	main \
 				ft_pwd \
 				ft_env \
 				ft_cd \
+				ft_export \
+				export_list \
 				heredoc \
 				redirections \
 				redirections_executor \

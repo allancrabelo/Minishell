@@ -43,6 +43,13 @@ typedef enum e_token_type
 	TOKEN_REDIRECT_APPEND
 }	t_token_type;
 
+typedef struct s_export
+{
+	char				*key;
+	char				*value;
+	struct s_export		*next;
+}	t_export;
+
 typedef struct s_token
 {
 	char			*data;
@@ -76,6 +83,7 @@ typedef struct s_mini
 	t_token			*token;
 	char			*input;
 	char			**envp;
+	t_export	*export_list;
 	int				env_size;
 	int				exit_status;
 	int				pipe_count;
@@ -94,14 +102,27 @@ int 	execute_command(t_mini *mini, t_ast *node);
 int		execute_external_command(t_mini *mini, t_ast *node, t_redir *redirects);
 
 // [BUILTINS]:
-//int		ft_echo(char **commands);
+// Echo:
 int		ft_echo(t_ast *node);
+
+// Export:
+int		ft_export(t_mini *mini, t_ast *node);
+
+// Export list
+t_export	*ft_newexp(char *key, char *value);
+void		ft_addexp(t_export **lst, t_export *new);
+t_export	*findexp(t_mini *mini, char *key);
+int			ft_setexp(char *key, char *newvalue, t_mini *mini);
+char		*ft_getexp(char *key, t_mini *mini);
+void		free_export_list(t_export *lst);
+
+// Exit:
 int		ft_exit(t_mini *mini);
 
 // Pwd:
 int		ft_pwd(t_mini *mini);
 
-//Env:
+//	Env:
 int		ft_env(t_mini *mini);
 
 // Cd:

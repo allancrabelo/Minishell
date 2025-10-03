@@ -8,3 +8,4 @@ int	ft_exit(t_mini *mini)
 	//TODO: temos de adicionar com handler para por exemplo "exit a"
 	exit(mini->exit_status);
 }
+
