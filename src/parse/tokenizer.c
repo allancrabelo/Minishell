@@ -112,7 +112,10 @@ int	ft_tokenizer(t_mini *mini, char *input)
 	i = 0;
 	len = ft_strlen(mini->input);
 	if (!check_validity(mini->input))
-		return (write(2, "Syntax error\n", 13), 0);
+	{
+		mini->exit_status = 2;
+		return (write(2, "unexpected EOF while looking for matching quotes\n", 49), 1);
+	}
 	while (i < len)
 	{
 		while (i < len && ft_isspace(mini->input[i]))

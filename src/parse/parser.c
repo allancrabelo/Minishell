@@ -203,12 +203,7 @@ t_ast	*parse_pipeline(t_mini *mini, t_token **tokens)
 	left = parse_command(mini, tokens);
 	if (*tokens && (*tokens)->type == TOKEN_PIPE)
 	{
-		if ((!(*tokens)->next) || ((*tokens)->next && (*tokens)->next->type != TOKEN_WORD && (*tokens)->next->type <= TOKEN_PIPE))
-		{
-			printf("minishell: syntax error near unexpected token `|'\n");
-			mini->exit_status = 2;
-			return (NULL);
-		}
+
 		*tokens = (*tokens)->next;
 		right = parse_pipeline(mini, tokens);
 		return (build_pipe_node(left, right));
@@ -216,13 +211,46 @@ t_ast	*parse_pipeline(t_mini *mini, t_token **tokens)
 	return (left);
 }
 
+static	int	verify_tokens(t_mini *mini, t_token *token)
+{
+	while (token)
+	{
+		if (token->type == TOKEN_PIPE)
+		{
+			if (!token->next || token->next->type == TOKEN_PIPE)
+			{
+				printf("minishell: syntax error near unexpected token `|'\n");
+				mini->exit_status = 2;
+				return (0);
+			}
+		}
+		else if (token->type > TOKEN_WORD && (!token->next || token->next->type != TOKEN_WORD))
+		{
+			printf("minishell: syntax error near unexpected token `newline'\n");
+			mini->exit_status = 2;
+			return (0);
+		}
+		token = token->next;
+	}
+	return (1);
+}
+
 int	build_ast(t_mini *mini)
 {
 	t_token	*cur;
 
+	if (mini->token->type == TOKEN_PIPE)
+	{
+		printf("minishell: syntax error near unexpected token `|'\n");
+		mini->exit_status = 2;
+		return (1);
+	}
 	cur = mini->token;
+	if (!verify_tokens(mini, cur))
+		return (1);
 	mini->ast = parse_pipeline(mini, &cur);
 	if (!mini->ast)
 		return (1);
 	return (0);
 }
+
