@@ -19,6 +19,6 @@ int	ft_env(t_mini *mini)
 		write (1, "\n", 1);
 		i++;
 	}
-	mini->exit_status = 0; // nao e preciso, neste ponto ainda deve ser 0.
+	mini->exit_status = 0; // nao e preciso, neste ponto ainda deve ser .
 	return (0);
 }
