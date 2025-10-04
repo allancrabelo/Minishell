@@ -58,29 +58,27 @@ static char	*make_prompt(t_mini *mini)
 	return (buf);
 }
 
-static char	*make_prompt(t_mini *mini)
+static void	main_loop(t_mini *mini)
 {
-	static char	buf[64];
-	char		*num;
-	int			status;
+	char	*input;
 
-	status = mini->exit_status;
-	num = ft_itoa(status);
-	buf[0] = '\0';
-	if (status == 0)
+	while (1)
 	{
-		ft_strlcpy(buf, "\001" SBBLUE "\002[", sizeof(buf));
-		ft_strlcat(buf, num, sizeof(buf));
-		ft_strlcat(buf, LINE, sizeof(buf));
+		signal_init();
+		if (g_signal)
+		{
+			mini->exit_status = g_signal;
+			g_signal = 0;
+		}
+		input = readline(make_prompt(mini));
+		if (!input)
+		{
+			write(1, "exit\n", 5);
+			break;
+		}
+		do_commands(mini, input);
+		free (input);
 	}
-	else
-	{
-		ft_strlcpy(buf, "\001" SBRED "\002[", sizeof(buf));
-		ft_strlcat(buf, num, sizeof(buf));
-		ft_strlcat(buf, LINE, sizeof(buf));
-	}
-	free(num);
-	return (buf);
 }
 
 int	main(int argc, char **argv, char **envp)
