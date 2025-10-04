@@ -126,7 +126,7 @@ char		*ft_getexp(char *key, t_mini *mini);
 void		free_export_list(t_export *lst);
 
 // Exit:
-int			ft_exit(t_mini *mini);
+int			ft_exit(t_mini *mini, t_ast *node);
 
 // Pwd:
 int			ft_pwd(t_mini *mini);
