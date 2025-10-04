@@ -65,12 +65,12 @@ static void	main_loop(t_mini *mini)
 	while (1)
 	{
 		signal_init();
+		input = readline(make_prompt(mini));
 		if (g_signal)
 		{
 			mini->exit_status = g_signal;
 			g_signal = 0;
 		}
-		input = readline(make_prompt(mini));
 		if (!input)
 		{
 			write(1, "exit\n", 5);

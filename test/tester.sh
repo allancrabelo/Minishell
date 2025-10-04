@@ -252,6 +252,8 @@ run_test "pipe at end" "echo hello |" true
 run_test "pipe at start" "| echo hello" true
 run_test "empty pipe" "echo | | cat" true
 
+header "TEST COMMAND"
+run_test "Non Existent Command" "aa"
 
 header "SUMMARY"
 echo "Total tests run: $TESTS_RUN"
