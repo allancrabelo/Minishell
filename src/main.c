@@ -1,5 +1,5 @@
 #include "minishell.h"
-#include "../includes/colors.h"
+#include "colors.h"
 
 volatile sig_atomic_t	g_signal = 0;
 
@@ -33,58 +33,54 @@ void	do_commands(t_mini *mini, char *input)
 	handle_commands(mini, input);
 }
 
-static char *make_prompt(t_mini *mini)
+static char	*make_prompt(t_mini *mini)
 {
 	static char	buf[64];
 	char		*num;
 	int			status;
 
 	status = mini->exit_status;
-	if (g_signal)
-	{
-		status = g_signal;
-		mini->exit_status = g_signal;
-		g_signal = 0;
-	}
 	num = ft_itoa(status);
 	buf[0] = '\0';
 	if (status == 0)
 	{
 		ft_strlcpy(buf, "\001" SBBLUE "\002[", sizeof(buf));
 		ft_strlcat(buf, num, sizeof(buf));
-		ft_strlcat(buf, "]\001" SBYELLOW "\002 minishell$\001" SRESET "\002 ", sizeof(buf));
+		ft_strlcat(buf, LINE, sizeof(buf));
 	}
 	else
 	{
 		ft_strlcpy(buf, "\001" SBRED "\002[", sizeof(buf));
 		ft_strlcat(buf, num, sizeof(buf));
-		ft_strlcat(buf, "]\001" SBYELLOW "\002 minishell$\001" SRESET "\002 ", sizeof(buf));
+		ft_strlcat(buf, LINE, sizeof(buf));
 	}
 	free (num);
 	return (buf);
 }
 
-static void	main_loop(t_mini *mini)
+static char	*make_prompt(t_mini *mini)
 {
-	char	*input;
+	static char	buf[64];
+	char		*num;
+	int			status;
 
-	while (1)
+	status = mini->exit_status;
+	num = ft_itoa(status);
+	buf[0] = '\0';
+	if (status == 0)
 	{
-		signal_init();
-		input = readline(make_prompt(mini));
-		if (g_signal)
-		{
-			mini->exit_status = g_signal;
-			g_signal = 0;
-		}
-		if (!input)
-		{
-			write(1, "exit\n", 5);
-			break;
-		}
-		do_commands(mini, input);
-		free (input);
+		ft_strlcpy(buf, "\001" SBBLUE "\002[", sizeof(buf));
+		ft_strlcat(buf, num, sizeof(buf));
+		ft_strlcat(buf, LINE, sizeof(buf));
 	}
+	else
+	{
+		ft_strlcpy(buf, "\001" SBRED "\002[", sizeof(buf));
+		ft_strlcat(buf, num, sizeof(buf));
+		ft_strlcat(buf, LINE, sizeof(buf));
+	}
+	free(num);
+	return (buf);
 }
 
 int	main(int argc, char **argv, char **envp)

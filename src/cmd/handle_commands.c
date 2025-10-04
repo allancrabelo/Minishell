@@ -62,8 +62,6 @@ int	execute_builtin(t_mini *mini, t_ast *node, t_redir *redir)
 		return (1);
 	if (apply_redirections(redir, mini) == -1)
 	{
-		// if (mini->exit_status == 0)
-		// 	mini->exit_status = 1;
 		restore_fd(stdin_backup, stdout_backup);
 		return (1);
 	}
@@ -81,8 +79,6 @@ int	execute_builtin(t_mini *mini, t_ast *node, t_redir *redir)
 		result = ft_export(mini, node);
 	else
 		result = 0;
-	// if (ft_strcmp(mini->ast, "unset") == 0)
-	//     result = ft_unset(mini, argv));
 	restore_fd(stdin_backup, stdout_backup);
 	return (result);
 }
@@ -120,9 +116,10 @@ int	execute_external_command(t_mini *mini, t_ast *node, t_redir *redirects)
 }
 
 // Main command execution function
-int execute_command(t_mini *mini, t_ast *node)
+int	execute_command(t_mini *mini, t_ast *node)
 {
-	if (!node || !node->args || (!node->args[0] && node->redir->type != TOKEN_HEREDOC))
+	if (!node || !node->args || (!node->args[0]
+			&& node->redir->type != TOKEN_HEREDOC))
 		return (0);
 	if (is_builtin_command(node->args[0]))
 		return (execute_builtin(mini, node, node->redir));
@@ -153,11 +150,6 @@ void	free_tokens(t_mini *mini)
 
 void	handle_commands(t_mini *mini, char *input)
 {
-	if (input[0] == '#') //TODO usar para teste
-	{
-		printf(BOLD SCYAN "%s\n" SRESET, input);
-		return ;
-	}
 	ft_tokenizer(mini, input);
 	if (mini->token == NULL)
 		return ;

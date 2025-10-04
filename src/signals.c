@@ -2,7 +2,7 @@
 
 void	sighandler(int signal)
 {
-	g_signal = 128 + WTERMSIG(signal);
+	g_signal = 128 + signal;
 	write(1, "\n", 1);
 	rl_replace_line("", 0);
 	rl_on_new_line();

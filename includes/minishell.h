@@ -19,7 +19,7 @@
 # include <readline/readline.h>	// readline
 # include <readline/history.h>	// add_history, rl_clear_history, etc.
 
-# define LINE SYELLOW "minishell> " SRESET
+# define LINE "]\001" SBYELLOW "\002 minishell$\001" SRESET "\002 "
 # define COMMAND_NOT_FOUND 127
 # define COMMAND_DENIED_OR_FAILED 126
 
@@ -101,20 +101,21 @@ typedef struct s_mini
 }	t_mini;
 
 // Commands
-void	do_commands(t_mini *mini, char *input);
-void	handle_commands(t_mini *mini, char *input);
-int		execute_builtin(t_mini *mini, t_ast *node, t_redir *redir);
-void	execute_ast_node(t_mini *mini, t_ast *node);
-int		execute_external(t_mini *mini, char **argv);
-int 	execute_command(t_mini *mini, t_ast *node);
-int		execute_external_command(t_mini *mini, t_ast *node, t_redir *redirects);
+void		do_commands(t_mini *mini, char *input);
+void		handle_commands(t_mini *mini, char *input);
+int			execute_builtin(t_mini *mini, t_ast *node, t_redir *redir);
+void		execute_ast_node(t_mini *mini, t_ast *node);
+int			execute_external(t_mini *mini, char **argv);
+int			execute_command(t_mini *mini, t_ast *node);
+int			execute_external_command(t_mini *mini, t_ast *node,
+				t_redir *redirects);
 
 // [BUILTINS]:
 // Echo:
-int		ft_echo(t_ast *node);
+int			ft_echo(t_ast *node);
 
 // Export:
-int		ft_export(t_mini *mini, t_ast *node);
+int			ft_export(t_mini *mini, t_ast *node);
 
 // Export list
 t_export	*ft_newexp(char *key, char *value);
@@ -125,78 +126,76 @@ char		*ft_getexp(char *key, t_mini *mini);
 void		free_export_list(t_export *lst);
 
 // Exit:
-int		ft_exit(t_mini *mini);
+int			ft_exit(t_mini *mini);
 
 // Pwd:
-int		ft_pwd(t_mini *mini);
+int			ft_pwd(t_mini *mini);
 
 //	Env:
-int		ft_env(t_mini *mini);
+int			ft_env(t_mini *mini);
 
 // Cd:
-int		ft_cd(t_mini *mini, t_ast *node);
+int			ft_cd(t_mini *mini, t_ast *node);
 
 // Redirects:
-int		redirect_in(t_redir *redirect);
-int		redirect_out(t_redir *redirect);
-int		redirect_append(t_redir *redirect);
-int		apply_redirections(t_redir *redirections, t_mini *mini);
-int		backup_fd(int *stdin_backup, int *stdout_backup);
-void	restore_fd(int stdin_backup, int stdout_backup);
+int			redirect_in(t_redir *redirect);
+int			redirect_out(t_redir *redirect);
+int			redirect_append(t_redir *redirect);
+int			apply_redirections(t_redir *redirections, t_mini *mini);
+int			backup_fd(int *stdin_backup, int *stdout_backup);
+void		restore_fd(int stdin_backup, int stdout_backup);
 
 // Heredoc:
-int		redirect_heredoc(t_redir *redirect, t_mini *mini);
+int			redirect_heredoc(t_redir *redirect, t_mini *mini);
 
 // Signals
-void	sighandler(int signal);
-void	signal_init(void);
-void	heredoc_sighandler(int signal);
-void	setup_heredoc_signals(void);
-void	wait_update_main(int pid, int *status);
+void		sighandler(int signal);
+void		signal_init(void);
+void		heredoc_sighandler(int signal);
+void		setup_heredoc_signals(void);
+void		wait_update_main(int pid, int *status);
 
 // Tokenizer
 //void	ft_tokenizer(t_mini *mini, char *input);
-int		ft_tokenizer(t_mini *mini, char *input);
-void	free_tokens(t_mini *mini);
-int		check_validity(char *input);
-size_t	get_word_len(t_mini *mini, size_t len, size_t i);
-int		is_op(const char *input, size_t i);
-int		build_ast(t_mini *mini);
-int		is_builtin_command(char *cmd);
+int			ft_tokenizer(t_mini *mini, char *input);
+void		free_tokens(t_mini *mini);
+int			check_validity(char *input);
+size_t		get_word_len(t_mini *mini, size_t len, size_t i);
+int			is_op(const char *input, size_t i);
+int			build_ast(t_mini *mini);
+int			is_builtin_command(char *cmd);
 
 //Expansion
-char	*extract_var_name(t_mini *mini, size_t *i);
-char	*expand_variable(t_mini *mini, char *var_name);
-int		is_special_var(char c);
-char	*get_env_var(t_mini *mini, char *var_name);
-size_t	expand_var_in_tokenizer(t_mini *mini, size_t *i);
+char		*extract_var_name(t_mini *mini, size_t *i);
+char		*expand_variable(t_mini *mini, char *var_name);
+int			is_special_var(char c);
+char		*get_env_var(t_mini *mini, char *var_name);
+size_t		expand_var_in_tokenizer(t_mini *mini, size_t *i);
 
 //Expansion Utils
-int		is_special_var(char c);
-char	*expand_special_var(t_mini *mini, char var_char);
-void	ft_itoa_alternative(int n, char *dst);
+int			is_special_var(char c);
+char		*expand_special_var(t_mini *mini, char var_char);
+void		ft_itoa_alternative(int n, char *dst);
 
 //Environment Utils
-char	*get_env_var(t_mini *mini, char *var_name);
+char		*get_env_var(t_mini *mini, char *var_name);
 
 //Command parsing
-int		build_ast(t_mini *mini);
-void	free_ast(t_ast *node);
-t_ast	*parse_or(t_mini *mini, t_token **tokens);
+int			build_ast(t_mini *mini);
+void		free_ast(t_ast *node);
+t_ast		*parse_or(t_mini *mini, t_token **tokens);
 
 //[Pipes]
 // Pipes Executor
-int		execute_pipe_node(t_mini *mini, t_ast *node);
+int			execute_pipe_node(t_mini *mini, t_ast *node);
 
 //External Commands
-int		execute_external(t_mini *mini, char **argv);
-char	*find_command_path(t_mini *mini, char *cmd);
-void	print_command_error(char *cmd, char *error);
-
+int			execute_external(t_mini *mini, char **argv);
+char		*find_command_path(t_mini *mini, char *cmd);
+void		print_command_error(char *cmd, char *error);
 
 // BONUS
-int	execute_and_node(t_mini *mini, t_ast *node);
-int	execute_or_node(t_mini *mini, t_ast *node);
-
+int			execute_and_node(t_mini *mini, t_ast *node);
+int			execute_or_node(t_mini *mini, t_ast *node);
 
 #endif
