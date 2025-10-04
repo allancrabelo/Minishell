@@ -27,7 +27,6 @@ void	execute_ast_node(t_mini *mini, t_ast *node)
 	}
 	execute_ast_node(mini, node->left);
 	execute_ast_node(mini, node->right);
-
 }
 
 int	is_builtin_command(char *cmd)

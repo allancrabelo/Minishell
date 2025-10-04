@@ -102,6 +102,15 @@ int	tokenize_op(t_mini *mini, size_t *i)
 	return (1);
 }
 
+void	print_tokens(t_token *token)
+{
+	while (token)
+	{
+		printf("%d\n", token->type);
+		token = token->next;
+	}
+}
+
 int	ft_tokenizer(t_mini *mini, char *input)
 {
 	size_t	i;
@@ -127,8 +136,8 @@ int	ft_tokenizer(t_mini *mini, char *input)
 			add_token(mini, &i, word_len, TOKEN_WORD);
 		else
 			i++;
-		i++;
 	}
+	print_tokens(mini->token);
 	if (mini->token != NULL)
 		return (build_ast(mini));
 	return (1);

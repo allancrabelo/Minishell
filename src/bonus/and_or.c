@@ -2,16 +2,16 @@
 
 int	execute_and_node(t_mini *mini, t_ast *node)
 {
-	mini->exit_status = execute_command(mini, node->left);
+	execute_ast_node(mini, node->left);
 	if (mini->exit_status == 0)
-		mini->exit_status = execute_command(mini, node->right);
+		execute_ast_node(mini, node->right);
 	return (mini->exit_status);
 }
 
 int	execute_or_node(t_mini *mini, t_ast *node)
 {
-	mini->exit_status = execute_command(mini, node->left);
+	execute_ast_node(mini, node->left);
 	if (mini->exit_status != 0)
-		mini->exit_status = execute_command(mini, node->right);
+		execute_ast_node(mini, node->right);
 	return (mini->exit_status);
 }

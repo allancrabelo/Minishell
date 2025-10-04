@@ -182,6 +182,7 @@ char	*get_env_var(t_mini *mini, char *var_name);
 //Command parsing
 int		build_ast(t_mini *mini);
 void	free_ast(t_ast *node);
+t_ast	*parse_or(t_mini *mini, t_token **tokens);
 
 //[Pipes]
 // Pipes Executor
