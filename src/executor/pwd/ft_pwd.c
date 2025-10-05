@@ -17,9 +17,9 @@ int	ft_pwd(t_mini *mini)
 	}
 	if (getcwd(pwd, sizeof(pwd)) == NULL)
 	{
-		perror("minishell: pwd");
-		return (1);
+		printf("%s\n", mini->pwd);
+		return (0);
 	}
-	printf("%s\n", pwd);
+	printf("%s\n",pwd);
 	return (0);
 }

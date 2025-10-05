@@ -107,6 +107,7 @@ typedef struct s_mini
 	pid_t			*child_pids;
 	int				child_count;
 	t_env			*env_list;
+	char			*pwd;
 }	t_mini;
 
 // Commands

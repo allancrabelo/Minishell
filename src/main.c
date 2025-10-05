@@ -30,6 +30,7 @@ static void	init_export_list(t_mini *mini, char **envp)
 void	do_commands(t_mini *mini, char *input)
 {
 	add_history(input);
+	mini->pwd = ft_getenv("PWD", mini);
 	handle_commands(mini, input);
 }
 

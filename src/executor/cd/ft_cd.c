@@ -3,11 +3,21 @@
 int	ft_cd(t_mini *mini, t_ast *node)
 {
 	char	*target_dir;
+	char	*old_pdw_var;
+	char	pwd[4096];
 
 	(void)mini;
-	if (!node->args[1])
-		return (1) ; // TODO: O que vamos tratar com o cd sem argumento????
+	target_dir = ft_getenv("HOME", mini);
+	if (node->args[1] == NULL)
+	{
+		if (target_dir)
+			return (chdir(target_dir), 0);
+		else
+			return (print_command_error("cd", "HOME not set"), 1);
+	}
 	target_dir = node->args[1];
+	old_pdw_var = ft_getenv("PWD", mini);
+	ft_setenv("OLDPWD", old_pdw_var, mini);
 	if (chdir(target_dir) != 0)
 	{
 		ft_putstr_fd("minishell: cd: ", 2);
@@ -21,5 +31,6 @@ int	ft_cd(t_mini *mini, t_ast *node)
 			ft_putstr_fd("Not a directory\n", 2);
 		return (1);
 	}
+	ft_setenv("PWD", getcwd(pwd, sizeof(pwd)), mini);
 	return (0);
 }
