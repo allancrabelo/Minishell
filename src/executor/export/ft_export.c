@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-static int	is_valid_identifier(char *str)
+int	is_valid_identifier(char *str)
 {
 	int	i;
 
@@ -69,9 +69,9 @@ static int	process_export_arg(t_mini *mini, char *arg)
 	key = NULL;
 	value = NULL;
 	extract_key_value(arg, &key, &value);
-	
 	result = ft_setexp(key, value, mini);
-	
+	if (result == 0 && value != NULL)
+		result = ft_setenv(key, value, mini);
 	free(key);
 	if (value)
 		free(value);

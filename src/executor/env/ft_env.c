@@ -1,24 +1,70 @@
-#include "../../../includes/minishell.h"
+#include "minishell.h"
+
+void	increment_shlvl(t_mini *mini)
+{
+	char	*shlvl_str;
+	int		shlvl;
+	char	*new_shlvl;
+
+	shlvl_str = ft_getenv("SHLVL", mini);
+	if (!shlvl_str)
+		ft_setenv("SHLVL", "1", mini);
+	else
+	{
+		shlvl = ft_atoi(shlvl_str);
+		if (shlvl < 0)
+			shlvl = 0;
+		else
+			shlvl++;
+		new_shlvl = ft_itoa(shlvl);
+		if (new_shlvl)
+		{
+			ft_setenv("SHLVL", new_shlvl, mini);
+			free(new_shlvl);
+		}
+	}
+}
+
+void	init_env_list(t_mini *mini, char **envp)
+{
+	int		i;
+	char	*equal_pos;
+	char	key[256];
+	char	*value;
+
+	mini->env_list = NULL;
+	i = 0;
+	while (envp[i])
+	{
+		equal_pos = ft_strchr(envp[i], '=');
+		if (equal_pos)
+		{
+			ft_strlcpy(key, envp[i], equal_pos - envp[i] + 1);
+			value = equal_pos + 1;
+			ft_setenv(key, value, mini);
+		}
+		else
+			ft_setenv(envp[i], NULL, mini);
+		i++;
+	}
+}
 
 int	ft_env(t_mini *mini)
 {
-	int		i;
-	int		j;
-	char	**envp;
+	t_env	*current;
 
-	i = 0;
-	envp = mini->envp;
-	while (envp[i])
+	current = mini->env_list;
+	while (current)
 	{
-		j = 0;
-		while (envp[i][j])
+		if (current->value != NULL)
 		{
-			write (1, &envp[i][j], 1);
-			j++;
+			ft_putstr_fd(current->key, 1);
+			ft_putstr_fd("=", 1);
+			ft_putstr_fd(current->value, 1);
+			ft_putstr_fd("\n", 1);
 		}
-		write (1, "\n", 1);
-		i++;
+		current = current->next;
 	}
-	mini->exit_status = 0; // nao e preciso, neste ponto ainda deve ser .
+	mini->exit_status = 0;
 	return (0);
 }

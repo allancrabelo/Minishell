@@ -58,6 +58,14 @@ typedef struct s_export
 	struct s_export		*next;
 }	t_export;
 
+typedef struct s_env
+{
+	char			*key;
+	char			*value;
+	struct s_env	*next;
+}	t_env;
+
+
 typedef struct s_token
 {
 	char			*data;
@@ -98,6 +106,7 @@ typedef struct s_mini
 	int				**pipes;
 	pid_t			*child_pids;
 	int				child_count;
+	t_env			*env_list;
 }	t_mini;
 
 // Commands
@@ -116,6 +125,7 @@ int			ft_echo(t_ast *node);
 
 // Export:
 int			ft_export(t_mini *mini, t_ast *node);
+int			is_valid_identifier(char *str);
 
 // Export list
 t_export	*ft_newexp(char *key, char *value);
@@ -133,6 +143,16 @@ int			ft_pwd(t_mini *mini);
 
 //	Env:
 int			ft_env(t_mini *mini);
+void		init_env_list(t_mini *mini, char **envp);
+void		free_env_list(t_env *lst);
+char		*ft_getenv(char *key, t_mini *mini);
+int			ft_setenv(char *key, char *newvalue, t_mini *mini);
+void		ft_addenv(t_env **lst, t_env *new);
+t_env		*ft_newenv(char *key, char *value);
+void		increment_shlvl(t_mini *mini);
+
+// Unset :
+int			ft_unset(t_mini *mini, t_ast *node);
 
 // Cd:
 int			ft_cd(t_mini *mini, t_ast *node);

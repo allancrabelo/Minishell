@@ -48,20 +48,68 @@ void	print_command_error(char *cmd, char *error)
 	ft_putstr_fd("\n", 2);
 }
 
+char	**env_list_to_array(t_mini *mini)
+{
+	t_env	*current;
+	char	**env_array;
+	int		count;
+	int		i;
+	char	*temp;
+
+	count = 0;
+	current = mini->env_list;
+	while (current)
+	{
+		if (current->value != NULL)
+			count++;
+		current = current->next;
+	}
+	env_array = malloc((count + 1) * sizeof(char *));
+	if (!env_array)
+		return (NULL);
+	i = 0;
+	current = mini->env_list;
+	while (current && i < count)
+	{
+		if (current->value != NULL)
+		{
+			temp = ft_strjoin(current->key, "=");
+			env_array[i] = ft_strjoin(temp, current->value);
+			free(temp);
+			if (!env_array[i])
+			{
+				ft_free_split(env_array);
+				return (NULL);
+			}
+			i++;
+		}
+		current = current->next;
+	}
+	env_array[i] = NULL;
+	return (env_array);
+}
+
 int	execute_external(t_mini *mini, char **argv)
 {
-	char *full_path;
+	char	*full_path;
+	char	**env_array;
 
 	full_path = find_command_path(mini, argv[0]);
 	if (!full_path)
 	{
 		ft_putstr_fd("minishell: ", 2);
 		perror(argv[0]);
-		//print_command_error(argv[0], "command not found");
 		return (127);
 	}
-	execve(full_path, argv, mini->envp);
+	env_array = env_list_to_array(mini);
+	if (!env_array)
+	{
+		free(full_path);
+		return (126);
+	}
+	execve(full_path, argv, env_array);
 	print_command_error(argv[0], strerror(errno));
+	ft_free_split(env_array);
 	free(full_path);
 	return (126);
 }

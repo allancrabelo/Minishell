@@ -22,6 +22,7 @@ VPATH		:=	src src/utils \
 				src/executor/pwd \
 				src/executor/env \
 				src/executor/cd \
+				src/executor/unset \
 				src/executor/redirections \
 				src/parse \
 				src/expander \
@@ -36,7 +37,9 @@ SRCSLIST	:=	main \
 				ft_exit \
 				ft_pwd \
 				ft_env \
+				env_list \
 				ft_cd \
+				ft_unset \
 				ft_export \
 				export_list \
 				heredoc \

@@ -77,6 +77,8 @@ int	execute_builtin(t_mini *mini, t_ast *node, t_redir *redir)
 		result = ft_pwd(mini);
 	else if (ft_strcmp(node->args[0], "export") == 0)
 		result = ft_export(mini, node);
+	else if (ft_strcmp(node->args[0], "unset") == 0)
+		result = ft_unset(mini, node);
 	else
 		result = 0;
 	restore_fd(stdin_backup, stdout_backup);

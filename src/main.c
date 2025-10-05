@@ -95,11 +95,16 @@ int	main(int argc, char **argv, char **envp)
 	mini.envp = envp;
 	mini.exit_status = 0;
 	mini.export_list = NULL;
+	mini.env_list = NULL;
 	init_export_list(&mini, envp);
+	init_env_list(&mini, envp);
+	increment_shlvl(&mini);
 	g_signal = 0;
 	main_loop(&mini);
 	if (mini.export_list)
 		free_export_list(mini.export_list);
+	if (mini.export_list)
+		free_env_list(mini.env_list);
 	rl_clear_history();
 	exit(mini.exit_status);
 }
