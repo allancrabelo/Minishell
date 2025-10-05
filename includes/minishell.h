@@ -120,6 +120,18 @@ int			execute_command(t_mini *mini, t_ast *node);
 int			execute_external_command(t_mini *mini, t_ast *node,
 				t_redir *redirects);
 
+// Frees
+int			ft_free_all(t_mini *mini, int ret, int exit_prog);
+void		free_tokens(t_mini *mini);
+void		free_ast(t_ast *node);
+void		free_redir(t_redir *redir);
+
+// Utils
+int	is_operator(t_token_type type);
+int	is_redirect(t_token_type type);
+int	print_syntax_error(t_mini *mini, char *error_msg);
+
+
 // [BUILTINS]:
 // Echo:
 int			ft_echo(t_ast *node);
@@ -137,7 +149,7 @@ char		*ft_getexp(char *key, t_mini *mini);
 void		free_export_list(t_export *lst);
 
 // Exit:
-int			ft_exit(t_mini *mini);
+int			ft_exit(t_mini *mini, t_ast *node);
 
 // Pwd:
 int			ft_pwd(t_mini *mini);
@@ -179,7 +191,6 @@ void		wait_update_main(int pid, int *status);
 // Tokenizer
 //void	ft_tokenizer(t_mini *mini, char *input);
 int			ft_tokenizer(t_mini *mini, char *input);
-void		free_tokens(t_mini *mini);
 int			check_validity(char *input);
 size_t		get_word_len(t_mini *mini, size_t len, size_t i);
 int			is_op(const char *input, size_t i);
@@ -203,7 +214,6 @@ char		*get_env_var(t_mini *mini, char *var_name);
 
 //Command parsing
 int			build_ast(t_mini *mini);
-void		free_ast(t_ast *node);
 t_ast		*parse_or(t_mini *mini, t_token **tokens);
 
 //[Pipes]
