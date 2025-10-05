@@ -55,7 +55,8 @@ static int	check_syntax(t_token *cur)
 		return (1);
 	if (cur->type >= TOKEN_OR && cur->type <= TOKEN_PIPE)
 	{
-		if (!cur->next || (cur->next->type >= TOKEN_OR && cur->next->type <= TOKEN_PIPE)
+		if (!cur->next || (cur->next->type >= TOKEN_OR
+				&& cur->next->type <= TOKEN_PIPE)
 			|| cur->next->type == TOKEN_RPAREN)
 			return (0);
 		return (1);

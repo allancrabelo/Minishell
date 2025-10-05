@@ -1,6 +1,5 @@
 #include "minishell.h"
 
-
 int	apply_redirections(t_redir *redirections, t_mini *mini)
 {
 	t_redir	*cur;

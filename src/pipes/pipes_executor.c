@@ -40,6 +40,40 @@ static void	execute_right_pipe(t_mini *mini, t_ast *right, int pipefd[2])
 	exit(mini->exit_status);
 }
 
+static int	handle_left_fork(t_mini *mini, t_ast *node, int pipefd[2])
+{
+	pid_t	pid_left;
+
+	pid_left = fork();
+	if (pid_left == 0)
+		execute_left_pipe(mini, node->left, pipefd);
+	else if (pid_left < 0)
+	{
+		close(pipefd[0]);
+		close(pipefd[1]);
+		return (perror("fork left"), -1);
+	}
+	return (pid_left);
+}
+
+static int	handle_right_fork(t_mini *mini, t_ast *node, int pipefd[2],
+						pid_t pid_left)
+{
+	pid_t	pid_right;
+
+	pid_right = fork();
+	if (pid_right == 0)
+		execute_right_pipe(mini, node->right, pipefd);
+	else if (pid_right < 0)
+	{
+		close(pipefd[0]);
+		close(pipefd[1]);
+		kill(pid_left, SIGTERM);
+		return (perror("fork right"), -1);
+	}
+	return (pid_right);
+}
+
 int	execute_pipe_node(t_mini *mini, t_ast *node)
 {
 	int		pipefd[2];
@@ -50,25 +84,12 @@ int	execute_pipe_node(t_mini *mini, t_ast *node)
 
 	if (pipe(pipefd) == -1)
 		return (perror("pipe"), 1);
-	pid_left = fork();
-	if (pid_left == 0)
-		execute_left_pipe(mini, node->left, pipefd);
-	else if (pid_left < 0)
-	{
-		close(pipefd[0]);
-		close(pipefd[1]);
-		return (perror("fork left"), 1);
-	}
-	pid_right = fork();
-	if (pid_right == 0)
-		execute_right_pipe(mini, node->right, pipefd);
-	else if (pid_right < 0)
-	{
-		close(pipefd[0]);
-		close(pipefd[1]);
-		kill(pid_left, SIGTERM);
-		return (perror("fork right"), 1);
-	}
+	pid_left = handle_left_fork(mini, node, pipefd);
+	if (pid_left == -1)
+		return (1);
+	pid_right = handle_right_fork(mini, node, pipefd, pid_left);
+	if (pid_right == -1)
+		return (1);
 	close(pipefd[0]);
 	close(pipefd[1]);
 	waitpid(pid_left, &status_left, 0);

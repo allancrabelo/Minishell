@@ -1,50 +1,5 @@
 #include "minishell.h"
 
-char	*fill_token_data(t_mini *mini, size_t *i, size_t len)
-{
-	char	*dst;
-	size_t	j;
-	int		quote;
-	char	*var_name;
-	char	*expanded_value;
-
-	dst = malloc(len + 1);
-	if (!dst)
-		return (NULL);
-	quote = 0;
-	j = 0;
-	while (j < len && mini->input[*i])
-	{
-		if ((mini->input[*i] == '\'' || mini->input[*i] == '"') && quote == 0)
-		{
-			quote = mini->input[*i];
-			(*i)++;
-		}
-		else if (mini->input[*i] == quote && quote != 0)
-		{
-			quote = 0;
-			(*i)++;
-		}
-		else if (mini->input[*i] == '$' && quote != '\'')
-		{
-			(*i)++;
-			var_name = extract_var_name(mini, i);
-			expanded_value = expand_variable(mini, var_name);
-			free(var_name);
-			if (expanded_value)
-			{
-				ft_strlcpy(&dst[j], expanded_value, len - j + 1);
-				j += ft_strlen(expanded_value);
-				free(expanded_value);
-			}
-		}
-		else
-			dst[j++] = mini->input[(*i)++];
-	}
-	dst[j] = '\0';
-	return (dst);
-}
-
 t_token	*new_token(t_mini *mini, size_t *i, size_t len, t_token_type type)
 {
 	t_token	*token;
@@ -111,11 +66,8 @@ int	ft_tokenizer(t_mini *mini, char *input)
 	mini->input = ft_strdup(input);
 	i = 0;
 	len = ft_strlen(mini->input);
-	if (!check_validity(mini->input))
-	{
-		mini->exit_status = 2;
-		return (write(2, "unexpected EOF while looking for matching quotes\n", 49), 1);
-	}
+	if (!check_validity(mini, mini->input))
+		return (0);
 	while (i < len)
 	{
 		while (i < len && ft_isspace(mini->input[i]))

@@ -33,6 +33,7 @@ VPATH		:=	src src/utils \
 SRCSLIST	:=	main \
 				signals \
 				handle_commands \
+				utils \
 				ft_echo \
 				ft_exit \
 				ft_pwd \
@@ -47,7 +48,10 @@ SRCSLIST	:=	main \
 				redirections_executor \
 				tokenizer \
 				tokenizer_utils \
+				fill_token_data \
 				parser \
+				parse_command \
+				parse_ordered \
 				variable_expander \
 				expander_utils \
 				environment_utils \

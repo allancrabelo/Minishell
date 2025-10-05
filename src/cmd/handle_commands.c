@@ -50,21 +50,10 @@ int	is_builtin_command(char *cmd)
 	return (0);
 }
 
-// Function to execute builtin commands
-int	execute_builtin(t_mini *mini, t_ast *node, t_redir *redir)
+int	builtin(t_mini *mini, t_ast *node)
 {
 	int	result;
-	int	stdin_backup;
-	int	stdout_backup;
 
-	(void)mini;
-	if (backup_fd(&stdin_backup, &stdout_backup) == -1)
-		return (1);
-	if (apply_redirections(redir, mini) == -1)
-	{
-		restore_fd(stdin_backup, stdout_backup);
-		return (1);
-	}
 	if (ft_strcmp(node->args[0], "echo") == 0)
 		result = ft_echo(node);
 	else if (ft_strcmp(node->args[0], "env") == 0)
@@ -81,6 +70,25 @@ int	execute_builtin(t_mini *mini, t_ast *node, t_redir *redir)
 		result = ft_unset(mini, node);
 	else
 		result = 0;
+	return (result);
+}
+
+// Function to execute builtin commands
+int	execute_builtin(t_mini *mini, t_ast *node, t_redir *redir)
+{
+	int	result;
+	int	stdin_backup;
+	int	stdout_backup;
+
+	(void)mini;
+	if (backup_fd(&stdin_backup, &stdout_backup) == -1)
+		return (1);
+	if (apply_redirections(redir, mini) == -1)
+	{
+		restore_fd(stdin_backup, stdout_backup);
+		return (1);
+	}
+	result = builtin(mini, node);
 	restore_fd(stdin_backup, stdout_backup);
 	return (result);
 }
@@ -100,10 +108,7 @@ int	execute_external_command(t_mini *mini, t_ast *node, t_redir *redirects)
 		if (apply_redirections(redirects, mini) == -1)
 			exit(mini->exit_status); //TODO: When does this happen?
 		exit_code = execute_external(mini, node->args);
-		free_tokens(mini);
-		free_ast(mini->ast);
-		free_export_list(mini->export_list);
-		exit(exit_code);
+		return (ft_free_all(mini, exit_code, 1));
 	}
 	else if (pid < 0)
 		return (perror("fork"), 1);

@@ -65,7 +65,6 @@ static int	process_export_arg(t_mini *mini, char *arg)
 		ft_putstr_fd("': not a valid identifier\n", 2);
 		return (1);
 	}
-	
 	key = NULL;
 	value = NULL;
 	extract_key_value(arg, &key, &value);
@@ -75,7 +74,6 @@ static int	process_export_arg(t_mini *mini, char *arg)
 	free(key);
 	if (value)
 		free(value);
-	
 	return (result);
 }
 
@@ -89,7 +87,6 @@ int	ft_export(t_mini *mini, t_ast *node)
 		print_export_list(mini);
 		return (0);
 	}
-	
 	ret = 0;
 	i = 1;
 	while (node->args[i])

@@ -1,5 +1,19 @@
 #include "minishell.h"
 
+static void	cd_error(char *target_dir)
+{
+	ft_putstr_fd("minishell: cd: ", 2);
+	ft_putstr_fd(target_dir, 2);
+	ft_putstr_fd(": ", 2);
+	if (errno == ENOENT)
+		ft_putstr_fd("No such file or directory\n", 2);
+	else if (errno == EACCES)
+		ft_putstr_fd("Permission denied\n", 2);
+	else
+		ft_putstr_fd("Not a directory\n", 2);
+	return ;
+}
+
 int	ft_cd(t_mini *mini, t_ast *node)
 {
 	char	*target_dir;
@@ -19,18 +33,7 @@ int	ft_cd(t_mini *mini, t_ast *node)
 	old_pdw_var = ft_getenv("PWD", mini);
 	ft_setenv("OLDPWD", old_pdw_var, mini);
 	if (chdir(target_dir) != 0)
-	{
-		ft_putstr_fd("minishell: cd: ", 2);
-		ft_putstr_fd(target_dir, 2);
-		ft_putstr_fd(": ", 2);
-		if (errno == ENOENT)
-			ft_putstr_fd("No such file or directory\n", 2);
-		else if (errno == EACCES)
-			ft_putstr_fd("Permission denied\n", 2);
-		else
-			ft_putstr_fd("Not a directory\n", 2);
-		return (1);
-	}
+		return (cd_error(target_dir), 1);
 	ft_setenv("PWD", getcwd(pwd, sizeof(pwd)), mini);
 	return (0);
 }

@@ -16,28 +16,29 @@ static char	*read_heredoc_input(char *delimeter, int *interrupted)
 		{
 			if (!*interrupted)
 			{
-				ft_putstr_fd("bash: warning: here-document delimited by end-of-file (wanted `", 2);
+				print_command_error("warning", "here-document delimited \
+by end-of-file (wanted `");
 				ft_putstr_fd(delimeter, 2);
 				ft_putstr_fd("')\n", 2);
-				break;
+				break ;
 			}
 		}
 		if (ft_strcmp(line, delimeter) == 0)
 		{
 			free(line);
-			break;
+			break ;
 		}
 		temp = content;
 		content = ft_strjoin(temp, line);
 		free(temp);
 		free(line);
 		if (!content)
-			break;
+			break ;
 		temp = content;
 		content = ft_strjoin(temp, "\n");
 		free(temp);
 		if (!content)
-			break;
+			break ;
 	}
 	return (content);
 }
@@ -57,7 +58,7 @@ static int	create_heredoc_file(char *delimiter, t_mini *mini)
 	{
 		fd = open("/tmp/minishell_heredoc", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (fd == -1)
-			exit(1);	//TODO: When does this happen?
+			exit(1); //TODO: free all???
 		content = read_heredoc_input(delimiter, &interrupted);
 		if (content)
 		{
@@ -92,7 +93,6 @@ int	redirect_heredoc(t_redir *redirect, t_mini *mini)
 	fd = create_heredoc_file(redirect->file, mini);
 	if (fd == -1)
 		return (-1);
-
 	if (dup2(fd, STDIN_FILENO) == -1)
 	{
 		close(fd);

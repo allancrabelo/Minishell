@@ -44,7 +44,7 @@ size_t	handle_quotes(t_mini *mini, size_t *i, char quote)
 	while (mini->input[*i] && mini->input[*i] != quote)
 	{
 		if (quote == '"' && mini->input[*i] == '$')
-			len += expand_var_in_tokenizer(mini, i);//expand_var(mini, i);
+			len += expand_var_in_tokenizer(mini, i);
 		else
 		{
 			len++;
@@ -56,7 +56,7 @@ size_t	handle_quotes(t_mini *mini, size_t *i, char quote)
 	return (len);
 }
 
-size_t	get_word_len(t_mini *mini, size_t len, size_t i) //	Implement exp var
+size_t	get_word_len(t_mini *mini, size_t len, size_t i)
 {
 	size_t	word_len;
 
@@ -66,7 +66,7 @@ size_t	get_word_len(t_mini *mini, size_t len, size_t i) //	Implement exp var
 		if (mini->input[i] == '\'' || mini->input[i] == '"')
 			word_len += handle_quotes(mini, &i, mini->input[i]);
 		else if (mini->input[i] == '$')
-			word_len += expand_var_in_tokenizer(mini, &i);//expand_var(mini, &i);
+			word_len += expand_var_in_tokenizer(mini, &i);
 		else
 		{
 			word_len++;
@@ -76,15 +76,14 @@ size_t	get_word_len(t_mini *mini, size_t len, size_t i) //	Implement exp var
 	return (word_len);
 }
 
-int	check_validity(char *input)
+int	check_validity(t_mini *mini, char *input)
 {
 	size_t	i;
 	int		single_quote;
 	int		double_quote;
-	int		balance;
+	int		ret;
 
 	i = 0;
-	balance = 0;
 	single_quote = 0;
 	double_quote = 0;
 	while (input[i])
@@ -93,13 +92,14 @@ int	check_validity(char *input)
 			single_quote = !single_quote;
 		else if (input[i] == '"' && !single_quote)
 			double_quote = !double_quote;
-		if (input[i] == '(')
-			balance ++;
-		else if (input[i] == ')')
-			balance --;
-		if (balance < 0)
-			return (0);
 		i++;
 	}
-	return (!single_quote && !double_quote && balance == 0);
+	ret = !single_quote && !double_quote;
+	if (!ret)
+	{
+		mini->exit_status = 2;
+		ft_putstr_fd("minishell: unexpected EOF while \
+looking for matching quotes\n", 2);
+	}
+	return (ret);
 }

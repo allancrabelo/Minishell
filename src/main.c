@@ -75,7 +75,7 @@ static void	main_loop(t_mini *mini)
 		if (!input)
 		{
 			write(1, "exit\n", 5);
-			break;
+			break ;
 		}
 		do_commands(mini, input);
 		free (input);

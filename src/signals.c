@@ -35,4 +35,3 @@ void	setup_heredoc_signals(void)
 {
 	signal(SIGINT, heredoc_sighandler);
 }
-

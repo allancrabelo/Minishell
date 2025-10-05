@@ -65,7 +65,6 @@ typedef struct s_env
 	struct s_env	*next;
 }	t_env;
 
-
 typedef struct s_token
 {
 	char			*data;
@@ -127,10 +126,9 @@ void		free_ast(t_ast *node);
 void		free_redir(t_redir *redir);
 
 // Utils
-int	is_operator(t_token_type type);
-int	is_redirect(t_token_type type);
-int	print_syntax_error(t_mini *mini, char *error_msg);
-
+int			is_operator(t_token_type type);
+int			is_redirect(t_token_type type);
+int			print_syntax_error(t_mini *mini, char *error_msg);
 
 // [BUILTINS]:
 // Echo:
@@ -191,11 +189,15 @@ void		wait_update_main(int pid, int *status);
 // Tokenizer
 //void	ft_tokenizer(t_mini *mini, char *input);
 int			ft_tokenizer(t_mini *mini, char *input);
-int			check_validity(char *input);
+int			check_validity(t_mini *mini, char *input);
 size_t		get_word_len(t_mini *mini, size_t len, size_t i);
 int			is_op(const char *input, size_t i);
+char		*fill_token_data(t_mini *mini, size_t *i, size_t len);
 int			build_ast(t_mini *mini);
 int			is_builtin_command(char *cmd);
+t_ast		*parse_command(t_mini *mini, t_token **tokens);
+t_ast		*build_cmd_node(char **args, int arg_count, t_redir *redir);
+t_ast		*build_operator_node(t_ast *left, t_ast *right, t_token_type type);
 
 //Expansion
 char		*extract_var_name(t_mini *mini, size_t *i);

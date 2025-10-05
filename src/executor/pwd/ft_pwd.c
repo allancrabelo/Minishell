@@ -20,6 +20,6 @@ int	ft_pwd(t_mini *mini)
 		printf("%s\n", mini->pwd);
 		return (0);
 	}
-	printf("%s\n",pwd);
+	printf("%s\n", pwd);
 	return (0);
 }

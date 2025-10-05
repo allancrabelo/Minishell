@@ -19,7 +19,7 @@ static void	remove_from_env_list(t_mini *mini, char *key)
 			if (current->value)
 				free(current->value);
 			free(current);
-			return;
+			return ;
 		}
 		prev = current;
 		current = current->next;
@@ -45,7 +45,7 @@ static void	remove_from_export_list(t_mini *mini, char *key)
 			if (current->value)
 				free(current->value);
 			free(current);
-			return;
+			return ;
 		}
 		prev = current;
 		current = current->next;
@@ -59,7 +59,6 @@ int	ft_unset(t_mini *mini, t_ast *node)
 
 	if (!node->args[1])
 		return (0);
-	
 	ret = 0;
 	i = 1;
 	while (node->args[i])

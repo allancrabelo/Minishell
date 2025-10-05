@@ -40,7 +40,6 @@ int	ft_echo(t_ast *node)
 			write(STDOUT_FILENO, " ", 1);
 		i++;
 	}
-	
 	if (!flag)
 		write(STDOUT_FILENO, "\n", 1);
 	return (0);
