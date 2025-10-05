@@ -129,27 +129,6 @@ int	execute_command(t_mini *mini, t_ast *node)
 		return (execute_external_command(mini, node, node->redir));
 }
 
-void	free_tokens(t_mini *mini)
-{
-	t_token	*cur;
-	t_token	*tmp;
-
-	cur = mini->token;
-	mini->token = NULL;
-	if (!cur)
-		return ;
-	while (cur)
-	{
-		tmp = cur->next;
-		if (cur->data)
-			free(cur->data);
-		free(cur);
-		cur = tmp;
-	}
-	if (mini->input)
-		free(mini->input);
-}
-
 void	handle_commands(t_mini *mini, char *input)
 {
 	ft_tokenizer(mini, input);

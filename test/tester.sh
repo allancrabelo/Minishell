@@ -168,96 +168,94 @@ fi
 
 
 
-# header "ECHO TESTS"
-# run_test "echo simple" "echo hello"
-# run_test "echo with -n flag" "echo -n hello"
-# run_test "echo with many -n flags" "echo -n -n -n hello"
-# run_test "echo with many -n flags with multiple n" "echo -nnnn -nnnnnnn -n hello"
-# run_test "echo multiple words" "echo hello world test"
-# run_test "echo empty" "echo"
-# run_test "echo with quotes" "echo 'hello world'"
-# run_test "echo with double quotes" 'echo "hello world"'
+header "ECHO TESTS"
+run_test "echo simple" "echo hello"
+run_test "echo with -n flag" "echo -n hello"
+run_test "echo with many -n flags" "echo -n -n -n hello"
+run_test "echo with many -n flags with multiple n" "echo -nnnn -nnnnnnn -n hello"
+run_test "echo multiple words" "echo hello world test"
+run_test "echo empty" "echo"
+run_test "echo with quotes" "echo 'hello world'"
+run_test "echo with double quotes" 'echo "hello world"'
 
-# header "PWD TESTS"
-# run_test "pwd" "pwd"
+header "PWD TESTS"
+run_test "pwd" "pwd"
 
-# header "CD TESTS"
-# run_test "cd to /tmp" "cd /tmp\npwd"
-# run_test "cd to home" "cd ~\npwd"
-# run_test "cd to .." "cd ..\npwd"
-# run_test "cd to relative path" "cd /tmp\ncd ..\npwd"
-# run_test "cd to nonexistent" "cd /nonexistent/path" true
+header "CD TESTS"
+run_test "cd to /tmp" "cd /tmp\npwd"
+run_test "cd to home" "cd ~\npwd"
+run_test "cd to .." "cd ..\npwd"
+run_test "cd to relative path" "cd /tmp\ncd ..\npwd"
+run_test "cd to nonexistent" "cd /nonexistent/path" true
 
-# header "ENV TESTS"
-# run_test "env shows variables" "env"
-# run_test "export variable" "export TEST=hello\necho \$TEST"
-# run_test "unset variable" "export TEST=hello\nunset TEST\necho \$TEST"
+header "ENV TESTS"
+run_test "env shows variables" "env"
+run_test "export variable" "export TEST=hello\necho \$TEST"
+run_test "unset variable" "export TEST=hello\nunset TEST\necho \$TEST"
 
-# header "REDIRECTIONS TESTS"
-# # Test syntax errors first
-# run_test "redirect without file" "echo >" true
-# run_test "redirect append without file" "echo >>" true
-# run_test "redirect input without file" "cat <" true
-# # Test basic redirections (create separate tests for each step)
-# run_test "output redirection simple" "echo hello > /tmp/test_mini.txt"
-# run_test "read redirected file" "cat /tmp/test_mini.txt"
-# run_test "append redirection" "echo world >> /tmp/test_mini.txt"
-# run_test "read appended file" "cat /tmp/test_mini.txt"
-# run_test "input redirection" "cat < /tmp/test_mini.txt"
-# run_test "cleanup test file" "rm /tmp/test_mini.txt"
+header "REDIRECTIONS TESTS"
+# Test syntax errors first
+run_test "redirect without file" "echo >" true
+run_test "redirect append without file" "echo >>" true
+run_test "redirect input without file" "cat <" true
+# Test basic redirections (create separate tests for each step)
+run_test "output redirection simple" "echo hello > /tmp/test_mini.txt"
+run_test "read redirected file" "cat /tmp/test_mini.txt"
+run_test "append redirection" "echo world >> /tmp/test_mini.txt"
+run_test "read appended file" "cat /tmp/test_mini.txt"
+run_test "input redirection" "cat < /tmp/test_mini.txt"
+run_test "cleanup test file" "rm /tmp/test_mini.txt"
 
-# # Multiple redirections
-# run_test "multiple output redirections" "echo hello > /tmp/test1.txt > /tmp/test2.txt"
-# run_test "check first file (should be empty)" "cat /tmp/test1.txt"
-# run_test "check second file (should have content)" "cat /tmp/test2.txt"
-# run_test "cleanup multiple files" "rm -f /tmp/test1.txt /tmp/test2.txt"
+# Multiple redirections
+run_test "multiple output redirections" "echo hello > /tmp/test1.txt > /tmp/test2.txt"
+run_test "check first file (should be empty)" "cat /tmp/test1.txt"
+run_test "check second file (should have content)" "cat /tmp/test2.txt"
+run_test "cleanup multiple files" "rm -f /tmp/test1.txt /tmp/test2.txt"
 
-# header "PIPES TESTS"
-# run_test "simple pipe" "echo hello | cat"
-# run_test "pipe with wc" "echo hello world | wc -w"
-# run_test "multiple pipes" "echo hello | cat | cat"
-# run_test "pipe with grep" "printf 'hello\nworld\ntest' | grep world"
+header "PIPES TESTS"
+run_test "simple pipe" "echo hello | cat"
+run_test "pipe with wc" "echo hello world | wc -w"
+run_test "multiple pipes" "echo hello | cat | cat"
+run_test "pipe with grep" "printf 'hello\nworld\ntest' | grep world"
 
-# header "BUILTIN TESTS"
-# run_test "exit with code" "exit 42"
-# run_test "exit without code" "exit"
+header "BUILTIN TESTS"
+run_test "exit with code" "exit 42"
+run_test "exit without code" "exit"
 
-# header "ERROR HANDLING TESTS"
-# run_test "command not found" "/bin/nonexistent_command_xyz" true
-# run_test "invalid option" "ls --invalid-option"
+header "ERROR HANDLING TESTS"
+run_test "command not found" "/bin/nonexistent_command_xyz" true
+run_test "invalid option" "ls --invalid-option"
 
-# header "QUOTES AND SPECIAL CHARS TESTS"
-# run_test "single quotes" "echo 'hello world'"
-# run_test "double quotes" 'echo "hello world"'
-# run_test "mixed quotes" "echo \"hello 'world'\""
-# run_test "quotes with spaces" "echo 'hello    world'"
-# run_test "empty quotes" "echo ''"
-# run_test "quotes with special chars" "echo 'hello \$USER world'"
+header "QUOTES AND SPECIAL CHARS TESTS"
+run_test "single quotes" "echo 'hello world'"
+run_test "double quotes" 'echo "hello world"'
+run_test "mixed quotes" "echo \"hello 'world'\""
+run_test "quotes with spaces" "echo 'hello    world'"
+run_test "empty quotes" "echo ''"
+run_test "quotes with special chars" "echo 'hello \$USER world'"
 
-# header "VARIABLE EXPANSION TESTS"
-# run_test "expand HOME" "echo \$HOME"
-# run_test "expand USER" "echo \$USER"
-# run_test "expand PATH" "echo \$PATH"
-# run_test "expand nonexistent var" "echo \$NONEXISTENT"
-# run_test "expand with text" "echo Hello \$USER!"
+header "VARIABLE EXPANSION TESTS"
+run_test "expand HOME" "echo \$HOME"
+run_test "expand USER" "echo \$USER"
+run_test "expand PATH" "echo \$PATH"
+run_test "expand nonexistent var" "echo \$NONEXISTENT"
+run_test "expand with text" "echo Hello \$USER!"
 
-# header "WHITESPACE TESTS"
-# run_test "multiple spaces" "echo hello    world"
-# run_test "tabs and spaces" "echo hello		world"
-# run_test "leading spaces" "   echo hello"
-# run_test "trailing spaces" "echo hello   "
+header "WHITESPACE TESTS"
+run_test "multiple spaces" "echo hello    world"
+run_test "tabs and spaces" "echo hello		world"
+run_test "leading spaces" "   echo hello"
+run_test "trailing spaces" "echo hello   "
 
-# header "SYNTAX ERROR TESTS"
-# run_test "unclosed single quote" "echo 'hello" true
-# run_test "unclosed double quote" 'echo "hello' true
-# run_test "pipe at end" "echo hello |" true
-# run_test "pipe at start" "| echo hello" true
-run_test "empty pipe" "echo | | cat" false "test"
-run_test "empty pipe" "echo | | cat" true "test"
-run_test "empty pipe" "echo | | cat" true
+header "SYNTAX ERROR TESTS"
+run_test "unclosed single quote" "echo 'hello" true "quote is unclosed (not required to handle)"
+run_test "unclosed double quote" 'echo "hello' true "quote is unclosed (not required to handle)"
+run_test "pipe at end" "echo hello |" true "Pipe at the start"
+run_test "pipe at start" "| echo hello" true "Pipe at the start"
+run_test "empty pipe" "echo | | cat" true "Pipe followed by pipe"
 
 header "TEST COMMAND"
-run_test "Non Existent Command" "aa"
+run_test "Non Existent Command" "aa" true "Command does not exist"
 
 header "SUMMARY"
 echo "Total tests run: $TESTS_RUN"
