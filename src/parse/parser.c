@@ -8,53 +8,6 @@
  * 4. Commands and parentheses
  */
 
-// Forward declarations for parser functions
-// static t_ast	*parse_or(t_mini *mini, t_token **tokens);
-// static t_ast	*parse_and(t_mini *mini, t_token **tokens);
-// static t_ast	*parse_pipe(t_mini *mini, t_token **tokens);
-// static t_ast	*parse_primary(t_mini *mini, t_token **tokens);
-
-// // Forward declarations for functions from original parser.c
-// static void		free_redir(t_redir *redir);
-// static int		add_redir_to_list(t_redir **redir, t_redir *new_redir);
-// static char		**init_args_array(int count);
-// static int		handle_word_token(t_token **tokens, char **args, int *count);
-// t_ast			*build_operator_node(t_ast *left, t_ast *right, t_token_type type);
-// t_ast			*build_cmd_node(char **args, int arg_count, t_redir *redir);
-// t_ast			*parse_command(t_mini *mini, t_token **tokens);
-// int				parse_redir(t_mini *mini, t_token **tokens, t_redir **redir);
-// int				count_cmd_args(t_token *tokens);
-
-
-static void	free_redir(t_redir *redir)
-{
-	t_redir	*tmp;
-
-	while (redir)
-	{
-		tmp = redir->next;
-		if (redir->file)
-			free(redir->file);
-		if (redir->heredoc_delimeter)
-			free(redir->heredoc_delimeter);
-		free(redir);
-		redir = tmp;
-	}
-}
-
-void	free_ast(t_ast *node)
-{
-	if (!node)
-		return ;
-	free_ast(node->left);
-	free_ast(node->right);
-	if (node->args)
-		ft_free_split(node->args);
-	if (node->redir)
-		free_redir(node->redir);
-	free(node);
-}
-
 t_ast	*build_operator_node(t_ast *left, t_ast *right, t_token_type type)
 {
 	t_ast	*node;
