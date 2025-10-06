@@ -28,10 +28,30 @@ void	heredoc_sighandler(int signal)
 	(void)signal;
 	g_signal = 130;
 	write(1, "\n", 1);
-	exit(g_signal);
+	exit(g_signal); //ISTO DA LEAK!!!
 }
 
 void	setup_heredoc_signals(void)
 {
 	signal(SIGINT, heredoc_sighandler);
+}
+
+void	handle_exec_ctrl_c(int signal)
+{
+	(void)signal;
+	g_signal = 130;
+	write(1, "\n", 1);
+}
+
+static void	handle_exec_ctrl_bslash(int signal)
+{
+	(void)signal;
+	g_signal = 131;
+	printf("Quit (core dumped)\n");
+}
+
+void	setup_exec_signals(void)
+{
+	signal(SIGINT, handle_exec_ctrl_c);
+	signal(SIGQUIT, handle_exec_ctrl_bslash);
 }

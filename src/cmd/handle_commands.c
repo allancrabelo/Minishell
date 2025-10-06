@@ -101,8 +101,7 @@ int	execute_external_command(t_mini *mini, t_ast *node, t_redir *redirects)
 	int		status;
 
 	pid = fork();
-	signal(SIGQUIT, SIG_IGN);
-	signal(SIGINT, SIG_IGN);
+	setup_exec_signals();
 	if (pid == 0)
 	{
 		if (apply_redirections(redirects, mini) == -1)
