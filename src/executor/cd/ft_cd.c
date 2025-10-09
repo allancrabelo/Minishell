@@ -21,6 +21,8 @@ int	ft_cd(t_mini *mini, t_ast *node)
 	char	pwd[4096];
 
 	target_dir = ft_getenv("HOME", mini);
+	if (node->arg_count == 3)
+		return (print_command_error("cd", "too many arguments"), 1);
 	if (node->args[1] == NULL)
 	{
 		if (target_dir)

@@ -18,6 +18,16 @@ char	*extract_var_name(t_mini *mini, size_t *i)
 		mini->input[*i] == '\"' || mini->input[*i] == '\'' || \
 		mini->input[*i] == '$')
 		return (ft_strdup("$")); 
+	if ((mini->input[*i] >= '0' && mini->input[*i] <= '9') || mini->input[*i] == '!')
+	{
+		var_name = malloc(2);
+		if (!var_name)
+			return (NULL);
+		var_name[0] = mini->input[*i];
+		var_name[1] = '\0';
+		(*i)++;
+		return (var_name);
+	}
 	while (mini->input[*i] && (ft_isalnum(mini->input[*i])
 			|| mini->input[*i] == '_'))
 	{
@@ -43,6 +53,8 @@ char	*expand_variable(t_mini *mini, char *var_name)
 		return (ft_strdup("$"));
 	if (ft_strlen(var_name) == 1 && is_special_var(var_name[0]))
 		return (expand_special_var(mini, var_name[0]));
+	if (var_name[0] >= '0' && var_name[0] <= '9' && var_name[1] == '\0')
+		return (ft_strdup(""));
 	value = ft_getenv(var_name, mini);
 	if (value)
 		return (ft_strdup(value));

@@ -34,31 +34,6 @@ void	do_commands(t_mini *mini, char *input)
 	handle_commands(mini, input);
 }
 
-static char	*make_prompt(t_mini *mini)
-{
-	static char	buf[64];
-	char		*num;
-	int			status;
-
-	status = mini->exit_status;
-	num = ft_itoa(status);
-	buf[0] = '\0';
-	if (status == 0)
-	{
-		ft_strlcpy(buf, "\001" SBBLUE "\002[", sizeof(buf));
-		ft_strlcat(buf, num, sizeof(buf));
-		ft_strlcat(buf, LINE, sizeof(buf));
-	}
-	else
-	{
-		ft_strlcpy(buf, "\001" SBRED "\002[", sizeof(buf));
-		ft_strlcat(buf, num, sizeof(buf));
-		ft_strlcat(buf, LINE, sizeof(buf));
-	}
-	free (num);
-	return (buf);
-}
-
 static void	main_loop(t_mini *mini)
 {
 	char	*input;
@@ -66,7 +41,7 @@ static void	main_loop(t_mini *mini)
 	while (1)
 	{
 		signal_init();
-		input = readline(make_prompt(mini));
+		input = readline(SYELLOW "minishell$ " SRESET);
 		if (g_signal)
 		{
 			mini->exit_status = g_signal;

@@ -63,18 +63,8 @@ int	ft_unset(t_mini *mini, t_ast *node)
 	i = 1;
 	while (node->args[i])
 	{
-		if (!is_valid_identifier(node->args[i]))
-		{
-			ft_putstr_fd("minishell: unset: `", 2);
-			ft_putstr_fd(node->args[i], 2);
-			ft_putstr_fd("': not a valid identifier\n", 2);
-			ret = 1;
-		}
-		else
-		{
-			remove_from_env_list(mini, node->args[i]);
-			remove_from_export_list(mini, node->args[i]);
-		}
+		remove_from_env_list(mini, node->args[i]);
+		remove_from_export_list(mini, node->args[i]);
 		i++;
 	}
 	return (ret);
