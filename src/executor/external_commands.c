@@ -97,8 +97,7 @@ int	execute_external(t_mini *mini, char **argv)
 	full_path = find_command_path(mini, argv[0]);
 	if (!full_path)
 	{
-		ft_putstr_fd("minishell: ", 2);
-		perror(argv[0]);
+		print_command_error(argv[0], "command not found");
 		return (127);
 	}
 	env_array = env_list_to_array(mini);

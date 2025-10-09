@@ -20,7 +20,6 @@ int	ft_cd(t_mini *mini, t_ast *node)
 	char	*old_pdw_var;
 	char	pwd[4096];
 
-	(void)mini;
 	target_dir = ft_getenv("HOME", mini);
 	if (node->args[1] == NULL)
 	{

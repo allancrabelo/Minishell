@@ -1,13 +1,56 @@
 #include "minishell.h"
 
-static int	get_num_256(char *str, int *res)
+int ft_atoll_safe(const char *str, long long *result)
 {
-	int	val;
-	int	i;
+	int					sign;
+	unsigned int		digit;
+	unsigned long long	acum;
+	unsigned long long	lim;
+
+	sign = 1;
+	acum = 0;
+	lim = (unsigned long long)LLONG_MAX;
+	while (*str == ' ' || (*str >= 9 && *str <= 13))
+		str++;
+	if (*str == '+' || *str == '-')
+	{
+		if (*str == '-')
+			sign = -1;
+		str++;
+	}
+	if (!*str)
+		return (0);
+	
+	if (sign < 0)
+		lim = (unsigned long long)LLONG_MAX + 1ULL;
+	
+	while (*str && ft_isdigit((unsigned char)*str))
+	{
+		digit = (unsigned)(*str - '0');
+		if (acum > (lim - digit) / 10ULL)
+			return (0);
+		acum = acum * 10ULL + digit;
+		str++;
+	}
+	
+	if (*str != '\0')
+		return (0);
+	
+	if (sign < 0)
+		*result = (long long)(-acum);
+	else
+		*result = (long long)acum;
+	
+	return (1);
+}
+
+static int get_num_256(char *str, long *res)
+{
+	long long	val;
 
 	if (!str || !str[0])
 		return (0);
-	i = 0;
+	int i = 0;
 	if (str[0] == '+' || str[0] == '-')
 		i++;
 	while (str[i])
@@ -16,34 +59,46 @@ static int	get_num_256(char *str, int *res)
 			return (0);
 		i++;
 	}
-	val = ft_atoi(str);
-	*res = ((int)(val % 256) + 256) % 256;
+	if (!ft_atoll_safe(str, &val))
+		return (0);
+	*res = (val % 256 + 256) % 256;
 	return (1);
 }
 
 int	ft_exit(t_mini *mini, t_ast *node)
 {
-	int	res;
+	long	res;
 
 	write(1, "exit\n", 5);
 	res = 0;
-	if (node->arg_count >= 2 && get_num_256(node->args[1], &res))
+	
+	if (node->arg_count >= 2)
 	{
-		if (node->arg_count == 2)
-			mini->exit_status = res;
-		else
-			return (ft_putstr_fd("minishell: exit: too many arguments\n", 2)
-				, 1);
-	}
-	else if (node->arg_count >= 2)
-	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(node->args[1], 2);
-		ft_putstr_fd(": numeric argument required\n", 2);
-		mini->exit_status = 2;
+		if (!get_num_256(node->args[1], &res))
+		{
+			ft_putstr_fd("minishell: exit: ", 2);
+			ft_putstr_fd(node->args[1], 2);
+			ft_putstr_fd(": numeric argument required\n", 2);
+			free_tokens(mini);
+			free_ast(mini->ast);
+			free_export_list(mini->export_list);
+			exit(2);
+		}
+		if (node->arg_count > 2)
+		{
+			ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+			return (1);
+		}
+		mini->exit_status = res;
 	}
 	free_tokens(mini);
 	free_ast(mini->ast);
 	free_export_list(mini->export_list);
+	if (mini->exit_status == LLONG_MIN)
+	{
+		ft_putstr_fd("minishell: exit: ", 2);
+		ft_putstr_fd(": numeric argument required\n", 2);
+		mini->exit_status = 0;
+	}
 	exit(mini->exit_status);
 }

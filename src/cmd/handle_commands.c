@@ -93,7 +93,6 @@ int	execute_builtin(t_mini *mini, t_ast *node, t_redir *redir)
 	return (result);
 }
 
-// Function to execute external commands using execve
 int	execute_external_command(t_mini *mini, t_ast *node, t_redir *redirects)
 {
 	pid_t	pid;
@@ -121,7 +120,6 @@ int	execute_external_command(t_mini *mini, t_ast *node, t_redir *redirects)
 	}
 }
 
-// Main command execution function
 int	execute_command(t_mini *mini, t_ast *node)
 {
 	if (!node || !node->args || (!node->args[0]

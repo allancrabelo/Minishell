@@ -18,6 +18,7 @@
 # include <curses.h>			// tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs (ou <termcap.h>)
 # include <readline/readline.h>	// readline
 # include <readline/history.h>	// add_history, rl_clear_history, etc.
+# include <limits.h>
 
 # define LINE "]\001" SBYELLOW "\002 minishell$\001" SRESET "\002 "
 # define COMMAND_NOT_FOUND 127
@@ -100,7 +101,7 @@ typedef struct s_mini
 	char			**envp;
 	t_export		*export_list;
 	int				env_size;
-	int				exit_status;
+	long				exit_status;
 	int				pipe_count;
 	int				**pipes;
 	pid_t			*child_pids;
