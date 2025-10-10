@@ -57,7 +57,7 @@ int	redirect_out(t_redir *redirect, t_mini *mini)
 	return (0);
 }
 
-int	redirect_append(t_redir *redirect)
+int	redirect_append(t_redir *redirect, t_mini *mini)
 {
 	int	fd;
 
@@ -72,6 +72,7 @@ int	redirect_append(t_redir *redirect)
 			ft_putstr_fd(": Is a directory\n", 2);
 		else
 			ft_putstr_fd(": Cannot open file\n", 2);
+		mini->exit_status = 1;
 		return (-1);
 	}
 	if (dup2(fd, STDOUT_FILENO) == -1)

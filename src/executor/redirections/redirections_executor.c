@@ -15,7 +15,7 @@ int	apply_redirections(t_redir *redirections, t_mini *mini)
 		else if (cur->type == TOKEN_REDIRECT_OUT)
 			result = redirect_out(cur, mini);
 		else if (cur->type == TOKEN_REDIRECT_APPEND)
-			result = redirect_append(cur);
+			result = redirect_append(cur, mini);
 		else if (cur->type == TOKEN_HEREDOC)
 			result = redirect_heredoc(cur, mini);
 		else

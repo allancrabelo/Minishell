@@ -171,7 +171,7 @@ int			ft_cd(t_mini *mini, t_ast *node);
 // Redirects:
 int			redirect_in(t_redir *redirect, t_mini *mini);
 int			redirect_out(t_redir *redirect, t_mini *mini);
-int			redirect_append(t_redir *redirect);
+int			redirect_append(t_redir *redirect, t_mini *mini);
 int			apply_redirections(t_redir *redirections, t_mini *mini);
 int			backup_fd(int *stdin_backup, int *stdout_backup);
 void		restore_fd(int stdin_backup, int stdout_backup);
