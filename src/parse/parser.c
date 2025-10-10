@@ -56,7 +56,7 @@ static int	verify_tokens(t_mini *mini, t_token *token)
 			if (!token->next || is_operator(token->next->type)
 				|| token->next->type == TOKEN_RPAREN)
 			{
-				printf("minishell: syntax error near unexpected token\n");
+				ft_putstr_fd("minishell: syntax error near unexpected token\n", 2);
 				mini->exit_status = 2;
 				return (0);
 			}
@@ -65,7 +65,7 @@ static int	verify_tokens(t_mini *mini, t_token *token)
 		{
 			if (!token->next || token->next->type != TOKEN_WORD)
 			{
-				print_syntax_error(mini, "near unexpected token `newline'");
+				ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
 				mini->exit_status = 2;
 				return (0);
 			}
@@ -82,7 +82,7 @@ int	build_ast(t_mini *mini)
 	if (mini->token->type == TOKEN_PIPE || mini->token->type == TOKEN_AND
 		|| mini->token->type == TOKEN_OR)
 	{
-		printf("minishell: syntax error near unexpected token\n");
+		ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2);
 		mini->exit_status = 2;
 		return (1);
 	}

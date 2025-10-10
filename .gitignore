@@ -1,8 +1,9 @@
 .vscode
 *.o
 *.a
+*.swp
 minishell
 *.txt
 *.supp
 *.pdf
-minishell-tester/
+minishell_tester/

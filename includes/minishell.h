@@ -129,7 +129,6 @@ void		free_redir(t_redir *redir);
 // Utils
 int			is_operator(t_token_type type);
 int			is_redirect(t_token_type type);
-int			print_syntax_error(t_mini *mini, char *error_msg);
 
 // [BUILTINS]:
 // Echo:
@@ -170,8 +169,8 @@ int			ft_unset(t_mini *mini, t_ast *node);
 int			ft_cd(t_mini *mini, t_ast *node);
 
 // Redirects:
-int			redirect_in(t_redir *redirect);
-int			redirect_out(t_redir *redirect);
+int			redirect_in(t_redir *redirect, t_mini *mini);
+int			redirect_out(t_redir *redirect, t_mini *mini);
 int			redirect_append(t_redir *redirect);
 int			apply_redirections(t_redir *redirections, t_mini *mini);
 int			backup_fd(int *stdin_backup, int *stdout_backup);
