@@ -20,6 +20,16 @@ static int	handle_quote_end(char c, int *quote)
 	return (0);
 }
 
+static char	*expand_tilde(t_mini *mini)
+{
+	char	*home;
+
+	home = get_env_var(mini, "HOME");
+	if (home)
+		return (ft_strdup(home));
+	return (ft_strdup("~"));
+}
+
 char	*fill_token_data(t_mini *mini, size_t *i, size_t len)
 {
 	char	*dst;
@@ -39,6 +49,17 @@ char	*fill_token_data(t_mini *mini, size_t *i, size_t len)
 			(*i)++;
 		else if (handle_quote_end(mini->input[*i], &quote))
 			(*i)++;
+		else if (mini->input[*i] == '~' && quote == 0 && (j == 0 || dst[j - 1] == '='))
+		{
+			(*i)++;
+			expanded_value = expand_tilde(mini);
+			if (expanded_value)
+			{
+				ft_strlcpy(&dst[j], expanded_value, len - j + 1);
+				j += ft_strlen(expanded_value);
+				free(expanded_value);
+			}
+		}
 		else if (mini->input[*i] == '$' && quote != '\'')
 		{
 			(*i)++;

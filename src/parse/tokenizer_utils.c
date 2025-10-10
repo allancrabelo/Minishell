@@ -56,6 +56,21 @@ size_t	handle_quotes(t_mini *mini, size_t *i, char quote)
 	return (len);
 }
 
+static size_t	expand_tilde_len(t_mini *mini, size_t *i)
+{
+	char	*home;
+	size_t	len;
+
+	home = get_env_var(mini, "HOME");
+	(*i)++;
+	if (home)
+	{
+		len = ft_strlen(home);
+		return (len);
+	}
+	return (1);
+}
+
 size_t	get_word_len(t_mini *mini, size_t len, size_t *i)
 {
 	size_t	word_len;
@@ -65,6 +80,8 @@ size_t	get_word_len(t_mini *mini, size_t len, size_t *i)
 	{
 		if (mini->input[*i] == '\'' || mini->input[*i] == '"')
 			word_len += handle_quotes(mini, i, mini->input[*i]);
+		else if (mini->input[*i] == '~' && word_len == 0)
+			word_len += expand_tilde_len(mini, i);
 		else if (mini->input[*i] == '$')
 			word_len += expand_var_in_tokenizer(mini, i);
 		else

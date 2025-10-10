@@ -91,14 +91,21 @@ char	**env_list_to_array(t_mini *mini)
 
 int	execute_external(t_mini *mini, char **argv)
 {
-	char	*full_path;
-	char	**env_array;
+	char		*full_path;
+	char		**env_array;
+	struct stat	path_stat;
 
 	full_path = find_command_path(mini, argv[0]);
 	if (!full_path)
 	{
 		print_command_error(argv[0], "command not found");
 		return (127);
+	}
+	if (stat(full_path, &path_stat) == 0 && S_ISDIR(path_stat.st_mode))
+	{
+		print_command_error(argv[0], "Is a directory");
+		free(full_path);
+		return (126);
 	}
 	env_array = env_list_to_array(mini);
 	if (!env_array)
