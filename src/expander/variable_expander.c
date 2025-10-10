@@ -50,11 +50,7 @@ char	*expand_variable(t_mini *mini, char *var_name)
 	if (!var_name || var_name[0] == '\0')
 		return (ft_strdup(""));
 	if (ft_strcmp(var_name, "$") == 0)
-	{
-		if (var_name[0] == '$' && var_name[1] != '$')
-			return (ft_strdup(""));
 		return (ft_strdup("$"));
-	}
 	if (ft_strlen(var_name) == 1 && is_special_var(var_name[0]))
 		return (expand_special_var(mini, var_name[0]));
 	if (var_name[0] >= '0' && var_name[0] <= '9' && var_name[1] == '\0')

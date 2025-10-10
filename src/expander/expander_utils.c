@@ -48,5 +48,6 @@ char	*expand_special_var(t_mini *mini, char var_char)
 
 int	is_special_var(char c)
 {
-	return (c == '?' || c == '$');
+	return (c == '?' || c == '$' || c == '!' || \
+			(c >= '0' && c <= '9'));
 }
