@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaugusto <aaugusto@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: aaugusto <aaugusto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 00:04:55 by aaugusto          #+#    #+#             */
-/*   Updated: 2025/07/10 00:34:08 by aaugusto         ###   ########.fr       */
+/*   Updated: 2025/10/11 00:30:00 by aaugusto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	ft_putstr(char *str)
 	return (i);
 }
 
-char	*ft_itoa(int n)
+static char	*ft_itoa_unsigned(unsigned int n)
 {
 	char			*a;
 	int				digits;
@@ -59,7 +59,7 @@ int	ft_putunsigned(unsigned int n)
 	char	*a;
 
 	i = 0;
-	a = ft_itoa(n);
+	a = ft_itoa_unsigned(n);
 	i += ft_putstr(a);
 	free (a);
 	return (i);

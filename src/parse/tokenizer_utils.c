@@ -56,21 +56,21 @@ size_t	handle_quotes(t_mini *mini, size_t *i, char quote)
 	return (len);
 }
 
-size_t	get_word_len(t_mini *mini, size_t len, size_t i)
+size_t	get_word_len(t_mini *mini, size_t len, size_t *i)
 {
 	size_t	word_len;
 
 	word_len = 0;
-	while (i < len && !ft_isspace(mini->input[i]) && !is_op(mini->input, i))
+	while (*i < len && !ft_isspace(mini->input[*i]) && !is_op(mini->input, *i))
 	{
-		if (mini->input[i] == '\'' || mini->input[i] == '"')
-			word_len += handle_quotes(mini, &i, mini->input[i]);
-		else if (mini->input[i] == '$')
-			word_len += expand_var_in_tokenizer(mini, &i);
+		if (mini->input[*i] == '\'' || mini->input[*i] == '"')
+			word_len += handle_quotes(mini, i, mini->input[*i]);
+		else if (mini->input[*i] == '$')
+			word_len += expand_var_in_tokenizer(mini, i);
 		else
 		{
 			word_len++;
-			i++;
+			(*i)++;
 		}
 	}
 	return (word_len);

@@ -63,10 +63,10 @@ char	*expand_variable(t_mini *mini, char *var_name)
 		return (ft_strdup(""));
 	if (ft_strcmp(var_name, "*") == 0)
 		return (ft_strdup(""));
-	value = ft_getenv(var_name, mini);
+	value = get_env_var(mini, var_name);
 	if (value)
 		return (ft_strdup(value));
-	value = ft_getexp(var_name, mini);
+	value = get_exp_var(mini, var_name);
 	if (value)
 		return (ft_strdup(value));
 	return (ft_strdup(""));

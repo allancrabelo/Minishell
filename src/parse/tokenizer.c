@@ -70,15 +70,18 @@ int	ft_tokenizer(t_mini *mini, char *input)
 		return (0);
 	while (i < len)
 	{
+		size_t	start_word;
+		
 		while (i < len && ft_isspace(mini->input[i]))
 			i++;
 		if (tokenize_op(mini, &i))
 			continue ;
-		word_len = get_word_len(mini, len, i);
+		start_word = i;
+		word_len = get_word_len(mini, len, &i);
 		if (word_len > 0)
-			add_token(mini, &i, word_len, TOKEN_WORD);
-		else
-			i++;
+		{
+			add_token(mini, &start_word, word_len, TOKEN_WORD);
+		}
 	}
 	if (mini->token != NULL)
 		return (build_ast(mini));

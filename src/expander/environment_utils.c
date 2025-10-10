@@ -16,21 +16,40 @@ char	*ft_strcpy(char *dest, char *src)
 
 char	*get_env_var(t_mini *mini, char *var_name)
 {
-	int		i;
-	size_t	name_len;
+	t_env	*current;
 
-	if (!var_name || !mini->envp)
+	if (!var_name || !mini->env_list)
 		return (NULL);
-	name_len = ft_strlen(var_name);
-	i = 0;
-	while (mini->envp[i])
+	
+	current = mini->env_list;
+	while (current)
 	{
-		if (ft_strncmp(mini->envp[i], var_name, name_len) == 0
-			&& mini->envp[i][name_len] == '=')
+		if (ft_strcmp(current->key, var_name) == 0)
+			return (current->value);
+		current = current->next;
+	}
+	return (NULL);
+}
+
+// Adicionar em environment_utils.c
+char	*get_exp_var(t_mini *mini, char *var_name)
+{
+	t_export	*current;
+
+	if (!var_name || !mini->export_list)
+		return (NULL);
+	
+	current = mini->export_list;
+	while (current)
+	{
+		if (ft_strcmp(current->key, var_name) == 0)
 		{
-			return (&mini->envp[i][name_len + 1]);
+			if (current->value)
+				return (current->value);
+			else
+				return (""); // Variável exportada sem valor
 		}
-		i++;
+		current = current->next;
 	}
 	return (NULL);
 }

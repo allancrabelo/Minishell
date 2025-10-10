@@ -191,7 +191,7 @@ void		setup_exec_signals(void);
 //void	ft_tokenizer(t_mini *mini, char *input);
 int			ft_tokenizer(t_mini *mini, char *input);
 int			check_validity(t_mini *mini, char *input);
-size_t		get_word_len(t_mini *mini, size_t len, size_t i);
+size_t		get_word_len(t_mini *mini, size_t len, size_t *i);
 int			is_op(const char *input, size_t i);
 char		*fill_token_data(t_mini *mini, size_t *i, size_t len);
 int			build_ast(t_mini *mini);
@@ -214,6 +214,7 @@ void		ft_itoa_alternative(int n, char *dst);
 
 //Environment Utils
 char		*get_env_var(t_mini *mini, char *var_name);
+char	*get_exp_var(t_mini *mini, char *var_name);
 
 //Command parsing
 int			build_ast(t_mini *mini);
