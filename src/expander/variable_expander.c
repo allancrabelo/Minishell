@@ -14,6 +14,12 @@ char	*extract_var_name(t_mini *mini, size_t *i)
 		(*i)++;
 		return (var_name);
 	}
+	if (mini->input[*i] == '*')
+	{
+		var_name = ft_strdup("*");
+		(*i)++;
+		return (var_name);
+	}
 	if (!mini->input[*i] || mini->input[*i] == ' ' || \
 		mini->input[*i] == '\"' || mini->input[*i] == '\'' || \
 		mini->input[*i] == '$')
@@ -55,7 +61,7 @@ char	*expand_variable(t_mini *mini, char *var_name)
 		return (expand_special_var(mini, var_name[0]));
 	if (var_name[0] >= '0' && var_name[0] <= '9' && var_name[1] == '\0')
 		return (ft_strdup(""));
-	if (ft_strcmp(var_name, "~") == 0)
+	if (ft_strcmp(var_name, "*") == 0)
 		return (ft_strdup(""));
 	value = ft_getenv(var_name, mini);
 	if (value)
