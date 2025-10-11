@@ -11,7 +11,7 @@ char	*find_command_path(t_mini *mini, char *cmd)
 	(void)mini;
 	if (ft_strchr(cmd, '/'))
 	{
-		if (access(cmd, X_OK) == 0)
+		if (access(cmd, F_OK) == 0)
 			return (ft_strdup(cmd));
 		return (NULL);
 	}
@@ -104,6 +104,12 @@ int	execute_external(t_mini *mini, char **argv)
 	if (stat(full_path, &path_stat) == 0 && S_ISDIR(path_stat.st_mode))
 	{
 		print_command_error(argv[0], "Is a directory");
+		free(full_path);
+		return (126);
+	}
+	if (access(full_path, X_OK) != 0)
+	{
+		print_command_error(argv[0], "Permission denied");
 		free(full_path);
 		return (126);
 	}

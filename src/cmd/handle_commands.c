@@ -125,6 +125,11 @@ int	execute_command(t_mini *mini, t_ast *node)
 	if (!node || !node->args || (!node->args[0]
 			&& node->redir->type != TOKEN_HEREDOC))
 		return (0);
+	if (node->args[0] && node->args[0][0] == '\0')
+	{
+		print_command_error("", "command not found");
+		return (127);
+	}
 	if (is_builtin_command(node->args[0]))
 		return (execute_builtin(mini, node, node->redir));
 	else

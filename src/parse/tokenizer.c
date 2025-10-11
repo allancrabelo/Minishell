@@ -23,7 +23,7 @@ void	add_token(t_mini *mini, size_t *i, size_t len, t_token_type type)
 	t_token	*new;
 	t_token	*cur;
 
-	if (!mini->input || len == 0)
+	if (!mini->input)
 		return ;
 	new = new_token(mini, i, len, type);
 	if (!new)
@@ -71,14 +71,16 @@ int	ft_tokenizer(t_mini *mini, char *input)
 	while (i < len)
 	{
 		size_t	start_word;
+		int		was_quoted;
 		
 		while (i < len && ft_isspace(mini->input[i]))
 			i++;
 		if (tokenize_op(mini, &i))
 			continue ;
 		start_word = i;
+		was_quoted = (mini->input[i] == '"' || mini->input[i] == '\'');
 		word_len = get_word_len(mini, len, &i);
-		if (word_len > 0)
+		if (word_len > 0 || (word_len == 0 && was_quoted))
 		{
 			add_token(mini, &start_word, word_len, TOKEN_WORD);
 		}
