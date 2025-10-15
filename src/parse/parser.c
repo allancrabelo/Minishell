@@ -55,20 +55,13 @@ static int	verify_tokens(t_mini *mini, t_token *token)
 		{
 			if (!token->next || is_operator(token->next->type)
 				|| token->next->type == TOKEN_RPAREN)
-			{
-				ft_putstr_fd("minishell: syntax error near unexpected token\n", 2);
-				mini->exit_status = 2;
-				return (0);
-			}
+				return (print_syntax_error(mini, "near unexpected token"));
 		}
 		else if (is_redirect(token->type))
 		{
 			if (!token->next || token->next->type != TOKEN_WORD)
-			{
-				ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
-				mini->exit_status = 2;
-				return (0);
-			}
+				return (print_syntax_error(mini,
+						"near unexpected token `newline'"));
 		}
 		token = token->next;
 	}

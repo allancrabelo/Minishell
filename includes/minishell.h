@@ -101,7 +101,7 @@ typedef struct s_mini
 	char			**envp;
 	t_export		*export_list;
 	int				env_size;
-	long				exit_status;
+	long			exit_status;
 	int				pipe_count;
 	int				**pipes;
 	pid_t			*child_pids;
@@ -214,7 +214,7 @@ void		ft_itoa_alternative(int n, char *dst);
 
 //Environment Utils
 char		*get_env_var(t_mini *mini, char *var_name);
-char	*get_exp_var(t_mini *mini, char *var_name);
+char		*get_exp_var(t_mini *mini, char *var_name);
 
 //Command parsing
 int			build_ast(t_mini *mini);
@@ -228,6 +228,7 @@ int			execute_pipe_node(t_mini *mini, t_ast *node);
 int			execute_external(t_mini *mini, char **argv);
 char		*find_command_path(t_mini *mini, char *cmd);
 void		print_command_error(char *cmd, char *error);
+int			print_syntax_error(t_mini *mini, char *error_msg);
 
 // BONUS
 int			execute_and_node(t_mini *mini, t_ast *node);

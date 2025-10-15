@@ -62,6 +62,8 @@ int	ft_tokenizer(t_mini *mini, char *input)
 	size_t	i;
 	size_t	len;
 	size_t	word_len;
+	size_t	start_word;
+	int		was_quoted;
 
 	mini->input = ft_strdup(input);
 	i = 0;
@@ -70,9 +72,6 @@ int	ft_tokenizer(t_mini *mini, char *input)
 		return (0);
 	while (i < len)
 	{
-		size_t	start_word;
-		int		was_quoted;
-		
 		while (i < len && ft_isspace(mini->input[i]))
 			i++;
 		if (tokenize_op(mini, &i))

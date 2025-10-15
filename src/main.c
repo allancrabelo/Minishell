@@ -57,7 +57,7 @@ static void	main_loop(t_mini *mini)
 	}
 }
 
-char	**envp_initializer(void) 
+char	**envp_initializer(void)
 {
 	char	**new_envp;
 	char	cwd[4096];
@@ -83,9 +83,11 @@ char	**envp_initializer(void)
 		}
 	}
 	new_envp[i] = ft_strdup("SHLVL=0");
-	if (new_envp[i]) i++;
-	new_envp[i] = ft_strdup("_=./minishell"); 
-	if (new_envp[i]) i++;
+	if (new_envp[i])
+		i++;
+	new_envp[i] = ft_strdup("_=./minishell");
+	if (new_envp[i])
+		i++;
 	return (new_envp);
 }
 

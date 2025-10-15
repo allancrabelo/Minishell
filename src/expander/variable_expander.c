@@ -20,11 +20,12 @@ char	*extract_var_name(t_mini *mini, size_t *i)
 		(*i)++;
 		return (var_name);
 	}
-	if (!mini->input[*i] || mini->input[*i] == ' ' || \
-		mini->input[*i] == '\"' || mini->input[*i] == '\'' || \
-		mini->input[*i] == '$')
-		return (ft_strdup("$")); 
-	if ((mini->input[*i] >= '0' && mini->input[*i] <= '9') || mini->input[*i] == '!')
+	if (!mini->input[*i] || mini->input[*i] == ' '
+		|| mini->input[*i] == '\"' || mini->input[*i] == '\''
+		|| mini->input[*i] == '$')
+		return (ft_strdup("$"));
+	if ((mini->input[*i] >= '0' && mini->input[*i] <= '9')
+		|| mini->input[*i] == '!')
 	{
 		var_name = malloc(2);
 		if (!var_name)
