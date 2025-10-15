@@ -1,0 +1,7 @@
+minishell: exit: too many arguments
+==229853== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+--229853-- 
+--229853-- used_suppression:     62 leak readline readline.supp:10 suppressed: 204,213 bytes in 221 blocks
+--229853-- used_suppression:      1 leak add_history readline.supp:16 suppressed: 4,016 bytes in 1 blocks
+==229853== 
+==229853== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

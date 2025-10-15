@@ -1,0 +1,81 @@
+$PWD
+$EMPTY
+$EMPTY echo hi
+./test_files/invalid_permission
+./missing.out
+missing.out
+"aaa"
+test_files
+./test_files
+/test_files
+minishell.h
+$
+$?
+README.md
+"" cat ./README.md
+"" echo hello
+test_files/
+
+a
+42
+echo $s$USER
+echo $USER$s
+echo "$s$USER"
+echo "$USER$s"
+echo "$42"
+echo "$?"
+echo "$?HELLO"
+echo "$!HELLO"
+echo "$!$USER"
+echo "$!$USER!"
+echo '$PWD'
+echo ""''""''"''"'""'
+echo $42
+echo $!
+echo $?!
+echo Hello"my friend $USER$S! from 42?"'are you ok?'$USER
+echo Hello"my friend $USER$S from 42?"'are you ok?'$USER
+echo Hello"my friend $S$USER$S from 42?"'are you ok?'$USER
+echo Hello"my friend $S$USER$S'from' 42?"'are you ok?'$USER
+echo Hello"my friend$S$USER$S'from' 42?"'are you ok?'$USER
+echo Hello"my friend$S$USER$S$!'from' 42?"'are you ok?'$USER
+echo Hello"my friend$S$USER$S$!='from' 42?"'are you ok?'$USER
+echo Hello"my friend$S$USER$S$='from' 42?"'are you ok?'$USER
+echo Hello my friend$S$USER$S$1'from' 42?'are you ok?'$USER
+echo Hello my friend$S$USER$S$='from' 42?'are you ok?'$USER
+echo Hello my friend$S$USER$S$1from 42?'are you ok?'$USER
+echo Hello my friend$S$USER$S$=from 42?are you ok?$USER
+echo Hello my friend$S$USER$S$1from 42?are you ok?$USER
+echo Hello my friend$S$USER$S$=from 42?are you ok?$USER
+echo ~
+echo ~ Hello My friend
+echo Hello My friend ~
+echo ~$USER
+echo ~ $USE
+echo $USER~
+echo $USE ~
+export ==hello
+export HELLO=123 A- B
+export ZZ$=hello
+export ZZ+=hello world
+export ZZ+=hello world!
+cd path path
+cd .
+cd pathinvalid
+cd ../pathinvalid
+cd /pathinvalid
+cd /pathinvalid/..
+cd /pathinvalid/../pathinvalid
+exit -256
+exit -255
+exit -250
+exit -100
+exit -10
+exit 0
+exit 1
+exit -+
+exit +-
+exit +=+=+=+=+=+=+=+=+=+=+=+=+=+=
+exit ++42
+exit --42
+exit 42 42

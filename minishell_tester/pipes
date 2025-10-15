@@ -1,0 +1,9 @@
+env | sort | grep -v SHLVL | grep -v ^_
+cat ./test_files/infile_big | grep oi
+export | grep "USER"
+commandnotfound1 | commandnotfound2
+commandnotfound1 | echo hello
+echo hello | echo bye
+echo hello | commandnotfound1
+cat minishell.h | grep ");"$
+export GHOST=123 | env | grep GHOST
