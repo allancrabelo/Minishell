@@ -185,6 +185,7 @@ void		restore_fd(int stdin_backup, int stdout_backup);
 
 // Heredoc:
 int			redirect_heredoc(t_redir *redirect, t_mini *mini);
+int			create_heredoc_file(char *delimiter, t_mini *mini);
 
 // Signals
 void		sighandler(int signal);

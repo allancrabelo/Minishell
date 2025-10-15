@@ -16,8 +16,8 @@ static char	*read_heredoc_input(char *delimeter, int *interrupted)
 		{
 			if (!*interrupted)
 			{
-				print_command_error("warning", "here-document delimited \
-by end-of-file (wanted `");
+				ft_putstr_fd("minishell: warning: here-document \
+delimited by end-of-file (wanted `", 2);
 				ft_putstr_fd(delimeter, 2);
 				ft_putstr_fd("')\n", 2);
 				break ;
@@ -43,7 +43,7 @@ by end-of-file (wanted `");
 	return (content);
 }
 
-static int	create_heredoc_file(char *delimiter, t_mini *mini)
+int	create_heredoc_file(char *delimiter, t_mini *mini)
 {
 	int		fd;
 	char	*content;

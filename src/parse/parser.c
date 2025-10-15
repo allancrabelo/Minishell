@@ -68,6 +68,26 @@ static int	verify_tokens(t_mini *mini, t_token *token)
 	return (1);
 }
 
+static int	write_heredoc(t_mini *mini)
+{
+	t_redir *redir;
+	t_token *cur;
+
+	cur = mini->token;
+	redir = NULL;
+	while (cur)
+	{
+		if (cur->type == TOKEN_HEREDOC)
+		{
+			create_heredoc_file(cur->next->data, mini);
+			if (cur->next->next)
+				cur = cur->next;
+		}
+		cur = cur->next;
+	}
+	return (EXIT_SUCCESS);
+}
+
 int	build_ast(t_mini *mini)
 {
 	t_token	*cur;
@@ -80,6 +100,8 @@ int	build_ast(t_mini *mini)
 		return (1);
 	}
 	cur = mini->token;
+	if (write_heredoc(mini))
+		return (EXIT_FAILURE);
 	if (!verify_tokens(mini, cur))
 		return (1);
 	mini->ast = parse_or(mini, &cur);
