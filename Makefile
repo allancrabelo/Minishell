@@ -29,10 +29,10 @@ VPATH		:=	src src/utils \
 				src/pipes \
 				src/bonus \
 
-
 SRCSLIST	:=	main \
 				signals \
 				handle_commands \
+				init \
 				utils \
 				ft_echo \
 				ft_exit \

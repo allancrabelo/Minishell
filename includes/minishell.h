@@ -3,6 +3,7 @@
 
 // Includes
 # include "../libft/libft.h"
+# include "colors.h"
 # include <stdio.h>				// printf, perror
 # include <stdlib.h>			// malloc, free, exit
 # include <unistd.h>			// write, access, read, close, fork, chdir, unlink, execve, dup, dup2, pipe, isatty, ttyname, ttyslot, getcwd
@@ -28,7 +29,9 @@
 #  define FD_MAX 1024
 # endif
 
+// Global Variable
 extern volatile sig_atomic_t	g_signal;
+
 // Structs
 typedef enum e_node_type
 {
@@ -109,6 +112,10 @@ typedef struct s_mini
 	t_env			*env_list;
 	char			*pwd;
 }	t_mini;
+
+// Initializer
+void	init_mini(t_mini *mini, char **envp);
+char	**envp_initializer(void);
 
 // Commands
 void		do_commands(t_mini *mini, char *input);
