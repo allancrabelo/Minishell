@@ -2,7 +2,7 @@ NAME		:= minishell
 CC			:= cc
 RM			:= rm -f
 
-CFLAGS		:= -Wall -Wextra -Werror
+CFLAGS		:= -Wall -Wextra
 DEBUGFLAGS	:= -g
 VALFLAGS	:=	--leak-check=full \
 				--show-leak-kinds=all \

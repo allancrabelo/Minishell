@@ -77,9 +77,9 @@ static int	write_heredoc(t_mini *mini)
 	redir = NULL;
 	while (cur)
 	{
-		if (cur->type == TOKEN_HEREDOC)
+		if (cur->type == TOKEN_HEREDOC && cur->next && cur->next->type == TOKEN_WORD)
 		{
-			create_heredoc_file(cur->next->data, mini);
+			create_heredoc_file(mini, cur->next->data, &mini->heredoc);
 			if (cur->next->next)
 				cur = cur->next;
 		}

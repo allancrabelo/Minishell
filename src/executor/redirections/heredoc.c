@@ -1,6 +1,6 @@
 #include "../../../includes/minishell.h"
 
-static char	*read_heredoc_input(char *delimeter, int *interrupted)
+/* static char	*read_heredoc_input(char *delimeter, int *interrupted)
 {
 	char	*content;
 	char	*line;
@@ -41,63 +41,163 @@ delimited by end-of-file (wanted `", 2);
 			break ;
 	}
 	return (content);
+} */
+
+static void	heredoc_append(t_heredoc **heredoc, t_heredoc *new)
+{
+	t_heredoc	*cur;
+
+	if (!(*heredoc))
+		*heredoc = new;
+	else
+	{
+		cur = *heredoc;
+		while (cur && cur->next)
+			cur = cur->next;
+		cur->next = new;
+	}
+
 }
 
-int	create_heredoc_file(char *delimiter, t_mini *mini)
+static char *get_filename(int *heredoc_fd)
 {
-	int		fd;
-	char	*content;
-	int		interrupted;
-	pid_t	pid;
-	int		status;
+	char	*filename;
+	char	*heredoc_string;
 
-	interrupted = 0;
-	pid = fork();
-	setup_heredoc_signals();
-	if (pid == 0)
-	{
-		fd = open("/tmp/minishell_heredoc", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (fd == -1)
-			exit(1); //TODO: free all???
-		content = read_heredoc_input(delimiter, &interrupted);
-		if (content)
-		{
-			write(fd, content, ft_strlen(content));
-			free(content);
-		}
-		close(fd);
-		free_tokens(mini);
-		free_ast(mini->ast);
-		free_export_list(mini->export_list);
-		exit(0);
-	}
-	if (pid > 0)
-	{
-		wait_update_main(pid, &status);
-		if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
-		{
-			mini->exit_status = 130;
-			return (-1);
-		}
-		fd = open("/tmp/minishell_heredoc", O_RDONLY);
-		unlink("/tmp/minishell_heredoc");
-		return (fd);
-	}
-	return (-1);
+	heredoc_string = ft_itoa(*heredoc_fd);
+	if (!heredoc_string)
+		return (NULL);
+	filename = ft_strjoin(".heredoc_", heredoc_string);
+	free(heredoc_string);
+	(*heredoc_fd)++;
+	return (filename);
 }
 
-int	redirect_heredoc(t_redir *redirect, t_mini *mini)
+static int	is_delimiter(char *line, char *delimiter)
 {
-	int	fd;
-
-	fd = create_heredoc_file(redirect->file, mini);
-	if (fd == -1)
-		return (-1);
-	if (dup2(fd, STDIN_FILENO) == -1)
+	if (ft_strlen(line) == ft_strlen(delimiter)
+		&& !ft_strncmp(line, delimiter, ft_strlen(line)))
 	{
-		close(fd);
-		return (-1);
+		free(line);
+		return (1);
 	}
-	close(fd);
 	return (0);
 }
+
+static void	write_heredoc(int fd, char *delimiter, int interrupted)
+{
+	char	*line;
+	int		input_dup;
+
+	input_dup = dup(STDIN_FILENO);
+	while (1)
+	{
+		line = readline("> ");
+		if (!line)
+		{
+			if (!interrupted)
+			{
+				ft_putstr_fd("minishell: warning: here-document \
+delimited by end-of-file (wanted `", 2);
+				ft_putstr_fd(delimiter, 2);
+				ft_putstr_fd("')\n", 2);
+				break ;
+			}
+		}
+		if (is_delimiter(line, delimiter))
+			break ;
+		ft_putendl_fd(line, fd);
+		free(line);
+	}
+	dup2(input_dup, STDIN_FILENO);
+	close(input_dup);
+}
+
+void	heredoc_cleanner(t_heredoc **heredoc, int unlinker)
+{
+	t_heredoc	*cur;
+	t_heredoc	*tmp;
+
+	cur = *heredoc;
+	while (cur)
+	{
+		tmp = cur->next;
+		if (cur->heredoc_delimeter)
+			free(cur->heredoc_delimeter);
+		if (cur->filename)
+		{
+			if (unlinker)
+				unlink(cur->filename);
+			free(cur->filename);
+		}
+		free(cur);
+		cur = tmp;
+	}
+	*heredoc = NULL;
+}
+
+static void	wait_heredoc(t_mini *mini, pid_t pid)
+{
+	int	status;
+
+	waitpid(pid, &status, 0);
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+	{
+		g_signal = 130;
+		mini->heredoc->heredoc_signal = 1;
+	}
+	else if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
+	{
+		g_signal = 130;
+		mini->heredoc->heredoc_signal = 1;
+	}
+}
+
+static void	read_heredoc(t_mini *mini, char *filename, char *delimiter)
+{
+	int	fd;
+	int	pid;
+	int	interrupted;
+
+	interrupted = 0;
+	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd == -1)
+	{
+		print_command_error(filename, strerror(errno));
+		return ;
+	}
+	signal(SIGINT, SIG_IGN);
+	pid = fork();
+	if (pid < 0)
+		ft_free_all(mini, errno, 1);
+	else if (pid == 0)
+	{
+		setup_heredoc_signals();
+		write_heredoc(fd, delimiter, interrupted);
+		close(fd);
+		heredoc_cleanner(&mini->heredoc, 0);
+		ft_free_all(mini, g_signal, 1);
+	}
+	close(fd);
+	wait_heredoc(mini, pid);
+	signal_init();
+}
+
+void	create_heredoc_file(t_mini *mini, char *delimiter, t_heredoc **heredoc)
+{
+	t_heredoc	*new;
+
+	new = malloc (sizeof(t_heredoc));
+	if (!new)
+		ft_free_all(mini, ENOMEM, 1);
+	heredoc_append(heredoc, new);
+	new->next = NULL;
+	new->heredoc_delimeter = ft_strdup(delimiter);
+	if (!new->heredoc_delimeter)
+		ft_free_all(mini, ENOMEM, 1);
+	new->filename = get_filename(&mini->heredoc_fd);
+	if (!new->filename)
+		ft_free_all(mini, ENOMEM, 1);
+	read_heredoc(mini, new->filename, new->heredoc_delimeter);
+}
+

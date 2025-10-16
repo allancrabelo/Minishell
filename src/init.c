@@ -83,4 +83,6 @@ void	init_mini(t_mini *mini, char **envp)
 	mini->export_list = NULL;
 	mini->env_list = NULL;
 	mini->envp = envp;
+	mini->heredoc = NULL;
+	mini->heredoc_fd = 1;
 }

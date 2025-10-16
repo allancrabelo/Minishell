@@ -85,6 +85,15 @@ typedef struct s_redir
 	struct s_redir	*next;
 }	t_redir;
 
+typedef struct s_heredoc
+{
+	char				*heredoc_delimeter;
+	char				*filename;
+	int					heredoc_signal;
+	struct s_heredoc	*next;
+}	t_heredoc;
+
+
 typedef struct s_ast
 {
 	t_node_type		type;
@@ -110,6 +119,8 @@ typedef struct s_mini
 	pid_t			*child_pids;
 	int				child_count;
 	t_env			*env_list;
+	t_heredoc		*heredoc;
+	int				heredoc_fd;
 	char			*pwd;
 }	t_mini;
 
@@ -184,8 +195,7 @@ int			backup_fd(int *stdin_backup, int *stdout_backup);
 void		restore_fd(int stdin_backup, int stdout_backup);
 
 // Heredoc:
-int			redirect_heredoc(t_redir *redirect, t_mini *mini);
-int			create_heredoc_file(char *delimiter, t_mini *mini);
+void	create_heredoc_file(t_mini *mini, char *delimiter, t_heredoc **heredoc);
 
 // Signals
 void		sighandler(int signal);

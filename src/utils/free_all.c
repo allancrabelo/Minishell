@@ -67,6 +67,25 @@ void	free_ast(t_ast *node)
 	free(node);
 }
 
+static void free_heredocs(t_heredoc *heredoc)
+{
+	t_heredoc	*cur;
+	t_heredoc	*tmp;
+
+	cur = heredoc;
+	heredoc = NULL;
+	if (!cur)
+		return ;
+	while (cur)
+	{
+		tmp = cur;
+		cur = cur->next;
+		if (tmp->heredoc_delimeter)
+			free(tmp->heredoc_delimeter);
+		free(tmp);
+	}
+}
+
 int	ft_free_all(t_mini *mini, int ret, int exit_prog)
 {
 	if (mini->token)
@@ -75,8 +94,12 @@ int	ft_free_all(t_mini *mini, int ret, int exit_prog)
 		free_ast(mini->ast);
 	if (mini->export_list)
 		free_export_list(mini->export_list);
+	if (mini->heredoc)
+		free_heredocs(mini->heredoc);
 	mini->exit_status = ret;
 	if (exit_prog)
 		exit(mini->exit_status);
+	//ENOMEM
+	//errno
 	return (mini->exit_status);
 }
