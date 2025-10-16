@@ -113,7 +113,7 @@ delimited by end-of-file (wanted `", 2);
 	close(input_dup);
 }
 
-void	heredoc_cleanner(t_heredoc **heredoc, int unlinker)
+void	heredoc_cleaner(t_heredoc **heredoc, int unlinker)
 {
 	t_heredoc	*cur;
 	t_heredoc	*tmp;
@@ -144,12 +144,12 @@ static void	wait_heredoc(t_mini *mini, pid_t pid)
 	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 	{
 		g_signal = 130;
-		mini->heredoc->heredoc_signal = 1;
+		mini->heredoc_signal = 1;
 	}
 	else if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
 	{
 		g_signal = 130;
-		mini->heredoc->heredoc_signal = 1;
+		mini->heredoc_signal = 1;
 	}
 }
 
@@ -175,7 +175,7 @@ static void	read_heredoc(t_mini *mini, char *filename, char *delimiter)
 		setup_heredoc_signals();
 		write_heredoc(fd, delimiter, interrupted);
 		close(fd);
-		heredoc_cleanner(&mini->heredoc, 0);
+		heredoc_cleaner(&mini->heredoc, 0);
 		ft_free_all(mini, g_signal, 1);
 	}
 	close(fd);

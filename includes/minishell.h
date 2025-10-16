@@ -89,7 +89,6 @@ typedef struct s_heredoc
 {
 	char				*heredoc_delimeter;
 	char				*filename;
-	int					heredoc_signal;
 	struct s_heredoc	*next;
 }	t_heredoc;
 
@@ -122,6 +121,7 @@ typedef struct s_mini
 	t_heredoc		*heredoc;
 	int				heredoc_fd;
 	char			*pwd;
+	int				heredoc_signal;
 }	t_mini;
 
 // Initializer
@@ -195,7 +195,8 @@ int			backup_fd(int *stdin_backup, int *stdout_backup);
 void		restore_fd(int stdin_backup, int stdout_backup);
 
 // Heredoc:
-void	create_heredoc_file(t_mini *mini, char *delimiter, t_heredoc **heredoc);
+void		create_heredoc_file(t_mini *mini, char *delimiter, t_heredoc **heredoc);
+void		heredoc_cleaner(t_heredoc **heredoc, int unlinker);
 
 // Signals
 void		sighandler(int signal);

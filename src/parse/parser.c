@@ -70,11 +70,9 @@ static int	verify_tokens(t_mini *mini, t_token *token)
 
 static int	write_heredoc(t_mini *mini)
 {
-	t_redir *redir;
 	t_token *cur;
 
 	cur = mini->token;
-	redir = NULL;
 	while (cur)
 	{
 		if (cur->type == TOKEN_HEREDOC && cur->next && cur->next->type == TOKEN_WORD)
@@ -102,6 +100,8 @@ int	build_ast(t_mini *mini)
 	cur = mini->token;
 	if (write_heredoc(mini))
 		return (EXIT_FAILURE);
+	if (mini->heredoc_signal == 1)
+		heredoc_cleaner(&mini->heredoc, 1);
 	if (!verify_tokens(mini, cur))
 		return (1);
 	mini->ast = parse_or(mini, &cur);
