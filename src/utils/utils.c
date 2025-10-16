@@ -7,7 +7,7 @@ int	is_operator(t_token_type type)
 
 int	is_redirect(t_token_type type)
 {
-	return (type == TOKEN_REDIRECT_IN || type == TOKEN_HEREDOC
+	return (type == TOKEN_REDIRECT_IN 
 		|| type == TOKEN_REDIRECT_OUT || type == TOKEN_REDIRECT_APPEND);
 }
 
