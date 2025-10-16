@@ -43,7 +43,8 @@ static char	*expand_heredoc_line(t_mini *mini, char *line)
 
 	if (!line || !ft_strchr(line, '$'))
 		return (ft_strdup(line));
-	len = ft_strlen(line) * 2;
+
+	len = ft_strlen(line) * 10 + 1024;
 	result = malloc(len + 1);
 	if (!result)
 		return (NULL);
@@ -56,8 +57,19 @@ static char	*expand_heredoc_line(t_mini *mini, char *line)
 			temp = extract_and_expand_var(mini, line, &i);
 			if (temp)
 			{
-				ft_strlcpy(result + j, temp, len - j);
-				j += ft_strlen(temp);
+				int temp_len = ft_strlen(temp);
+				if (j + temp_len >= len)
+				{
+					len = j + temp_len + 1024;
+					result = realloc(result, len + 1);
+					if (!result)
+					{
+						free(temp);
+						return (NULL);
+					}
+				}
+				ft_strcpy(result + j, temp);
+				j += temp_len;
 				free(temp);
 			}
 		}

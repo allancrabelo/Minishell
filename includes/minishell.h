@@ -139,6 +139,7 @@ void		free_redir(t_redir *redir);
 // Utils
 int			is_operator(t_token_type type);
 int			is_redirect(t_token_type type);
+char		*ft_strcpy(char *dest, char *src);
 
 // [BUILTINS]:
 // Echo:
