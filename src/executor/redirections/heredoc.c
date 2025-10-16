@@ -199,5 +199,7 @@ void	create_heredoc_file(t_mini *mini, char *delimiter, t_heredoc **heredoc)
 	if (!new->filename)
 		ft_free_all(mini, ENOMEM, 1);
 	read_heredoc(mini, new->filename, new->heredoc_delimeter);
+	if (new)
+		free(new);
 }
 

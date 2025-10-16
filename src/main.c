@@ -65,7 +65,10 @@ int	main(int argc, char **argv, char **envp)
 	if (argc != 1 || argv[1])
 		return (printf("[ERROR] Usage: ./minishell\n" SRESET), 127);
 	signal_init();
-	init_mini(&mini, envp);
+	mini = (t_mini){0};
+	mini.envp = envp;
+	mini.heredoc_fd = 1;
+	// init_mini(&mini, envp);
 	if (envp[0] == NULL || envp == NULL)
 		mini.envp = envp_initializer();
 	init_export_list(&mini, mini.envp);

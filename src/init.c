@@ -75,14 +75,16 @@ void	init_export_list(t_mini *mini, char **envp)
 	}
 }
 
-void	init_mini(t_mini *mini, char **envp)
+/* void	init_mini(t_mini *mini, char **envp)
 {
-	mini->token = NULL;
 	mini->ast = NULL;
+	mini->token = NULL;
+	mini->input = NULL;
 	mini->exit_status = 0;
 	mini->export_list = NULL;
 	mini->env_list = NULL;
-	mini->envp = envp;
 	mini->heredoc = NULL;
+	mini->envp = envp;
 	mini->heredoc_fd = 1;
 }
+ */

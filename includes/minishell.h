@@ -106,7 +106,6 @@ typedef struct s_ast
 typedef struct s_mini
 {
 	t_ast			*ast;
-	t_token_type	type;
 	t_token			*token;
 	char			*input;
 	char			**envp;
@@ -147,6 +146,7 @@ void		free_redir(t_redir *redir);
 // Utils
 int			is_operator(t_token_type type);
 int			is_redirect(t_token_type type);
+char		*ft_strjoin_free(char *s1, char *s2);
 
 // [BUILTINS]:
 // Echo:
