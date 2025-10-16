@@ -141,11 +141,26 @@ void	handle_commands(t_mini *mini, char *input)
 	ft_tokenizer(mini, input);
 	if (mini->token == NULL)
 		return ;
-	execute_ast_node(mini, mini->ast);
+	if (build_ast(mini) != 0)
+	{
+		free_tokens(mini);
+		return ;
+	}
+	process_heredocs(mini, mini->ast);
+	if (mini->heredoc_signal)
+	{
+		mini->exit_status = 130;
+		mini->heredoc_signal = 0;
+		heredoc_cleaner(&mini->heredoc, 1);
+	}
+	else
+		execute_ast_node(mini, mini->ast);
 	free_tokens(mini);
 	if (mini->ast)
 	{
 		free_ast(mini->ast);
 		mini->ast = NULL;
 	}
+	if (mini->heredoc)
+		heredoc_cleaner(&mini->heredoc, 1);
 }

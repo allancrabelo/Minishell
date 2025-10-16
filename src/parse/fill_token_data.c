@@ -49,8 +49,7 @@ char	*fill_token_data(t_mini *mini, size_t *i, size_t len)
 			(*i)++;
 		else if (handle_quote_end(mini->input[*i], &quote))
 			(*i)++;
-		else if (mini->input[*i] == '~' && quote == 0
-			&& (j == 0 || dst[j - 1] == '='))
+		else if (mini->input[*i] == '~' && quote == 0 && (j == 0 || dst[j - 1] == '='))
 		{
 			(*i)++;
 			expanded_value = expand_tilde(mini);

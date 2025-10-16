@@ -1,4 +1,5 @@
 #include "minishell.h"
+#include "colors.h"
 
 volatile sig_atomic_t	g_signal = 0;
 
@@ -56,6 +57,38 @@ static void	main_loop(t_mini *mini)
 	}
 }
 
+char	**envp_initializer(void) 
+{
+	char	**new_envp;
+	char	cwd[4096];
+	int		total_size;
+	int		i;
+
+	new_envp = malloc(sizeof(char *) * (10 + 1));
+	if (!new_envp)
+		return (NULL);
+	i = 0;
+	while (i <= 10)
+		new_envp[i++] = NULL;
+	i = 0;
+	if (getcwd(cwd, sizeof(cwd)) != NULL)
+	{
+		total_size = ft_strlen("PWD=") + ft_strlen(cwd) + 1;
+		new_envp[i] = malloc(total_size);
+		if (new_envp[i])
+		{
+			ft_strlcpy(new_envp[i], "PWD=", total_size);
+			ft_strlcat(new_envp[i], cwd, total_size);
+			i++;
+		}
+	}
+	new_envp[i] = ft_strdup("SHLVL=0");
+	if (new_envp[i]) i++;
+	new_envp[i] = ft_strdup("_=./minishell"); 
+	if (new_envp[i]) i++;
+	return (new_envp);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_mini	mini;
@@ -65,10 +98,15 @@ int	main(int argc, char **argv, char **envp)
 	if (argc != 1 || argv[1])
 		return (printf("[ERROR] Usage: ./minishell\n" SRESET), 127);
 	signal_init();
-	mini = (t_mini){0};
+	mini.token = NULL;
+	mini.ast = NULL;
+	mini.exit_status = 0;
+	mini.export_list = NULL;
+	mini.env_list = NULL;
+	mini.heredoc = NULL;
+	mini.heredoc_fd = 0;
+	mini.heredoc_signal = 0;
 	mini.envp = envp;
-	mini.heredoc_fd = 1;
-	// init_mini(&mini, envp);
 	if (envp[0] == NULL || envp == NULL)
 		mini.envp = envp_initializer();
 	init_export_list(&mini, mini.envp);

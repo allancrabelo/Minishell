@@ -55,35 +55,24 @@ static int	verify_tokens(t_mini *mini, t_token *token)
 		{
 			if (!token->next || is_operator(token->next->type)
 				|| token->next->type == TOKEN_RPAREN)
-				return (print_syntax_error(mini, "near unexpected token"));
+			{
+				ft_putstr_fd("minishell: syntax error near unexpected token\n", 2);
+				mini->exit_status = 2;
+				return (0);
+			}
 		}
 		else if (is_redirect(token->type))
 		{
 			if (!token->next || token->next->type != TOKEN_WORD)
-				return (print_syntax_error(mini,
-						"near unexpected token `newline'"));
+			{
+				ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
+				mini->exit_status = 2;
+				return (0);
+			}
 		}
 		token = token->next;
 	}
 	return (1);
-}
-
-static int	write_heredoc(t_mini *mini)
-{
-	t_token *cur;
-
-	cur = mini->token;
-	while (cur)
-	{
-		if (cur->type == TOKEN_HEREDOC && cur->next && cur->next->type == TOKEN_WORD)
-		{
-			create_heredoc_file(mini, cur->next->data, &mini->heredoc);
-			if (cur->next->next)
-				cur = cur->next;
-		}
-		cur = cur->next;
-	}
-	return (EXIT_SUCCESS);
 }
 
 int	build_ast(t_mini *mini)
@@ -98,10 +87,6 @@ int	build_ast(t_mini *mini)
 		return (1);
 	}
 	cur = mini->token;
-	if (write_heredoc(mini))
-		return (EXIT_FAILURE);
-	if (mini->heredoc_signal == 1)
-		heredoc_cleaner(&mini->heredoc, 1);
 	if (!verify_tokens(mini, cur))
 		return (1);
 	mini->ast = parse_or(mini, &cur);

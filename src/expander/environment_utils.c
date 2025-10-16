@@ -20,6 +20,7 @@ char	*get_env_var(t_mini *mini, char *var_name)
 
 	if (!var_name || !mini->env_list)
 		return (NULL);
+	
 	current = mini->env_list;
 	while (current)
 	{
@@ -37,6 +38,7 @@ char	*get_exp_var(t_mini *mini, char *var_name)
 
 	if (!var_name || !mini->export_list)
 		return (NULL);
+	
 	current = mini->export_list;
 	while (current)
 	{

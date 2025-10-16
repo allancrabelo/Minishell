@@ -3,7 +3,6 @@
 
 // Includes
 # include "../libft/libft.h"
-# include "colors.h"
 # include <stdio.h>				// printf, perror
 # include <stdlib.h>			// malloc, free, exit
 # include <unistd.h>			// write, access, read, close, fork, chdir, unlink, execve, dup, dup2, pipe, isatty, ttyname, ttyslot, getcwd
@@ -29,9 +28,7 @@
 #  define FD_MAX 1024
 # endif
 
-// Global Variable
 extern volatile sig_atomic_t	g_signal;
-
 // Structs
 typedef enum e_node_type
 {
@@ -69,6 +66,13 @@ typedef struct s_env
 	struct s_env	*next;
 }	t_env;
 
+typedef struct s_heredoc
+{
+	char				*heredoc_delimeter;
+	char				*filename;
+	struct s_heredoc	*next;
+}	t_heredoc;
+
 typedef struct s_token
 {
 	char			*data;
@@ -85,14 +89,6 @@ typedef struct s_redir
 	struct s_redir	*next;
 }	t_redir;
 
-typedef struct s_heredoc
-{
-	char				*heredoc_delimeter;
-	char				*filename;
-	struct s_heredoc	*next;
-}	t_heredoc;
-
-
 typedef struct s_ast
 {
 	t_node_type		type;
@@ -106,26 +102,23 @@ typedef struct s_ast
 typedef struct s_mini
 {
 	t_ast			*ast;
+	t_token_type	type;
 	t_token			*token;
 	char			*input;
 	char			**envp;
 	t_export		*export_list;
 	int				env_size;
-	long			exit_status;
+	long				exit_status;
 	int				pipe_count;
 	int				**pipes;
 	pid_t			*child_pids;
 	int				child_count;
 	t_env			*env_list;
+	char			*pwd;
 	t_heredoc		*heredoc;
 	int				heredoc_fd;
-	char			*pwd;
 	int				heredoc_signal;
 }	t_mini;
-
-// Initializer
-void	init_mini(t_mini *mini, char **envp);
-char	**envp_initializer(void);
 
 // Commands
 void		do_commands(t_mini *mini, char *input);
@@ -146,7 +139,6 @@ void		free_redir(t_redir *redir);
 // Utils
 int			is_operator(t_token_type type);
 int			is_redirect(t_token_type type);
-char		*ft_strjoin_free(char *s1, char *s2);
 
 // [BUILTINS]:
 // Echo:
@@ -195,8 +187,10 @@ int			backup_fd(int *stdin_backup, int *stdout_backup);
 void		restore_fd(int stdin_backup, int stdout_backup);
 
 // Heredoc:
+int			redirect_heredoc(t_redir *redirect, t_mini *mini);
 void		create_heredoc_file(t_mini *mini, char *delimiter, t_heredoc **heredoc);
 void		heredoc_cleaner(t_heredoc **heredoc, int unlinker);
+void		process_heredocs(t_mini *mini, t_ast *node);
 
 // Signals
 void		sighandler(int signal);
@@ -233,7 +227,7 @@ void		ft_itoa_alternative(int n, char *dst);
 
 //Environment Utils
 char		*get_env_var(t_mini *mini, char *var_name);
-char		*get_exp_var(t_mini *mini, char *var_name);
+char	*get_exp_var(t_mini *mini, char *var_name);
 
 //Command parsing
 int			build_ast(t_mini *mini);
@@ -247,7 +241,6 @@ int			execute_pipe_node(t_mini *mini, t_ast *node);
 int			execute_external(t_mini *mini, char **argv);
 char		*find_command_path(t_mini *mini, char *cmd);
 void		print_command_error(char *cmd, char *error);
-int			print_syntax_error(t_mini *mini, char *error_msg);
 
 // BONUS
 int			execute_and_node(t_mini *mini, t_ast *node);

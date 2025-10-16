@@ -2,7 +2,7 @@ NAME		:= minishell
 CC			:= cc
 RM			:= rm -f
 
-CFLAGS		:= -Wall -Wextra
+CFLAGS		:= -Wall -Wextra -Werror
 DEBUGFLAGS	:= -g
 VALFLAGS	:=	--leak-check=full \
 				--show-leak-kinds=all \
@@ -29,10 +29,10 @@ VPATH		:=	src src/utils \
 				src/pipes \
 				src/bonus \
 
+
 SRCSLIST	:=	main \
 				signals \
 				handle_commands \
-				init \
 				utils \
 				ft_echo \
 				ft_exit \

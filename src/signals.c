@@ -28,7 +28,7 @@ void	heredoc_sighandler(int signal)
 	(void)signal;
 	g_signal = 130;
 	write(1, "\n", 1);
-	exit(g_signal); //ISTO DA LEAK!!!
+	close(STDIN_FILENO);
 }
 
 void	setup_heredoc_signals(void)
