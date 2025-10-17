@@ -60,7 +60,7 @@ char	*fill_token_data(t_mini *mini, size_t *i, size_t len)
 				free(expanded_value);
 			}
 		}
-		else if (mini->input[*i] == '$' && quote != '\'')
+		else if (mini->input[*i] == '$' && quote != '\'' && !heredoc_expand_safe(mini))
 		{
 			(*i)++;
 			var_name = extract_var_name(mini, i);

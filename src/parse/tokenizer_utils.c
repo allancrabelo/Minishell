@@ -82,7 +82,7 @@ size_t	get_word_len(t_mini *mini, size_t len, size_t *i)
 			word_len += handle_quotes(mini, i, mini->input[*i]);
 		else if (mini->input[*i] == '~' && word_len == 0)
 			word_len += expand_tilde_len(mini, i);
-		else if (mini->input[*i] == '$')
+		else if (mini->input[*i] == '$' && !heredoc_expand_safe(mini))
 			word_len += expand_var_in_tokenizer(mini, i);
 		else
 		{

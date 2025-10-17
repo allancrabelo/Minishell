@@ -220,6 +220,7 @@ char		*expand_variable(t_mini *mini, char *var_name);
 int			is_special_var(char c);
 char		*get_env_var(t_mini *mini, char *var_name);
 size_t		expand_var_in_tokenizer(t_mini *mini, size_t *i);
+int			heredoc_expand_safe(t_mini *mini);
 
 //Expansion Utils
 int			is_special_var(char c);

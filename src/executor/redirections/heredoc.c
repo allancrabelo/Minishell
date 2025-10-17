@@ -33,6 +33,20 @@ static char	*extract_and_expand_var(t_mini *mini, char *line, int *i)
 	return (ft_strdup(""));
 }
 
+int	heredoc_expand_safe(t_mini *mini)
+{
+	t_token	*cur;
+
+	cur = NULL;
+	if (mini->token)
+		cur = mini->token;
+	while (cur && cur->next)
+		cur = cur->next;
+	if (cur && cur->type == TOKEN_HEREDOC)
+		return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
+}
+
 static char	*expand_heredoc_line(t_mini *mini, char *line)
 {
 	char	*result;

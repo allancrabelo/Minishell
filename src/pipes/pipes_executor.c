@@ -68,7 +68,7 @@ static int	handle_right_fork(t_mini *mini, t_ast *node, int pipefd[2],
 	{
 		close(pipefd[0]);
 		close(pipefd[1]);
-		kill(pid_left, SIGTERM);
+		kill(pid_left, SIGTERM); 
 		return (perror("fork right"), -1);
 	}
 	return (pid_right);
