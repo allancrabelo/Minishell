@@ -57,26 +57,22 @@ int	tokenize_op(t_mini *mini, size_t *i)
 	return (1);
 }
 
+
 int	ft_tokenizer(t_mini *mini, char *input)
 {
 	size_t	i;
 	size_t	len;
 	size_t	word_len;
+	size_t	start_word;
+	int		was_quoted;
 
 	mini->input = ft_strdup(input);
 	i = 0;
 	len = ft_strlen(mini->input);
 	if (!check_validity(mini, mini->input))
-	{
-		free(mini->input);
-		mini->input = NULL;
 		return (EXIT_FAILURE);
-	}
 	while (i < len)
 	{
-		size_t	start_word;
-		int		was_quoted;
-		
 		while (i < len && ft_isspace(mini->input[i]))
 			i++;
 		if (tokenize_op(mini, &i))
@@ -85,9 +81,7 @@ int	ft_tokenizer(t_mini *mini, char *input)
 		was_quoted = (mini->input[i] == '"' || mini->input[i] == '\'');
 		word_len = get_word_len(mini, len, &i);
 		if (word_len > 0 || (word_len == 0 && was_quoted))
-		{
 			add_token(mini, &start_word, word_len, TOKEN_WORD);
-		}
 	}
 	return (EXIT_SUCCESS);
 }
