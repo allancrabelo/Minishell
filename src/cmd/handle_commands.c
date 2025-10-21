@@ -136,11 +136,31 @@ int	execute_command(t_mini *mini, t_ast *node)
 		return (execute_external_command(mini, node, node->redir));
 }
 
+static void tokenizer_init(t_mini *mini, char *input)
+{
+	if (ft_tokenizer(mini, input) != 0)
+	{
+		if (mini->input)
+		{
+			free(mini->input);
+			mini->input = NULL;
+		}
+		return ;
+	}
+	if (mini->token == NULL)
+	{
+		if (mini->input)
+		{
+			free(mini->input);
+			mini->input = NULL;
+		}
+		return ;
+	}
+}
+
 void	handle_commands(t_mini *mini, char *input)
 {
-	ft_tokenizer(mini, input);
-	if (mini->token == NULL)
-		return ;
+	tokenizer_init(mini, input);
 	if (build_ast(mini) != 0)
 	{
 		free_tokens(mini);

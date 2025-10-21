@@ -67,7 +67,11 @@ int	ft_tokenizer(t_mini *mini, char *input)
 	i = 0;
 	len = ft_strlen(mini->input);
 	if (!check_validity(mini, mini->input))
-		return (0);
+	{
+		free(mini->input);
+		mini->input = NULL;
+		return (EXIT_FAILURE);
+	}
 	while (i < len)
 	{
 		size_t	start_word;
@@ -85,7 +89,5 @@ int	ft_tokenizer(t_mini *mini, char *input)
 			add_token(mini, &start_word, word_len, TOKEN_WORD);
 		}
 	}
-	if (mini->token != NULL)
-		return (build_ast(mini));
-	return (1);
+	return (EXIT_SUCCESS);
 }

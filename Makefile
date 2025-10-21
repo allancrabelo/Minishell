@@ -2,7 +2,7 @@ NAME		:= minishell
 CC			:= cc
 RM			:= rm -f
 
-CFLAGS		:= -Wall -Wextra -Werror
+CFLAGS		:= -Wall -Wextra -Werror -fPIE
 DEBUGFLAGS	:= -g
 VALFLAGS	:=	--leak-check=full \
 				--show-leak-kinds=all \
@@ -133,7 +133,7 @@ val: re
 	@echo "..." >> readline.supp
 	@echo "	fun:add_history" >> readline.supp
 	@echo "}" >> readline.supp
-	@valgrind $(VALFLAGS) ./$(NAME)
+	@valgrind ${VALFLAGS} ./${NAME}
 
 debug: CFLAGS += -g -fsanitize=address -fno-omit-frame-pointer
 debug: re

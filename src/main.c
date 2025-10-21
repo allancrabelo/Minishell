@@ -96,10 +96,11 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	if (argc != 1 || argv[1])
-		return (printf("[ERROR] Usage: ./minishell\n" SRESET), 127);
+		return (ft_putstr_fd("[ERROR] Usage: ./minishell\n" SRESET, 2), 127);
 	signal_init();
 	mini.token = NULL;
 	mini.ast = NULL;
+	mini.input = NULL;
 	mini.exit_status = 0;
 	mini.export_list = NULL;
 	mini.env_list = NULL;
@@ -114,10 +115,7 @@ int	main(int argc, char **argv, char **envp)
 	increment_shlvl(&mini);
 	g_signal = 0;
 	main_loop(&mini);
-	if (mini.export_list)
-		free_export_list(mini.export_list);
-	if (mini.export_list)
-		free_env_list(mini.env_list);
+	ft_free_all(&mini, mini.exit_status, 0);
 	rl_clear_history();
 	exit(mini.exit_status);
 }

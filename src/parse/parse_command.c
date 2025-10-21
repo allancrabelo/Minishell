@@ -66,10 +66,7 @@ int	parse_redir(t_mini *mini, t_token **tokens, t_redir **redir)
 	t_redir	*new_redir;
 
 	if (!(*tokens)->next || (*tokens)->next->type != TOKEN_WORD)
-	{
-		mini->exit_status = 2;
-		return (printf("Error: expected filename after redirection\n"), 0);
-	}
+		return (print_syntax_error(mini, "near unexpected token ", "newline"));
 	new_redir = malloc(sizeof(t_redir));
 	if (!new_redir)
 		return (0);

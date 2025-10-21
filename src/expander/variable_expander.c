@@ -41,7 +41,7 @@ char	*extract_var_name(t_mini *mini, size_t *i)
 		len++;
 	}
 	if (len == 0)
-		return (ft_strdup(""));
+		return (ft_strdup("$"));
 	var_name = malloc(len + 1);
 	if (!var_name)
 		return (NULL);
@@ -57,10 +57,10 @@ char	*expand_variable(t_mini *mini, char *var_name)
 		return (ft_strdup(""));
 	if (ft_strcmp(var_name, "$") == 0)
 		return (ft_strdup("$"));
-	if (ft_strlen(var_name) == 1 && is_special_var(var_name[0]))
-		return (expand_special_var(mini, var_name[0]));
 	if (var_name[0] >= '0' && var_name[0] <= '9' && var_name[1] == '\0')
 		return (ft_strdup(""));
+	if (ft_strlen(var_name) == 1 && is_special_var(var_name[0]))
+		return (expand_special_var(mini, var_name[0]));
 	if (ft_strcmp(var_name, "*") == 0)
 		return (ft_strdup(""));
 	value = get_env_var(mini, var_name);

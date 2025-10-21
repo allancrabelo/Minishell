@@ -15,10 +15,8 @@ static t_ast	*parse_primary(t_mini *mini, t_token **tokens)
 			return (NULL);
 		if (!*tokens || (*tokens)->type != TOKEN_RPAREN)
 		{
-			printf("minishell: syntax error: expected ')'\n");
-			mini->exit_status = 2;
-			free_ast(node);
-			return (NULL);
+			print_syntax_error(mini, "expected", ")");
+			return (ft_free_all(mini, 2, 0), NULL);
 		}
 		*tokens = (*tokens)->next;
 		return (node);

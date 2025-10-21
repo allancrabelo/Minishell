@@ -75,16 +75,16 @@ int	verify_tokens(t_mini *mini, t_token *token)
 	t_token	*cur;
 
 	if (!check_start_end_tokens(token))
-		return (print_syntax_error(mini, "near unexpected token"));
+		return (print_syntax_error(mini, "near unexpected token", NULL));
 	if (!check_parentheses_balance(token))
-		return (print_syntax_error(mini, "unmatched parentheses"));
+		return (print_syntax_error(mini, "unmatched parentheses", NULL));
 	if (!check_empty_parentheses(token))
-		return (print_syntax_error(mini, "near unexpected token ')'"));
+		return (print_syntax_error(mini, "near unexpected token ')'", NULL));
 	cur = token;
 	while (cur)
 	{
 		if (!check_syntax(cur))
-			return (print_syntax_error(mini, "near unexpected token"));
+			return (print_syntax_error(mini, "near unexpected token", NULL));
 		cur = cur->next;
 	}
 	return (1);

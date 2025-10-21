@@ -140,6 +140,7 @@ void		free_redir(t_redir *redir);
 int			is_operator(t_token_type type);
 int			is_redirect(t_token_type type);
 char		*ft_strcpy(char *dest, char *src);
+int			print_syntax_error(t_mini *mini, char *error_msg, char *token);
 
 // [BUILTINS]:
 // Echo:
@@ -229,7 +230,7 @@ void		ft_itoa_alternative(int n, char *dst);
 
 //Environment Utils
 char		*get_env_var(t_mini *mini, char *var_name);
-char	*get_exp_var(t_mini *mini, char *var_name);
+char		*get_exp_var(t_mini *mini, char *var_name);
 
 //Command parsing
 int			build_ast(t_mini *mini);
