@@ -168,6 +168,11 @@ void	handle_commands(t_mini *mini, char *input)
 		free_tokens(mini);
 		return ;
 	}
+	if (mini->input)
+	{
+		free(mini->input);
+		mini->input = NULL;
+	}
 	process_heredocs(mini, mini->ast);
 	if (mini->heredoc_signal)
 	{

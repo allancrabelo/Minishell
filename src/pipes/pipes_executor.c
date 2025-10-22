@@ -8,16 +8,10 @@ static void	execute_left_pipe(t_mini *mini, t_ast *left, int pipefd[2])
 	if (apply_redirections(left->redir, mini) == -1)
 	{
 		mini->exit_status = 1;
-		free_tokens(mini);
-		free_ast(mini->ast);
-		free_export_list(mini->export_list);
-		exit(1);
+		ft_free_all(mini, 1, 1);
 	}
 	execute_ast_node(mini, left);
-	free_tokens(mini);
-	free_ast(mini->ast);
-	free_export_list(mini->export_list);
-	exit(mini->exit_status);
+	ft_free_all(mini, mini->exit_status, 1);
 }
 
 static void	execute_right_pipe(t_mini *mini, t_ast *right, int pipefd[2])
@@ -28,16 +22,10 @@ static void	execute_right_pipe(t_mini *mini, t_ast *right, int pipefd[2])
 	if (apply_redirections(right->redir, mini) == -1)
 	{
 		mini->exit_status = 1;
-		free_tokens(mini);
-		free_ast(mini->ast);
-		free_export_list(mini->export_list);
-		exit(1);
+		ft_free_all(mini, 1, 1);
 	}
 	execute_ast_node(mini, right);
-	free_tokens(mini);
-	free_ast(mini->ast);
-	free_export_list(mini->export_list);
-	exit(mini->exit_status);
+	ft_free_all(mini, mini->exit_status, 1);
 }
 
 static int	handle_left_fork(t_mini *mini, t_ast *node, int pipefd[2])

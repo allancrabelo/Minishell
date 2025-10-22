@@ -50,11 +50,6 @@ void	free_tokens(t_mini *mini)
 		free(cur);
 		cur = tmp;
 	}
-	if (mini->input)
-	{
-		free(mini->input);
-		mini->input = NULL;
-	}
 }
 
 void	free_ast(t_ast *node)
@@ -96,13 +91,25 @@ int	ft_free_all(t_mini *mini, int ret, int exit_prog)
 	if (mini->ast)
 		free_ast(mini->ast);
 	if (mini->export_list)
+	{
 		free_export_list(mini->export_list);
+		mini->export_list = NULL;
+	}
 	if (mini->env_list)
+	{
 		free_env_list(mini->env_list);
+		mini->env_list = NULL;
+	}
 	if (mini->heredoc)
 	{
 		free_heredocs(mini->heredoc);
 		heredoc_cleaner(&mini->heredoc, 1);
+	}
+	/* Free input if it still exists */
+	if (mini->input)
+	{
+		free(mini->input);
+		mini->input = NULL;
 	}
 	mini->exit_status = ret;
 	if (exit_prog)
