@@ -69,7 +69,7 @@ typedef struct s_env
 typedef struct s_heredoc
 {
 	char				*heredoc_delimeter;
-	char				*filename;
+	int					pipe_fd;
 	struct s_heredoc	*next;
 }	t_heredoc;
 
@@ -128,13 +128,15 @@ void		execute_ast_node(t_mini *mini, t_ast *node);
 int			execute_external(t_mini *mini, char **argv);
 int			execute_command(t_mini *mini, t_ast *node);
 int			execute_external_command(t_mini *mini, t_ast *node,
-				t_redir *redirects);
-
+	t_redir *redirects);
+	
 // Frees
 int			ft_free_all(t_mini *mini, int ret, int exit_prog);
 void		free_tokens(t_mini *mini);
 void		free_ast(t_ast *node);
 void		free_redir(t_redir *redir);
+void		free_env_list(t_env *lst);
+void		free_export_list(t_export *lst);
 
 // Utils
 int			is_operator(t_token_type type);
@@ -156,7 +158,6 @@ void		ft_addexp(t_export **lst, t_export *new);
 t_export	*findexp(t_mini *mini, char *key);
 int			ft_setexp(char *key, char *newvalue, t_mini *mini);
 char		*ft_getexp(char *key, t_mini *mini);
-void		free_export_list(t_export *lst);
 
 // Exit:
 int			ft_exit(t_mini *mini, t_ast *node);
@@ -167,7 +168,6 @@ int			ft_pwd(t_mini *mini);
 //	Env:
 int			ft_env(t_mini *mini);
 void		init_env_list(t_mini *mini, char **envp);
-void		free_env_list(t_env *lst);
 char		*ft_getenv(char *key, t_mini *mini);
 int			ft_setenv(char *key, char *newvalue, t_mini *mini);
 void		ft_addenv(t_env **lst, t_env *new);
@@ -190,8 +190,8 @@ void		restore_fd(int stdin_backup, int stdout_backup);
 
 // Heredoc:
 int			redirect_heredoc(t_redir *redirect, t_mini *mini);
-void		create_heredoc_file(t_mini *mini, char *delimiter, t_heredoc **heredoc);
-void		heredoc_cleaner(t_heredoc **heredoc, int unlinker);
+void		create_heredoc_pipe(t_mini *mini, char *delimiter, t_heredoc **heredoc);
+void		heredoc_cleaner(t_heredoc **heredoc);
 void		process_heredocs(t_mini *mini, t_ast *node);
 
 // Signals

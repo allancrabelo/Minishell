@@ -96,7 +96,6 @@ int	execute_builtin(t_mini *mini, t_ast *node, t_redir *redir)
 int	execute_external_command(t_mini *mini, t_ast *node, t_redir *redirects)
 {
 	pid_t	pid;
-	int		exit_code;
 	int		status;
 
 	pid = fork();
@@ -104,9 +103,10 @@ int	execute_external_command(t_mini *mini, t_ast *node, t_redir *redirects)
 	if (pid == 0)
 	{
 		if (apply_redirections(redirects, mini) == -1)
-			exit(mini->exit_status); //TODO: When does this happen?
-		exit_code = execute_external(mini, node->args);
-		return (ft_free_all(mini, exit_code, 1));
+			ft_free_all(mini, mini->exit_status, 1);
+		if (mini->heredoc)
+			heredoc_cleaner(&mini->heredoc);
+		return (ft_free_all(mini, execute_external(mini, node->args), 1));
 	}
 	else if (pid < 0)
 		return (perror("fork"), 1);
@@ -178,10 +178,15 @@ void	handle_commands(t_mini *mini, char *input)
 	{
 		mini->exit_status = 130;
 		mini->heredoc_signal = 0;
-		heredoc_cleaner(&mini->heredoc, 1);
+		heredoc_cleaner(&mini->heredoc);
 	}
 	else
+	{
 		execute_ast_node(mini, mini->ast);
+		/* Clean up heredocs after successful execution */
+		if (mini->heredoc)
+			heredoc_cleaner(&mini->heredoc);
+	}
 	free_tokens(mini);
 	if (mini->ast)
 	{
@@ -189,5 +194,5 @@ void	handle_commands(t_mini *mini, char *input)
 		mini->ast = NULL;
 	}
 	if (mini->heredoc)
-		heredoc_cleaner(&mini->heredoc, 1);
+		heredoc_cleaner(&mini->heredoc);
 }

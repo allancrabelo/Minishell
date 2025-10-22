@@ -33,7 +33,6 @@ void	ft_addenv(t_env **lst, t_env *new)
 	temp->next = new;
 }
 
-// Encontrar variável na lista de ambiente
 t_env	*findenv(t_mini *mini, char *key)
 {
 	t_env	*find;
@@ -62,7 +61,7 @@ int	ft_setenv(char *key, char *newvalue, t_mini *mini)
 			find->value = ft_strdup(newvalue);
 		else
 			find->value = NULL;
-		return (0);
+		return (EXIT_SUCCESS);
 	}
 	else
 	{
@@ -70,7 +69,7 @@ int	ft_setenv(char *key, char *newvalue, t_mini *mini)
 		if (!newenv)
 			return (-1);
 		ft_addenv(&mini->env_list, newenv);
-		return (0);
+		return (EXIT_SUCCESS);
 	}
 }
 

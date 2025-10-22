@@ -7,7 +7,8 @@ DEBUGFLAGS	:= -g
 VALFLAGS	:=	--leak-check=full \
 				--show-leak-kinds=all \
 				--track-origins=yes \
-				--suppressions=readline.supp
+				--suppressions=readline.supp \
+				--track-fds=yes
 
 HEADDIR		:= ./includes/
 HEADLIST	:= minishell.h
