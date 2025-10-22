@@ -89,21 +89,34 @@ static void free_heredocs(t_heredoc *heredoc)
 	}
 }
 
-int	ft_free_all(t_mini *mini, int ret, int exit_prog)
+void	ft_free_extra(t_mini *mini, int ret, int exit_prog)
 {
-	if (mini->token)
-		free_tokens(mini);
-	if (mini->ast)
-		free_ast(mini->ast);
-	if (mini->export_list)
-		free_export_list(mini->export_list);
-	if (mini->env_list)
-		free_env_list(mini->env_list);
 	if (mini->heredoc)
 	{
 		free_heredocs(mini->heredoc);
 		heredoc_cleaner(&mini->heredoc, 1);
 	}
+	if (mini->token)
+		free_tokens(mini);
+	if (mini->ast)
+	{
+		free_ast(mini->ast);
+		mini->ast = NULL;
+	}
+	mini->exit_status = ret;
+	if (exit_prog)
+		exit(mini->exit_status);
+	//ENOMEM
+	//errno
+}
+
+int	ft_free_all(t_mini *mini, int ret, int exit_prog)
+{
+	ft_free_extra(mini, ret, 0);
+	if (mini->export_list)
+		free_export_list(mini->export_list);
+	if (mini->env_list)
+		free_env_list(mini->env_list);
 	mini->exit_status = ret;
 	if (exit_prog)
 		exit(mini->exit_status);
@@ -111,3 +124,4 @@ int	ft_free_all(t_mini *mini, int ret, int exit_prog)
 	//errno
 	return (mini->exit_status);
 }
+

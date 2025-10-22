@@ -82,6 +82,8 @@ char	**envp_initializer(void)
 			i++;
 		}
 	}
+	else
+		return(perror("getcwd"), NULL); //TODO: Make sense
 	new_envp[i] = ft_strdup("SHLVL=0");
 	if (new_envp[i]) i++;
 	new_envp[i] = ft_strdup("_=./minishell"); 

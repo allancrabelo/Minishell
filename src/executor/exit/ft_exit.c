@@ -94,8 +94,6 @@ int	ft_exit(t_mini *mini, t_ast *node)
 		}
 		mini->exit_status = res;
 	}
-	free_tokens(mini);
-	free_ast(mini->ast);
-	free_export_list(mini->export_list);
-	exit(mini->exit_status);
+	ft_free_all(mini, mini->exit_status, 1);
+	return (EXIT_SUCCESS);
 }
