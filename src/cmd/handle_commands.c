@@ -99,9 +99,9 @@ int	execute_external_command(t_mini *mini, t_ast *node, t_redir *redirects)
 	int		status;
 
 	pid = fork();
-	setup_exec_signals();
 	if (pid == 0)
 	{
+		setup_exec_signals();
 		if (apply_redirections(redirects, mini) == -1)
 			ft_free_all(mini, mini->exit_status, 1);
 		if (mini->heredoc)
@@ -112,10 +112,21 @@ int	execute_external_command(t_mini *mini, t_ast *node, t_redir *redirects)
 		return (perror("fork"), 1);
 	else
 	{
+		signal(SIGINT, SIG_IGN);
 		waitpid(pid, &status, 0);
-		mini->exit_status = status;
+		signal_init();
 		if (WIFEXITED(status))
+		{
+			mini->exit_status = WEXITSTATUS(status);
 			return (WEXITSTATUS(status));
+		}
+		else if (WIFSIGNALED(status))
+		{
+			if (WTERMSIG(status) == SIGINT)
+				write(1, "\n", 1);
+			mini->exit_status = 128 + WTERMSIG(status);
+			return (mini->exit_status);
+		}
 		return (g_signal);
 	}
 }

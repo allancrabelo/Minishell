@@ -2,6 +2,7 @@
 
 static void	execute_left_pipe(t_mini *mini, t_ast *left, int pipefd[2])
 {
+	setup_exec_signals();
 	close(pipefd[0]);
 	dup2(pipefd[1], STDOUT_FILENO);
 	close(pipefd[1]);
@@ -16,6 +17,7 @@ static void	execute_left_pipe(t_mini *mini, t_ast *left, int pipefd[2])
 
 static void	execute_right_pipe(t_mini *mini, t_ast *right, int pipefd[2])
 {
+	setup_exec_signals();
 	close(pipefd[1]);
 	dup2(pipefd[0], STDIN_FILENO);
 	close(pipefd[0]);
@@ -72,6 +74,7 @@ int	execute_pipe_node(t_mini *mini, t_ast *node)
 
 	if (pipe(pipefd) == -1)
 		return (perror("pipe"), 1);
+	signal(SIGINT, SIG_IGN);
 	pid_left = handle_left_fork(mini, node, pipefd);
 	if (pid_left == -1)
 		return (1);
@@ -82,9 +85,14 @@ int	execute_pipe_node(t_mini *mini, t_ast *node)
 	close(pipefd[1]);
 	waitpid(pid_left, &status_left, 0);
 	waitpid(pid_right, &status_right, 0);
+	signal_init();
 	if (WIFEXITED(status_right))
 		mini->exit_status = WEXITSTATUS(status_right);
 	else if (WIFSIGNALED(status_right))
+	{
+		if (WTERMSIG(status_right) == SIGINT)
+			write(1, "\n", 1);
 		mini->exit_status = 128 + WTERMSIG(status_right);
+	}
 	return (mini->exit_status);
 }
