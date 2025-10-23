@@ -1,5 +1,17 @@
 #include "minishell.h"
 
+static void	close_extra_fds(void)
+{
+	int	fd;
+
+	fd = 3;
+	while (fd < 1024)
+	{
+		close(fd);
+		fd++;
+	}
+}
+
 int ft_atoll_safe(const char *str, long long *result)
 {
 	int					sign;
@@ -85,6 +97,7 @@ int	ft_exit(t_mini *mini, t_ast *node)
 			free_tokens(mini);
 			free_ast(mini->ast);
 			free_export_list(mini->export_list);
+			close_extra_fds();
 			exit(2);
 		}
 		if (node->arg_count > arg_index + 1)
@@ -94,6 +107,7 @@ int	ft_exit(t_mini *mini, t_ast *node)
 		}
 		mini->exit_status = res;
 	}
+	close_extra_fds();
 	ft_free_all(mini, mini->exit_status, 1);
 	return (EXIT_SUCCESS);
 }

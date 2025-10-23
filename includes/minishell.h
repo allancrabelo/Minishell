@@ -61,9 +61,9 @@ typedef struct s_export
 
 typedef struct s_env
 {
-	char			*key;
-	char			*value;
-	struct s_env	*next;
+	char				*key;
+	char				*value;
+	struct s_env		*next;
 }	t_env;
 
 typedef struct s_heredoc
@@ -75,49 +75,49 @@ typedef struct s_heredoc
 
 typedef struct s_token
 {
-	char			*data;
-	t_token_type	type;
-	struct s_token	*next;
+	char				*data;
+	t_token_type		type;
+	struct s_token		*next;
 }				t_token;
 
 typedef struct s_redir
 {
-	t_token_type	type;
-	char			*file;
-	char			*heredoc_delimeter;
-	int				fd;
-	struct s_redir	*next;
+	t_token_type		type;
+	char				*file;
+	char				*heredoc_delimeter;
+	int					fd;
+	struct s_redir		*next;
 }	t_redir;
 
 typedef struct s_ast
 {
-	t_node_type		type;
-	struct s_ast	*left;
-	struct s_ast	*right;
-	char			**args;
-	int				arg_count;
-	t_redir			*redir;
+	t_node_type			type;
+	struct s_ast		*left;
+	struct s_ast		*right;
+	char				**args;
+	int					arg_count;
+	t_redir				*redir;
 }	t_ast;
 
 typedef struct s_mini
 {
-	t_ast			*ast;
-	t_token_type	type;
-	t_token			*token;
-	char			*input;
-	char			**envp;
-	t_export		*export_list;
-	int				env_size;
+	t_ast				*ast;
+	t_token_type		type;
+	t_token				*token;
+	char				*input;
+	char				**envp;
+	t_export			*export_list;
+	int					env_size;
 	long				exit_status;
-	int				pipe_count;
-	int				**pipes;
-	pid_t			*child_pids;
-	int				child_count;
-	t_env			*env_list;
-	char			*pwd;
-	t_heredoc		*heredoc;
-	int				heredoc_fd;
-	int				heredoc_signal;
+	int					pipe_count;
+	int					**pipes;
+	pid_t				*child_pids;
+	int					child_count;
+	t_env				*env_list;
+	char				*pwd;
+	t_heredoc			*heredoc;
+	int					heredoc_fd;
+	int					heredoc_signal;
 }	t_mini;
 
 // Commands
@@ -186,7 +186,7 @@ int			redirect_out(t_redir *redirect, t_mini *mini);
 int			redirect_append(t_redir *redirect, t_mini *mini);
 int			apply_redirections(t_redir *redirections, t_mini *mini);
 int			backup_fd(int *stdin_backup, int *stdout_backup);
-void		restore_fd(int stdin_backup, int stdout_backup);
+void		restore_fd(int *stdin_backup, int *stdout_backup);
 
 // Heredoc:
 int			redirect_heredoc(t_redir *redirect, t_mini *mini);

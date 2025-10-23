@@ -85,11 +85,11 @@ int	execute_builtin(t_mini *mini, t_ast *node, t_redir *redir)
 		return (1);
 	if (apply_redirections(redir, mini) == -1)
 	{
-		restore_fd(stdin_backup, stdout_backup);
+		restore_fd(&stdin_backup, &stdout_backup);
 		return (1);
 	}
 	result = builtin(mini, node);
-	restore_fd(stdin_backup, stdout_backup);
+	restore_fd(&stdin_backup, &stdout_backup);
 	return (result);
 }
 
