@@ -65,31 +65,39 @@ void	free_ast(t_ast *node)
 	free(node);
 }
 
-static void free_heredocs(t_heredoc *heredoc)
+static void free_heredocs(t_heredoc **head)
 {
 	t_heredoc	*cur;
 	t_heredoc	*tmp;
 
-	cur = heredoc;
-	heredoc = NULL;
-	if (!cur)
-		return ;
+	if (!head || !*head)
+		return;
+	cur = *head;
 	while (cur)
 	{
 		tmp = cur;
 		cur = cur->next;
 		if (tmp->heredoc_delimeter)
+		{
 			free(tmp->heredoc_delimeter);
+			tmp->heredoc_delimeter = NULL;
+		}
+		if (tmp->pipe_fd != -1)
+		{
+			close(tmp->pipe_fd);
+			tmp->pipe_fd = -1;
+		}
 		free(tmp);
 	}
+	*head = NULL;
 }
 
 void	ft_free_extra(t_mini *mini, int ret, int exit_prog)
 {
 	if (mini->heredoc)
 	{
-		free_heredocs(mini->heredoc);
-		heredoc_cleaner(&mini->heredoc);
+		free_heredocs(&mini->heredoc);
+		//heredoc_cleaner(&mini->heredoc); Causa free(): invalid pointer
 	}
 	if (mini->token)
 		free_tokens(mini);
@@ -117,7 +125,7 @@ int	ft_free_all(t_mini *mini, int ret, int exit_prog)
 		free_env_list(mini->env_list);
 	if (mini->heredoc)
 	{
-		free_heredocs(mini->heredoc);
+		free_heredocs(&mini->heredoc);
 		heredoc_cleaner(&mini->heredoc);
 	}
 	mini->exit_status = ret;

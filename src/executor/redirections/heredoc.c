@@ -121,7 +121,7 @@ static char	*expand_heredoc_line(t_mini *mini, char *line)
 	return (result);
 }
 
-static void	heredoc_append(t_heredoc **heredoc, t_heredoc *new)
+/* static void	heredoc_append(t_heredoc **heredoc, t_heredoc *new)
 {
 	t_heredoc	*cur;
 
@@ -134,7 +134,7 @@ static void	heredoc_append(t_heredoc **heredoc, t_heredoc *new)
 			cur = cur->next;
 		cur->next = new;
 	}
-}
+} */
 
 static int	is_delimiter(char *line, char *delimiter)
 {
@@ -218,28 +218,29 @@ static int	read_heredoc_with_pipe(t_mini *mini, char *delimiter)
 
 void	create_heredoc_pipe(t_mini *mini, char *delimiter, t_heredoc **heredoc)
 {
-	t_heredoc	*new;
-	int			pipe_fd;
+	int	pipe_fd;
 
-	new = malloc(sizeof(t_heredoc));
-	if (!new)
+	*heredoc = malloc(sizeof(t_heredoc));
+	if (!*heredoc)
 		ft_free_all(mini, ENOMEM, 1);
-	new->next = NULL;
-	new->heredoc_delimeter = ft_strdup(delimiter);
-	if (!new->heredoc_delimeter)
+	(*heredoc)->next = NULL;
+	(*heredoc)->heredoc_delimeter = ft_strdup(delimiter);
+	(*heredoc)->pipe_fd = -1;
+	if (!(*heredoc)->heredoc_delimeter)
 	{
-		free(new);
+		free(*heredoc);
+		*heredoc = NULL;
 		ft_free_all(mini, ENOMEM, 1);
 	}
 	pipe_fd = read_heredoc_with_pipe(mini, delimiter);
 	if (pipe_fd == -1)
 	{
-		free(new->heredoc_delimeter);
-		free(new);
+		free((*heredoc)->heredoc_delimeter);
+		free(*heredoc);
+		*heredoc = NULL;
 		ft_free_all(mini, ENOMEM, 1);
 	}
-	new->pipe_fd = pipe_fd;
-	heredoc_append(heredoc, new);
+	(*heredoc)->pipe_fd = pipe_fd;
 }
 
 int	redirect_heredoc(t_redir *redirect, t_mini *mini)
