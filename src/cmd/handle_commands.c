@@ -1,5 +1,4 @@
 #include "minishell.h"
-#include "colors.h"
 
 void	execute_ast_node(t_mini *mini, t_ast *node)
 {

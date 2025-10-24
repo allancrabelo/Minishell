@@ -9,11 +9,16 @@ void	sighandler(int signal)
 	rl_redisplay();
 }
 
+void	handle_ctrl_c_on_pipe(int signal)
+{
+	(void)signal;
+	write(1, "\n", 1);
+}
+
 void	signal_init(void)
 {
 	signal(SIGINT, sighandler);
 	signal(SIGQUIT, SIG_IGN);
-	signal(SIGTSTP, SIG_IGN);
 }
 
 void	wait_update_main(int pid, int *status)

@@ -201,6 +201,7 @@ void		heredoc_sighandler(int signal);
 void		setup_heredoc_signals(void);
 void		wait_update_main(int pid, int *status);
 void		setup_exec_signals(void);
+void		handle_ctrl_c_on_pipe(int signal);
 
 // Tokenizer
 //void	ft_tokenizer(t_mini *mini, char *input);
