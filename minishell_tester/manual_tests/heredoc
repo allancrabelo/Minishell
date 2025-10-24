@@ -33,3 +33,7 @@ $
 
 << echo oi
 echo
+
+<< HERE
+oi
+HERE

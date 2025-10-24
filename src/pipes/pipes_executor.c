@@ -6,11 +6,13 @@ static void	execute_left_pipe(t_mini *mini, t_ast *left, int pipefd[2])
 	close(pipefd[0]);
 	dup2(pipefd[1], STDOUT_FILENO);
 	close(pipefd[1]);
-	if (apply_redirections(left->redir, mini) == -1)
-	{
-		mini->exit_status = 1;
-		ft_free_all(mini, 1, 1);
-	}
+	
+	/* Process heredocs for this side of the pipe */
+	process_heredocs(mini, left);
+	if (mini->heredoc_signal)
+		ft_free_all(mini, 130, 1);
+	
+	/* Don't call apply_redirections here - it will be called by execute_command */
 	execute_ast_node(mini, left);
 	ft_free_all(mini, mini->exit_status, 1);
 }
@@ -21,11 +23,13 @@ static void	execute_right_pipe(t_mini *mini, t_ast *right, int pipefd[2])
 	close(pipefd[1]);
 	dup2(pipefd[0], STDIN_FILENO);
 	close(pipefd[0]);
-	if (apply_redirections(right->redir, mini) == -1)
-	{
-		mini->exit_status = 1;
-		ft_free_all(mini, 1, 1);
-	}
+	
+	/* Process heredocs for this side of the pipe */
+	process_heredocs(mini, right);
+	if (mini->heredoc_signal)
+		ft_free_all(mini, 130, 1);
+	
+	/* Don't call apply_redirections here - it will be called by execute_command */
 	execute_ast_node(mini, right);
 	ft_free_all(mini, mini->exit_status, 1);
 }

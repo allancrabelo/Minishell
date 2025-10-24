@@ -132,10 +132,29 @@ int	execute_external_command(t_mini *mini, t_ast *node, t_redir *redirects)
 
 int	execute_command(t_mini *mini, t_ast *node)
 {
-	if (!node || !node->args || (!node->args[0]
-			&& node->redir->type != TOKEN_HEREDOC))
+	if (!node)
 		return (0);
-	if (node->args[0] && node->args[0][0] == '\0')
+	
+	/* Handle standalone heredoc (no command, only redirection) */
+	if (!node->args || !node->args[0])
+	{
+		if (node->redir && node->redir->type == TOKEN_HEREDOC)
+		{
+			/* Standalone heredoc - just apply the redirection */
+			int	stdin_backup;
+			int	stdout_backup;
+			int	result;
+
+			if (backup_fd(&stdin_backup, &stdout_backup) == -1)
+				return (1);
+			result = apply_redirections(node->redir, mini);
+			restore_fd(&stdin_backup, &stdout_backup);
+			return (result == -1 ? 1 : 0);
+		}
+		return (0);
+	}
+	
+	if (node->args[0][0] == '\0')
 	{
 		print_command_error("", "command not found");
 		return (127);
@@ -175,6 +194,7 @@ void	handle_commands(t_mini *mini, char *input)
 		return ;
 	if (build_ast(mini) != 0)
 	{
+		free(mini->input);
 		free_tokens(mini);
 		return ;
 	}
@@ -183,19 +203,28 @@ void	handle_commands(t_mini *mini, char *input)
 		free(mini->input);
 		mini->input = NULL;
 	}
-	process_heredocs(mini, mini->ast);
-	if (mini->heredoc_signal)
+	/* Only process heredocs for immediate commands, not PIPE/AND/OR */
+	if (mini->ast->type != NODE_AND && mini->ast->type != NODE_OR && mini->ast->type != NODE_PIPE)
 	{
-		mini->exit_status = 130;
-		mini->heredoc_signal = 0;
-		heredoc_cleaner(&mini->heredoc);
+		process_heredocs(mini, mini->ast);
+		if (mini->heredoc_signal)
+		{
+			mini->exit_status = 130;
+			mini->heredoc_signal = 0;
+			heredoc_cleaner(&mini->heredoc);
+		}
+		else
+		{
+			execute_ast_node(mini, mini->ast);
+			/* Clean up heredocs after successful execution */
+			if (mini->heredoc)
+				heredoc_cleaner(&mini->heredoc);
+		}
 	}
 	else
 	{
+		/* For PIPE/AND/OR nodes, heredocs are processed within their execution */
 		execute_ast_node(mini, mini->ast);
-		/* Clean up heredocs after successful execution */
-		if (mini->heredoc)
-			heredoc_cleaner(&mini->heredoc);
 	}
 	free_tokens(mini);
 	if (mini->ast)

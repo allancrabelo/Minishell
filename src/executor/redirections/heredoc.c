@@ -247,17 +247,11 @@ void	create_heredoc_pipe(t_mini *mini, char *delimiter, t_heredoc **heredoc)
 
 int	redirect_heredoc(t_redir *redirect, t_mini *mini)
 {
+	(void)redirect;
 	if (!mini->heredoc || mini->heredoc->pipe_fd < 0)
 	{
 		print_command_error("heredoc", "pipe not available");
 		return (-1);
-	}
-	/* Only redirect if this is the same delimiter as the last processed heredoc */
-	if (!redirect->heredoc_delimeter || 
-		ft_strcmp(redirect->heredoc_delimeter, mini->heredoc->heredoc_delimeter) != 0)
-	{
-		/* This is not the last heredoc, skip it */
-		return (0);
 	}
 	if (dup2(mini->heredoc->pipe_fd, STDIN_FILENO) == -1)
 	{
@@ -292,7 +286,5 @@ void	process_heredocs(t_mini *mini, t_ast *node)
 			redir = redir->next;
 		}
 	}
-	process_heredocs(mini, node->left);
-	process_heredocs(mini, node->right);
+	/* Don't traverse pipe nodes - each side handles its own heredocs */
 }
-

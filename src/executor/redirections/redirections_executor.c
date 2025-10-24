@@ -3,10 +3,22 @@
 int	apply_redirections(t_redir *redirections, t_mini *mini)
 {
 	t_redir	*cur;
+	t_redir	*last_heredoc;
 	int		result;
 
 	if (!redirections)
 		return (0);
+	
+	/* Find the last heredoc in the list */
+	last_heredoc = NULL;
+	cur = redirections;
+	while (cur)
+	{
+		if (cur->type == TOKEN_HEREDOC)
+			last_heredoc = cur;
+		cur = cur->next;
+	}
+	
 	cur = redirections;
 	while (cur)
 	{
@@ -17,7 +29,13 @@ int	apply_redirections(t_redir *redirections, t_mini *mini)
 		else if (cur->type == TOKEN_REDIRECT_APPEND)
 			result = redirect_append(cur, mini);
 		else if (cur->type == TOKEN_HEREDOC)
-			result = redirect_heredoc(cur, mini);
+		{
+			/* Only apply the last heredoc, skip others */
+			if (cur == last_heredoc)
+				result = redirect_heredoc(cur, mini);
+			else
+				result = 0; /* Skip non-last heredocs */
+		}
 		else
 			result = -1;
 		if (result == -1)
