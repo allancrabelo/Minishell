@@ -112,6 +112,7 @@ t_ast	*parse_command(t_mini *mini, t_token **tokens)
 	}
 	if (count == 0 && redir != NULL && redir->type == TOKEN_HEREDOC)
 	{
+		ft_free_split(args);
 		args = init_args_array(1);
 		if (!args)
 			return (free_redir(redir), NULL);

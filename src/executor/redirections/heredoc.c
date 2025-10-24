@@ -11,8 +11,10 @@ static void	write_heredoc_to_pipe(int write_fd, char *delimiter, t_mini *mini)
 	while (1)
 	{
 		line = readline("> ");
-		if (!line && g_signal != 130)
+		if (!line)
 		{
+			if (g_signal == 130)
+				break ;
 			ft_putstr_fd("minishell: warning: here-document \
 delimited by end-of-file (wanted `", 2);
 			ft_putstr_fd(delimiter, 2);
@@ -245,18 +247,23 @@ void	create_heredoc_pipe(t_mini *mini, char *delimiter, t_heredoc **heredoc)
 
 int	redirect_heredoc(t_redir *redirect, t_mini *mini)
 {
-	(void)redirect;
 	if (!mini->heredoc || mini->heredoc->pipe_fd < 0)
 	{
 		print_command_error("heredoc", "pipe not available");
 		return (-1);
+	}
+	/* Only redirect if this is the same delimiter as the last processed heredoc */
+	if (!redirect->heredoc_delimeter || 
+		ft_strcmp(redirect->heredoc_delimeter, mini->heredoc->heredoc_delimeter) != 0)
+	{
+		/* This is not the last heredoc, skip it */
+		return (0);
 	}
 	if (dup2(mini->heredoc->pipe_fd, STDIN_FILENO) == -1)
 	{
 		perror("dup2");
 		return (-1);
 	}
-	/* Close the original pipe fd since it's now duplicated to stdin */
 	close(mini->heredoc->pipe_fd);
 	mini->heredoc->pipe_fd = -1;
 	return (0);
@@ -275,6 +282,8 @@ void	process_heredocs(t_mini *mini, t_ast *node)
 		{
 			if (redir->type == TOKEN_HEREDOC)
 			{
+				if (mini->heredoc)
+					heredoc_cleaner(&mini->heredoc);
 				create_heredoc_pipe(mini, redir->heredoc_delimeter,
 					&mini->heredoc);
 				if (mini->heredoc_signal)
