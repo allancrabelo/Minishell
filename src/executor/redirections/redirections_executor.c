@@ -8,7 +8,7 @@ int	apply_redirections(t_redir *redirections, t_mini *mini)
 
 	if (!redirections)
 		return (0);
-	
+
 	/* Find the last heredoc in the list */
 	last_heredoc = NULL;
 	cur = redirections;
@@ -18,7 +18,7 @@ int	apply_redirections(t_redir *redirections, t_mini *mini)
 			last_heredoc = cur;
 		cur = cur->next;
 	}
-	
+
 	cur = redirections;
 	while (cur)
 	{

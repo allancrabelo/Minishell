@@ -134,7 +134,7 @@ int	execute_command(t_mini *mini, t_ast *node)
 {
 	if (!node)
 		return (0);
-	
+
 	/* Handle standalone heredoc (no command, only redirection) */
 	if (!node->args || !node->args[0])
 	{
@@ -153,7 +153,7 @@ int	execute_command(t_mini *mini, t_ast *node)
 		}
 		return (0);
 	}
-	
+
 	if (node->args[0][0] == '\0')
 	{
 		print_command_error("", "command not found");
