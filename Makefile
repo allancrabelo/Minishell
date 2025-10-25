@@ -34,6 +34,7 @@ VPATH		:=	src src/utils \
 SRCSLIST	:=	main \
 				initializer \
 				signals \
+				especial_signals \
 				handle_commands \
 				utils \
 				atoll \

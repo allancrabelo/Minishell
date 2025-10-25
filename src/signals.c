@@ -1,5 +1,14 @@
 #include "minishell.h"
 
+/**
+ * @brief Signal handler for interactive mode
+ * 
+ * Handles SIGINT (Ctrl-C) in the main shell loop. Sets global signal flag,
+ * displays new prompt, and preserves current input line.
+ * 
+ * @param signal The signal number received
+ * @return void
+ */
 void	sighandler(int signal)
 {
 	g_signal = 128 + signal;
@@ -9,38 +18,29 @@ void	sighandler(int signal)
 	rl_redisplay();
 }
 
-void	handle_ctrl_c_on_pipe(int signal)
-{
-	(void)signal;
-	write(1, "\n", 1);
-}
-
+/**
+ * @brief Initializes signal handlers for the shell
+ * 
+ * Sets up SIGINT (Ctrl-C) handling for interactive mode and
+ * ignores SIGQUIT (Ctrl-\) in the main shell process.
+ * 
+ * @return void
+ */
 void	signal_init(void)
 {
 	signal(SIGINT, sighandler);
 	signal(SIGQUIT, SIG_IGN);
 }
 
-void	wait_update_main(int pid, int *status)
-{
-	signal(SIGINT, SIG_IGN);
-	waitpid(pid, status, 0);
-	signal(SIGINT, sighandler);
-}
-
-void	heredoc_sighandler(int signal)
-{
-	(void)signal;
-	g_signal = 130;
-	write(1, "\n", 1);
-	close(STDIN_FILENO);
-}
-
-void	setup_heredoc_signals(void)
-{
-	signal(SIGINT, heredoc_sighandler);
-}
-
+/**
+ * @brief Signal handler for child processes during execution
+ * 
+ * Handles SIGINT (Ctrl-C) in child processes. Sets appropriate
+ * exit status and displays newline without affecting parent shell.
+ * 
+ * @param signal The signal number received
+ * @return void
+ */
 void	handle_exec_ctrl_c(int signal)
 {
 	(void)signal;
@@ -48,6 +48,15 @@ void	handle_exec_ctrl_c(int signal)
 	write(1, "\n", 1);
 }
 
+/**
+ * @brief Signal handler for SIGQUIT in child processes
+ * 
+ * Handles Ctrl-\ (SIGQUIT) during command execution. Sets the
+ * appropriate exit status and displays quit message.
+ * 
+ * @param signal The signal number received
+ * @return void
+ */
 static void	handle_exec_ctrl_bslash(int signal)
 {
 	(void)signal;
@@ -55,6 +64,14 @@ static void	handle_exec_ctrl_bslash(int signal)
 	printf("Quit (core dumped)\n");
 }
 
+/**
+ * @brief Configures signal handling for child processes
+ * 
+ * Sets up signal handlers for SIGINT and SIGQUIT specifically
+ * for commands being executed (child processes).
+ * 
+ * @return void
+ */
 void	setup_exec_signals(void)
 {
 	signal(SIGINT, handle_exec_ctrl_c);
