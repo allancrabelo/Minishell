@@ -3,6 +3,16 @@
 
 volatile sig_atomic_t	g_signal = 0;
 
+/**
+ * @brief Initializes the export list from environment variables
+ * 
+ * Parses the environment variables array and populates the shell's
+ * export list. Handles both key=value pairs and standalone keys.
+ * 
+ * @param mini Pointer to the main shell structure
+ * @param envp Array of environment variables strings
+ * @return void
+ */
 static void	init_export_list(t_mini *mini, char **envp)
 {
 	int		i;
@@ -27,6 +37,16 @@ static void	init_export_list(t_mini *mini, char **envp)
 	}
 }
 
+/**
+ * @brief Processes user input commands
+ * 
+ * Adds input to command history, updates current working directory,
+ * and delegates to command handler for execution.
+ * 
+ * @param mini Pointer to the main shell structure
+ * @param input User input string to process
+ * @return void
+ */
 void	do_commands(t_mini *mini, char *input)
 {
 	add_history(input);
@@ -34,6 +54,15 @@ void	do_commands(t_mini *mini, char *input)
 	handle_commands(mini, input);
 }
 
+/**
+ * @brief Main interactive loop for the minishell
+ * 
+ * Handles the REPL (Read-Eval-Print Loop) cycle for user interaction.
+ * Reads input, processes commands, and manages exit conditions.
+ * 
+ * @param mini Pointer to the main shell structure
+ * @return void
+ */
 static void	main_loop(t_mini *mini)
 {
 	char	*input;
@@ -57,40 +86,50 @@ static void	main_loop(t_mini *mini)
 	}
 }
 
-char	**envp_initializer(void) 
+/**
+ * @brief Initializes a basic environment when no environment is provided
+ * 
+ * Creates a minimal environment array with essential variables including
+ * PWD, OLDPWD, SHLVL, and underscore. Used when the shell starts without
+ * an inherited environment.
+ * 
+ * @return char** Newly allocated environment array, NULL-terminated
+ */
+static char	**envp_initializer(void)
 {
 	char	**new_envp;
 	char	cwd[4096];
 	int		total_size;
 	int		i;
 
+	total_size = 0;
 	new_envp = malloc(sizeof(char *) * (10 + 1));
 	if (!new_envp)
 		return (NULL);
 	i = 0;
 	while (i <= 10)
 		new_envp[i++] = NULL;
-	i = 0;
-	if (getcwd(cwd, sizeof(cwd)) != NULL)
-	{
-		total_size = ft_strlen("PWD=") + ft_strlen(cwd) + 1;
-		new_envp[i] = malloc(total_size);
-		if (new_envp[i])
-		{
-			ft_strlcpy(new_envp[i], "PWD=", total_size);
-			ft_strlcat(new_envp[i], cwd, total_size);
-			i++;
-		}
-	}
-	else
-		return(perror("getcwd"), NULL); //TODO: Make sense
+	set_getcwd(cwd, total_size, new_envp, i);
 	new_envp[i] = ft_strdup("SHLVL=0");
-	if (new_envp[i]) i++;
-	new_envp[i] = ft_strdup("_=./minishell"); 
-	if (new_envp[i]) i++;
+	if (new_envp[i])
+		i++;
+	new_envp[i] = ft_strdup("_=./minishell");
+	if (new_envp[i])
+		i++;
 	return (new_envp);
 }
 
+/**
+ * @brief Main entry point for the minishell program
+ * 
+ * Initializes the shell environment, processes startup configuration,
+ * and enters the main command loop. Handles program cleanup on exit.
+ * 
+ * @param argc Argument count
+ * @param argv Argument vector
+ * @param envp Environment variables array
+ * @return int Exit status code
+ */
 int	main(int argc, char **argv, char **envp)
 {
 	t_mini	mini;
@@ -100,16 +139,7 @@ int	main(int argc, char **argv, char **envp)
 	if (argc != 1 || argv[1])
 		return (ft_putstr_fd("[ERROR] Usage: ./minishell\n" SRESET, 2), 127);
 	signal_init();
-	mini.token = NULL;
-	mini.ast = NULL;
-	mini.input = NULL;
-	mini.exit_status = 0;
-	mini.export_list = NULL;
-	mini.env_list = NULL;
-	mini.heredoc = NULL;
-	mini.heredoc_fd = 0;
-	mini.heredoc_signal = 0;
-	mini.envp = envp;
+	mini_init(&mini, envp);
 	if (envp[0] == NULL || envp == NULL)
 		mini.envp = envp_initializer();
 	init_export_list(&mini, mini.envp);

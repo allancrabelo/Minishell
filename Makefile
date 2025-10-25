@@ -32,6 +32,7 @@ VPATH		:=	src src/utils \
 
 
 SRCSLIST	:=	main \
+				initializer \
 				signals \
 				handle_commands \
 				utils \

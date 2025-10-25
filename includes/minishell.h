@@ -119,6 +119,9 @@ typedef struct s_mini
 	int					heredoc_signal;
 }	t_mini;
 
+// Initializer:
+void		mini_init(t_mini *mini, char **envp);
+
 // Commands
 void		do_commands(t_mini *mini, char *input);
 void		handle_commands(t_mini *mini, char *input);
@@ -144,6 +147,7 @@ char		*ft_strcpy(char *dest, char *src);
 int			print_syntax_error(t_mini *mini, char *error_msg, char *token);
 int			ft_atoll_safe(const char *str, long long *result);
 void		print_command_error(char *cmd, char *error);
+int			set_getcwd(char *cwd, int total_size, char **new_envp, int i);
 
 // [BUILTINS]:
 // Echo:

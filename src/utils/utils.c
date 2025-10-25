@@ -54,3 +54,22 @@ char	*ft_strjoin_free(char *s1, char *s2)
 	free(s1);
 	return (new);
 }
+
+int	set_getcwd(char *cwd, int total_size, char **new_envp, int i)
+{
+	i = 0;
+	if (getcwd(cwd, sizeof(cwd)) != NULL)
+	{
+		total_size = ft_strlen("PWD=") + ft_strlen(cwd) + 1;
+		new_envp[i] = malloc(total_size);
+		if (new_envp[i])
+		{
+			ft_strlcpy(new_envp[i], "PWD=", total_size);
+			ft_strlcat(new_envp[i], cwd, total_size);
+			i++;
+		}
+	}
+	else
+		return (perror("getcwd"), EXIT_FAILURE);
+	return (i);
+}
