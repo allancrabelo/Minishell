@@ -57,7 +57,6 @@ int	tokenize_op(t_mini *mini, size_t *i)
 	return (1);
 }
 
-
 int	ft_tokenizer(t_mini *mini, char *input)
 {
 	size_t	i;

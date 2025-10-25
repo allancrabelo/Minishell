@@ -16,7 +16,8 @@ static t_ast	*parse_primary(t_mini *mini, t_token **tokens)
 		if (!*tokens || (*tokens)->type != TOKEN_RPAREN)
 		{
 			print_syntax_error(mini, "expected", ")");
-			return (ft_free_all(mini, 2, 0), NULL);
+			free_ast(node);
+			return (NULL);
 		}
 		*tokens = (*tokens)->next;
 		return (node);

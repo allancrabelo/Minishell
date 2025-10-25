@@ -35,6 +35,7 @@ SRCSLIST	:=	main \
 				signals \
 				handle_commands \
 				utils \
+				atoll \
 				ft_echo \
 				ft_exit \
 				ft_pwd \
@@ -50,6 +51,8 @@ SRCSLIST	:=	main \
 				tokenizer \
 				tokenizer_utils \
 				fill_token_data \
+				fil_token_data_utils \
+				verify_tokens \
 				parser \
 				parse_command \
 				parse_ordered \

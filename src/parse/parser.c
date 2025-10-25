@@ -45,33 +45,6 @@ t_ast	*build_cmd_node(char **args, int arg_count, t_redir *redir)
 	return (node);
 }
 
-/* Updated verify_tokens function to handle parentheses */
-static int	verify_tokens(t_mini *mini, t_token *token)
-{
-	while (token)
-	{
-		if (token->type == TOKEN_PIPE || token->type == TOKEN_AND
-			|| token->type == TOKEN_OR)
-		{
-			if (!token->next)
-				return (print_syntax_error(mini, "near unexpected token ", "newline"));
-			else if (token->next && is_operator(token->next->type))
-				return (print_syntax_error(mini, "near unexpected token ", token->next->data));
-			else if (token->next && token->next->type == TOKEN_RPAREN)
-				return (print_syntax_error(mini, "near unexpected token ", ")"));
-		}
-		else if (is_redirect(token->type))
-		{
-			if (!token->next)
-				return (print_syntax_error(mini, "near unexpected token ", "newline"));
-			else if (token->next->type != TOKEN_WORD)
-				return (print_syntax_error(mini, "near unexpected token ", token->next->data));
-		}
-		token = token->next;
-	}
-	return (1);
-}
-
 int	build_ast(t_mini *mini)
 {
 	t_token	*cur;

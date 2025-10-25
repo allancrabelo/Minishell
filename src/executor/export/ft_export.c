@@ -9,13 +9,14 @@ int	is_valid_identifier(char *str)
 	i = 1;
 	while (str[i] && str[i] != '=')
 	{
-		if ((str[i] == '+' && str[i + 1] == '=') || (str[i] == '+' && str[i + 1] == '=' && str[i + 3] == ':'))
+		if ((str[i] == '+' && str[i + 1] == '=') || (str[i] == '+'
+				&& str[i + 1] == '=' && str[i + 3] == ':'))
 		{
 			if ((str[i] == '+' && str[i + 1] == '=' && str[i + 3] == ':'))
 				i += 3;
 			else
 				i += 2;
-			break;
+			break ;
 		}
 		if (!ft_isalnum(str[i]) && str[i] != '_')
 			return (0);

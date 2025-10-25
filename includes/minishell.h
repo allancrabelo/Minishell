@@ -19,7 +19,6 @@
 # include <readline/readline.h>	// readline
 # include <readline/history.h>	// add_history, rl_clear_history, etc.
 # include <limits.h>
-
 # define LINE "]\001" SBYELLOW "\002 minishell$\001" SRESET "\002 "
 # define COMMAND_NOT_FOUND 127
 # define COMMAND_DENIED_OR_FAILED 126
@@ -212,6 +211,9 @@ int			check_validity(t_mini *mini, char *input);
 size_t		get_word_len(t_mini *mini, size_t len, size_t *i);
 int			is_op(const char *input, size_t i);
 char		*fill_token_data(t_mini *mini, size_t *i, size_t len);
+void		do_var(t_mini *mini, char *dst, size_t *i, size_t *j);
+void		do_tilde(t_mini *mini, char *dst, size_t *i, size_t *j);
+int			verify_tokens(t_mini *mini, t_token *token);
 int			build_ast(t_mini *mini);
 int			is_builtin_command(char *cmd);
 t_ast		*parse_command(t_mini *mini, t_token **tokens);
