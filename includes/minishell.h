@@ -129,7 +129,7 @@ int			execute_external(t_mini *mini, char **argv);
 int			execute_command(t_mini *mini, t_ast *node);
 int			execute_external_command(t_mini *mini, t_ast *node,
 	t_redir *redirects);
-	
+
 // Frees
 int			ft_free_all(t_mini *mini, int ret, int exit_prog);
 void		free_tokens(t_mini *mini);
@@ -143,6 +143,8 @@ int			is_operator(t_token_type type);
 int			is_redirect(t_token_type type);
 char		*ft_strcpy(char *dest, char *src);
 int			print_syntax_error(t_mini *mini, char *error_msg, char *token);
+int			ft_atoll_safe(const char *str, long long *result);
+void		print_command_error(char *cmd, char *error);
 
 // [BUILTINS]:
 // Echo:
@@ -244,7 +246,6 @@ int			execute_pipe_node(t_mini *mini, t_ast *node);
 //External Commands
 int			execute_external(t_mini *mini, char **argv);
 char		*find_command_path(t_mini *mini, char *cmd);
-void		print_command_error(char *cmd, char *error);
 
 // BONUS
 int			execute_and_node(t_mini *mini, t_ast *node);

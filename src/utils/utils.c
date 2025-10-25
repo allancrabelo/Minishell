@@ -7,7 +7,7 @@ int	is_operator(t_token_type type)
 
 int	is_redirect(t_token_type type)
 {
-	return (type == TOKEN_REDIRECT_IN 
+	return (type == TOKEN_REDIRECT_IN
 		|| type == TOKEN_REDIRECT_OUT || type == TOKEN_REDIRECT_APPEND);
 }
 
@@ -26,7 +26,6 @@ int	print_syntax_error(t_mini *mini, char *error_msg, char *token)
 	mini->exit_status = 2;
 	return (0);
 }
-
 
 char	*ft_strjoin_free(char *s1, char *s2)
 {
