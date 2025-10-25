@@ -111,7 +111,7 @@ int	execute_external_command(t_mini *mini, t_ast *node, t_redir *redirects)
 		return (perror("fork"), 1);
 	else
 	{
-		signal(SIGINT, SIG_IGN);
+		setup_exec_signals();
 		waitpid(pid, &status, 0);
 		signal_init();
 		if (WIFEXITED(status))

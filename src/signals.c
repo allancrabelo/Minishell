@@ -45,7 +45,6 @@ void	handle_exec_ctrl_c(int signal)
 {
 	(void)signal;
 	g_signal = 130;
-	write(1, "\n", 1);
 }
 
 /**
