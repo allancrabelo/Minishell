@@ -64,6 +64,7 @@ SRCSLIST	:=	main \
 				pipes_executor \
 				external_commands \
 				free_all \
+				free_all_redirections \
 				and_or
 
 SRCS		:= $(addsuffix .c, ${SRCSLIST})

@@ -1,21 +1,14 @@
 #include "minishell.h"
 
-void	free_redir(t_redir *redir)
-{
-	t_redir	*tmp;
-
-	while (redir)
-	{
-		tmp = redir->next;
-		if (redir->file)
-			free(redir->file);
-		if (redir->heredoc_delimeter)
-			free(redir->heredoc_delimeter);
-		free(redir);
-		redir = tmp;
-	}
-}
-
+/**
+ * @brief Frees the entire export list memory
+ * 
+ * Iterates through the export linked list and frees all allocated
+ * memory for keys, values, and node structures.
+ * 
+ * @param lst Pointer to the head of the export list
+ * @return void
+ */
 void	free_export_list(t_export *lst)
 {
 	t_export	*tmp;
@@ -33,6 +26,16 @@ void	free_export_list(t_export *lst)
 	}
 }
 
+/**
+ * @brief Frees all tokens from the shell structure
+ * 
+ * Iterates through the token linked list and frees all allocated
+ * memory for token data and structures. Resets the token
+ * pointer to NULL.
+ * 
+ * @param mini Pointer to the main shell structure
+ * @return void
+ */
 void	free_tokens(t_mini *mini)
 {
 	t_token	*cur;
@@ -52,6 +55,15 @@ void	free_tokens(t_mini *mini)
 	}
 }
 
+/**
+ * @brief Recursively frees the abstract syntax tree (AST)
+ * 
+ * Performs post-order traversal to free all AST nodes, including
+ * command arguments and redirection lists.
+ * 
+ * @param node Root node of the AST to free
+ * @return void
+ */
 void	free_ast(t_ast *node)
 {
 	if (!node)
@@ -65,33 +77,17 @@ void	free_ast(t_ast *node)
 	free(node);
 }
 
-static void	free_heredocs(t_heredoc **head)
-{
-	t_heredoc	*cur;
-	t_heredoc	*tmp;
-
-	if (!head || !*head)
-		return ;
-	cur = *head;
-	while (cur)
-	{
-		tmp = cur;
-		cur = cur->next;
-		if (tmp->heredoc_delimeter)
-		{
-			free(tmp->heredoc_delimeter);
-			tmp->heredoc_delimeter = NULL;
-		}
-		if (tmp->pipe_fd != -1)
-		{
-			close(tmp->pipe_fd);
-			tmp->pipe_fd = -1;
-		}
-		free(tmp);
-	}
-	*head = NULL;
-}
-
+/**
+ * @brief Frees temporary shell resources and optionally exits
+ * 
+ * Cleans up heredocs, tokens, and AST structures. Updates exit status
+ * and can terminate the program if requested.
+ * 
+ * @param mini Pointer to the main shell structure
+ * @param ret Exit status to set
+ * @param exit_prog Flag to terminate program (1) or continue (0)
+ * @return void
+ */
 void	ft_free_extra(t_mini *mini, int ret, int exit_prog)
 {
 	if (mini->heredoc)
@@ -108,6 +104,18 @@ void	ft_free_extra(t_mini *mini, int ret, int exit_prog)
 		exit(mini->exit_status);
 }
 
+/**
+ * @brief Comprehensive cleanup of all shell resources
+ * 
+ * Frees all allocated memory including temporary structures,
+ * environment lists, export lists, and heredocs. Optionally
+ * terminates the program with specified exit status.
+ * 
+ * @param mini Pointer to the main shell structure
+ * @param ret Exit status to set
+ * @param exit_prog Flag to terminate program (1) or return status (0)
+ * @return int Final exit status
+ */
 int	ft_free_all(t_mini *mini, int ret, int exit_prog)
 {
 	ft_free_extra(mini, ret, 0);
@@ -128,4 +136,3 @@ int	ft_free_all(t_mini *mini, int ret, int exit_prog)
 		exit(mini->exit_status);
 	return (mini->exit_status);
 }
-

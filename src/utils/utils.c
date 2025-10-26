@@ -1,16 +1,45 @@
 #include "minishell.h"
 
+/**
+ * @brief Checks if token type is a logical or pipe operator
+ * 
+ * Determines whether the given token type represents a control
+ * operator (OR, AND, PIPE) used for command sequencing.
+ * 
+ * @param type Token type to check
+ * @return int 1 if operator, 0 otherwise
+ */
 int	is_operator(t_token_type type)
 {
 	return (type == TOKEN_OR || type == TOKEN_AND || type == TOKEN_PIPE);
 }
 
+/**
+ * @brief Checks if token type is a redirection operator
+ * 
+ * Determines whether the given token type represents a file
+ * redirection operator (in, out or append).
+ * 
+ * @param type Token type to check
+ * @return int 1 if redirection operator, 0 otherwise
+ */
 int	is_redirect(t_token_type type)
 {
 	return (type == TOKEN_REDIRECT_IN
 		|| type == TOKEN_REDIRECT_OUT || type == TOKEN_REDIRECT_APPEND);
 }
 
+/**
+ * @brief Prints syntax error message and sets exit status
+ * 
+ * Formats and displays syntax error information to stderr
+ * and updates the shell's exit status to indicate syntax error.
+ * 
+ * @param mini Pointer to main shell structure
+ * @param error_msg Primary error description
+ * @param token Offending token data (optional)
+ * @return int Always returns 0 to indicate error condition
+ */
 int	print_syntax_error(t_mini *mini, char *error_msg, char *token)
 {
 	ft_putstr_fd("minishell: syntax error ", 2);
@@ -27,6 +56,16 @@ int	print_syntax_error(t_mini *mini, char *error_msg, char *token)
 	return (0);
 }
 
+/**
+ * @brief Concatenates two strings and frees the first string
+ * 
+ * Allocates new memory for the concatenated result, copies both strings,
+ * and frees the first input string. Useful for building strings incrementally.
+ * 
+ * @param s1 First string (will be freed)
+ * @param s2 Second string to append
+ * @return char* New concatenated string, NULL on allocation failure
+ */
 char	*ft_strjoin_free(char *s1, char *s2)
 {
 	size_t	i;
@@ -55,6 +94,18 @@ char	*ft_strjoin_free(char *s1, char *s2)
 	return (new);
 }
 
+/**
+ * @brief Sets PWD environment variable from current working directory
+ * 
+ * Retrieves current working directory and creates PWD environment variable
+ * string. Handles getcwd failures and memory allocation.
+ * 
+ * @param cwd Buffer for current working directory
+ * @param total_size
+ * @param new_envp Environment array to populate
+ * @param i Current index in environment array
+ * @return int Updated index on success, EXIT_FAILURE on error
+ */
 int	set_getcwd(char *cwd, int total_size, char **new_envp, int i)
 {
 	i = 0;

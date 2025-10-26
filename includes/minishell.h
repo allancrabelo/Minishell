@@ -134,6 +134,7 @@ int			execute_external_command(t_mini *mini, t_ast *node,
 
 // Frees
 int			ft_free_all(t_mini *mini, int ret, int exit_prog);
+void		free_heredocs(t_heredoc **head);
 void		free_tokens(t_mini *mini);
 void		free_ast(t_ast *node);
 void		free_redir(t_redir *redir);
