@@ -20,6 +20,8 @@ void	free_redir(t_redir *redir)
 			free(redir->file);
 		if (redir->heredoc_delimeter)
 			free(redir->heredoc_delimeter);
+		if (redir->fd > 0)
+			close(redir->fd);
 		free(redir);
 		redir = tmp;
 	}

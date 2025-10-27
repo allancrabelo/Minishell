@@ -203,28 +203,20 @@ void	handle_commands(t_mini *mini, char *input)
 		free(mini->input);
 		mini->input = NULL;
 	}
-	/* Only process heredocs for immediate commands, not PIPE/AND/OR */
-	if (mini->ast->type != NODE_AND && mini->ast->type != NODE_OR && mini->ast->type != NODE_PIPE)
+	/* Process heredocs for all AST nodes */
+	process_heredocs(mini, mini->ast);
+	if (mini->heredoc_signal)
 	{
-		process_heredocs(mini, mini->ast);
-		if (mini->heredoc_signal)
-		{
-			mini->exit_status = 130;
-			mini->heredoc_signal = 0;
-			heredoc_cleaner(&mini->heredoc);
-		}
-		else
-		{
-			execute_ast_node(mini, mini->ast);
-			/* Clean up heredocs after successful execution */
-			if (mini->heredoc)
-				heredoc_cleaner(&mini->heredoc);
-		}
+		mini->exit_status = 130;
+		mini->heredoc_signal = 0;
+		heredoc_cleaner(&mini->heredoc);
 	}
 	else
 	{
-		/* For PIPE/AND/OR nodes, heredocs are processed within their execution */
 		execute_ast_node(mini, mini->ast);
+		/* Clean up heredocs after successful execution */
+		if (mini->heredoc)
+			heredoc_cleaner(&mini->heredoc);
 	}
 	free_tokens(mini);
 	if (mini->ast)

@@ -14,7 +14,10 @@ static void	write_heredoc_to_pipe(int write_fd, char *delimiter, t_mini *mini)
 		if (!line)
 		{
 			if (g_signal == 130)
+			{
+				rl_clear_history();
 				break ;
+			}
 			ft_putstr_fd("minishell: warning: here-document \
 delimited by end-of-file (wanted `", 2);
 			ft_putstr_fd(delimiter, 2);
@@ -247,25 +250,27 @@ void	create_heredoc_pipe(t_mini *mini, char *delimiter, t_heredoc **heredoc)
 
 int	redirect_heredoc(t_redir *redirect, t_mini *mini)
 {
-	(void)redirect;
-	if (!mini->heredoc || mini->heredoc->pipe_fd < 0)
+	(void)mini;
+	if (!redirect || redirect->fd < 0)
 	{
 		print_command_error("heredoc", "pipe not available");
 		return (-1);
 	}
-	if (dup2(mini->heredoc->pipe_fd, STDIN_FILENO) == -1)
+	if (dup2(redirect->fd, STDIN_FILENO) == -1)
 	{
 		perror("dup2");
 		return (-1);
 	}
-	close(mini->heredoc->pipe_fd);
-	mini->heredoc->pipe_fd = -1;
+	close(redirect->fd);
+	redirect->fd = -1;
 	return (0);
 }
 
 void	process_heredocs(t_mini *mini, t_ast *node)
 {
 	t_redir	*redir;
+	int		pipe_fd[2];
+	pid_t	pid;
 
 	if (!node)
 		return ;
@@ -276,15 +281,33 @@ void	process_heredocs(t_mini *mini, t_ast *node)
 		{
 			if (redir->type == TOKEN_HEREDOC)
 			{
-				if (mini->heredoc)
-					heredoc_cleaner(&mini->heredoc);
-				create_heredoc_pipe(mini, redir->heredoc_delimeter,
-					&mini->heredoc);
+				if (pipe(pipe_fd) == -1)
+					ft_free_all(mini, errno, 1);
+				signal(SIGINT, SIG_IGN);
+				pid = fork();
+				if (pid == 0)
+				{
+					close(pipe_fd[0]);
+					setup_heredoc_signals();
+					write_heredoc_to_pipe(pipe_fd[1], redir->heredoc_delimeter, mini);
+					ft_free_all(mini, g_signal, 1);
+				}
+				close(pipe_fd[1]);
+				wait_heredoc(mini, pid);
+				signal_init();
 				if (mini->heredoc_signal)
+				{
+					close(pipe_fd[0]);
 					return ;
+				}
+				redir->fd = pipe_fd[0];
 			}
 			redir = redir->next;
 		}
 	}
-	/* Don't traverse pipe nodes - each side handles its own heredocs */
+	/* Recursively process heredocs in child nodes */
+	process_heredocs(mini, node->left);
+	if (mini->heredoc_signal)
+		return ;
+	process_heredocs(mini, node->right);
 }

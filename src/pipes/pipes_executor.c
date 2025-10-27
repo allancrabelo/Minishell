@@ -7,12 +7,7 @@ static void	execute_left_pipe(t_mini *mini, t_ast *left, int pipefd[2])
 	dup2(pipefd[1], STDOUT_FILENO);
 	close(pipefd[1]);
 
-	/* Process heredocs for this side of the pipe */
-	process_heredocs(mini, left);
-	if (mini->heredoc_signal)
-		ft_free_all(mini, 130, 1);
-
-	/* Don't call apply_redirections here - it will be called by execute_command */
+	/* Heredocs already processed in parent - FDs stored in t_redir->fd */
 	execute_ast_node(mini, left);
 	ft_free_all(mini, mini->exit_status, 1);
 }
@@ -24,12 +19,7 @@ static void	execute_right_pipe(t_mini *mini, t_ast *right, int pipefd[2])
 	dup2(pipefd[0], STDIN_FILENO);
 	close(pipefd[0]);
 
-	/* Process heredocs for this side of the pipe */
-	process_heredocs(mini, right);
-	if (mini->heredoc_signal)
-		ft_free_all(mini, 130, 1);
-
-	/* Don't call apply_redirections here - it will be called by execute_command */
+	/* Heredocs already processed in parent - FDs stored in t_redir->fd */
 	execute_ast_node(mini, right);
 	ft_free_all(mini, mini->exit_status, 1);
 }
@@ -78,7 +68,7 @@ int	execute_pipe_node(t_mini *mini, t_ast *node)
 
 	if (pipe(pipefd) == -1)
 		return (perror("pipe"), 1);
-	signal(SIGINT, handle_ctrl_c_on_pipe);
+	signal(SIGINT, SIG_IGN);
 	pid_left = handle_left_fork(mini, node, pipefd);
 	if (pid_left == -1)
 		return (1);
@@ -90,6 +80,8 @@ int	execute_pipe_node(t_mini *mini, t_ast *node)
 	waitpid(pid_left, &status_left, 0);
 	waitpid(pid_right, &status_right, 0);
 	signal_init();
+	if (WIFSIGNALED(status_left) && WTERMSIG(status_left) == SIGINT)
+		write(1, "\n", 1);
 	if (WIFEXITED(status_right))
 		mini->exit_status = WEXITSTATUS(status_right);
 	else if (WIFSIGNALED(status_right))
