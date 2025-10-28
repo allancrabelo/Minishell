@@ -134,13 +134,10 @@ int	execute_command(t_mini *mini, t_ast *node)
 {
 	if (!node)
 		return (0);
-
-	/* Handle standalone heredoc (no command, only redirection) */
 	if (!node->args || !node->args[0])
 	{
 		if (node->redir && node->redir->type == TOKEN_HEREDOC)
 		{
-			/* Standalone heredoc - just apply the redirection */
 			int	stdin_backup;
 			int	stdout_backup;
 			int	result;

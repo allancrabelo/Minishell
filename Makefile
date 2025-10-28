@@ -62,6 +62,7 @@ SRCSLIST	:=	main \
 				expander_utils \
 				environment_utils \
 				pipes_executor \
+				signals_pipe_update \
 				external_commands \
 				free_all \
 				free_all_redirections \

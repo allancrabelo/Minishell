@@ -249,6 +249,7 @@ t_ast		*parse_or(t_mini *mini, t_token **tokens);
 //[Pipes]
 // Pipes Executor
 int			execute_pipe_node(t_mini *mini, t_ast *node);
+int			signals_pipe_update(int status_right, int status_left, t_mini *mini);
 
 //External Commands
 int			execute_external(t_mini *mini, char **argv);
