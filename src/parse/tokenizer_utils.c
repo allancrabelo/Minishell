@@ -1,31 +1,16 @@
 #include "../../includes/minishell.h"
 
-int	is_op(const char *input, size_t i)
-{
-	if (input[i] == '\0')
-		return (0);
-	if (input[i] == '(')
-		return (TOKEN_LPAREN);
-	if (input[i] == ')')
-		return (TOKEN_RPAREN);
-	if (input[i] == '|' && input[i + 1] && input[i + 1] == '|')
-		return (TOKEN_OR);
-	if (input[i] == '&' && input[i + 1] && input[i + 1] == '&')
-		return (TOKEN_AND);
-	if (input[i] == '|')
-		return (TOKEN_PIPE);
-	if (input[i] == '>' && input[i + 1] && input[i + 1] == '>')
-		return (TOKEN_REDIRECT_APPEND);
-	if (input[i] == '>')
-		return (TOKEN_REDIRECT_OUT);
-	if (input[i] == '<' && input[i + 1] && input[i + 1] == '<')
-		return (TOKEN_HEREDOC);
-	if (input[i] == '<')
-		return (TOKEN_REDIRECT_IN);
-	return (0);
-}
-
-size_t	expand_var(t_mini *mini, size_t *i) //	Implement expand variables
+/**
+ * @brief Expands variable name by advancing through valid characters
+ * 
+ * Moves index pointer through alphanumeric characters and underscores
+ * that form a valid shell variable name.
+ * 
+ * @param mini Pointer to main shell structure
+ * @param i Pointer to current index in input string
+ * @return size_t Length of the variable name
+ */
+size_t	expand_var(t_mini *mini, size_t *i)
 {
 	size_t	start;
 
@@ -35,6 +20,17 @@ size_t	expand_var(t_mini *mini, size_t *i) //	Implement expand variables
 	return (*i - start);
 }
 
+/**
+ * @brief Processes quoted string and calculates expanded length
+ * 
+ * Handles both single and double quotes, expanding variables
+ * within double quotes. Advances index to end of quoted section.
+ * 
+ * @param mini Pointer to main shell structure
+ * @param i Pointer to current index in input string
+ * @param quote Type of quote (' or ")
+ * @return size_t Length of expanded quoted content
+ */
 size_t	handle_quotes(t_mini *mini, size_t *i, char quote)
 {
 	size_t	len;
@@ -56,6 +52,16 @@ size_t	handle_quotes(t_mini *mini, size_t *i, char quote)
 	return (len);
 }
 
+/**
+ * @brief Expands tilde to home directory length
+ * 
+ * Retrieves HOME environment variable and returns its length.
+ * Advances index past the tilde character.
+ * 
+ * @param mini Pointer to main shell structure
+ * @param i Pointer to current index in input string
+ * @return size_t Length of the expanded home directory path
+ */
 static size_t	expand_tilde_len(t_mini *mini, size_t *i)
 {
 	char	*home;
@@ -71,6 +77,18 @@ static size_t	expand_tilde_len(t_mini *mini, size_t *i)
 	return (1);
 }
 
+/**
+ * @brief Calculates length of next word in input string
+ * 
+ * Processes input starting from index, handling quotes,
+ * variable expansions, and tilde expansions to compute
+ * the total length of the next word token.
+ * 
+ * @param mini Pointer to main shell structure
+ * @param len Total length of input string
+ * @param i Pointer to current index in input string
+ * @return size_t Length of the next word token
+ */
 size_t	get_word_len(t_mini *mini, size_t len, size_t *i)
 {
 	size_t	word_len;
@@ -93,6 +111,16 @@ size_t	get_word_len(t_mini *mini, size_t len, size_t *i)
 	return (word_len);
 }
 
+/**
+ * @brief Checks for balanced quotes in input string
+ * 
+ * Scans the input for single and double quotes, ensuring
+ * that all opened quotes are properly closed.
+ * 
+ * @param mini Pointer to main shell structure
+ * @param input Input string to validate
+ * @return int 1 if quotes are balanced, 0 otherwise
+ */
 int	check_validity(t_mini *mini, char *input)
 {
 	size_t	i;

@@ -1,13 +1,16 @@
 #include "minishell.h"
 
-/*
- * Operator precedence (lowest to highest):
- * 1. OR (||)
- * 2. AND (&&)
- * 3. PIPE (|)
- * 4. Commands and parentheses
+/**
+ * @brief Creates AST node for logical or pipe operators
+ * 
+ * Allocates and initializes operator node (PIPE, AND, OR) with
+ * left and right subtrees. Sets node type and initializes other fields.
+ * 
+ * @param left Left subtree AST node
+ * @param right Right subtree AST node
+ * @param type Token type of the operator
+ * @return t_ast* New operator node, NULL on allocation failure
  */
-
 t_ast	*build_operator_node(t_ast *left, t_ast *right, t_token_type type)
 {
 	t_ast	*node;
@@ -29,6 +32,18 @@ t_ast	*build_operator_node(t_ast *left, t_ast *right, t_token_type type)
 	return (node);
 }
 
+/**
+ * @brief Creates AST node for command with arguments and redirections
+ * 
+ * Allocates and initializes command node with provided arguments,
+ * argument count, and redirection list. Sets node type and initializes
+ * child pointers to NULL.
+ * 
+ * @param args Array of command arguments
+ * @param arg_count Number of arguments
+ * @param redir Linked list of redirections
+ * @return t_ast* New command node, NULL on allocation failure
+ */
 t_ast	*build_cmd_node(char **args, int arg_count, t_redir *redir)
 {
 	t_ast	*node;
@@ -45,6 +60,16 @@ t_ast	*build_cmd_node(char **args, int arg_count, t_redir *redir)
 	return (node);
 }
 
+/**
+ * @brief Builds the abstract syntax tree (AST) from tokens
+ * 
+ * Validates initial token and overall token sequence before
+ * parsing into an AST. Starts parsing from the highest precedence
+ * level (OR) and constructs the full AST.
+ * 
+ * @param mini Pointer to main shell structure
+ * @return int 0 on success, 1 on failure
+ */
 int	build_ast(t_mini *mini)
 {
 	t_token	*cur;

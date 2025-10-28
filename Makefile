@@ -58,6 +58,7 @@ SRCSLIST	:=	main \
 				parser \
 				parse_command \
 				parse_ordered \
+				operator_checker \
 				variable_expander \
 				expander_utils \
 				environment_utils \
@@ -66,7 +67,7 @@ SRCSLIST	:=	main \
 				external_commands \
 				free_all \
 				free_all_redirections \
-				and_or
+				and_or_bonus
 
 SRCS		:= $(addsuffix .c, ${SRCSLIST})
 

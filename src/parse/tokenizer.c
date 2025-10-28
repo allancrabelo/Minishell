@@ -1,5 +1,16 @@
 #include "minishell.h"
 
+/**
+ * @brief Fills token data from input string
+ * 
+ * Extracts a substring from the input starting at index `*i`
+ * with length `len`, updates index `*i` to point after the token.
+ * 
+ * @param mini Pointer to main shell structure
+ * @param i Pointer to start index of token in input string
+ * @param len Length of token data to extract
+ * @return char* Newly allocated token data string
+ */
 t_token	*new_token(t_mini *mini, size_t *i, size_t len, t_token_type type)
 {
 	t_token	*token;
@@ -18,6 +29,18 @@ t_token	*new_token(t_mini *mini, size_t *i, size_t len, t_token_type type)
 	return (token);
 }
 
+/**
+ * @brief Adds a new token to the end of the token list
+ * 
+ * Creates a token node and appends it to the linked list.
+ * Handles both empty list and existing list cases.
+ * 
+ * @param mini Pointer to main shell structure
+ * @param i Pointer to start index of token in input string
+ * @param len Length of token data to extract
+ * @param type Type of token to create
+ * @return void
+ */
 void	add_token(t_mini *mini, size_t *i, size_t len, t_token_type type)
 {
 	t_token	*new;
@@ -39,6 +62,16 @@ void	add_token(t_mini *mini, size_t *i, size_t len, t_token_type type)
 	}
 }
 
+/**
+ * @brief Identifies and tokenizes operators in input string
+ * 
+ * Detects shell operators (||, &&, |, >>, <<, >, <, etc.) at current
+ * position and adds corresponding token to the token list.
+ * 
+ * @param mini Pointer to main shell structure
+ * @param i Pointer to current index in input string
+ * @return int 1 if operator was tokenized, 0 if no operator found
+ */
 int	tokenize_op(t_mini *mini, size_t *i)
 {
 	t_token_type	type;
@@ -57,6 +90,16 @@ int	tokenize_op(t_mini *mini, size_t *i)
 	return (1);
 }
 
+/**
+ * @brief Tokenizes input string into lexical tokens
+ * 
+ * Processes input string by skipping whitespace, identifying operators,
+ * and extracting words (including quoted strings). Builds token linked list.
+ * 
+ * @param mini Pointer to main shell structure
+ * @param input Input string to tokenize
+ * @return int EXIT_SUCCESS on success, EXIT_FAILURE on syntax error
+ */
 int	ft_tokenizer(t_mini *mini, char *input)
 {
 	size_t	i;

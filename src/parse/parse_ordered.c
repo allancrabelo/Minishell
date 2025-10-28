@@ -1,6 +1,16 @@
 #include "minishell.h"
 
-// Parse primary expressions (commands and parentheses)
+/**
+ * @brief Parses primary expressions including parentheses
+ * 
+ * Handles parenthesized expressions and command sequences.
+ * Recursively parses content within parentheses and ensures
+ * proper closing parenthesis.
+ * 
+ * @param mini Pointer to main shell structure
+ * @param tokens Double pointer to current token in list
+ * @return t_ast* AST node for primary expression, NULL on error
+ */
 static t_ast	*parse_primary(t_mini *mini, t_token **tokens)
 {
 	t_ast	*node;
@@ -25,7 +35,16 @@ static t_ast	*parse_primary(t_mini *mini, t_token **tokens)
 	return (parse_command(mini, tokens));
 }
 
-// Parse PIPE expressions
+/**
+ * @brief Parses pipe expressions
+ * 
+ * Handles sequences of commands connected by pipe operators.
+ * Recursively builds AST nodes for each command in the pipe chain.
+ * 
+ * @param mini Pointer to main shell structure
+ * @param tokens Double pointer to current token in list
+ * @return t_ast* AST node for pipe expression, NULL on error
+ */
 static t_ast	*parse_pipe(t_mini *mini, t_token **tokens)
 {
 	t_ast	*left;
@@ -53,7 +72,16 @@ static t_ast	*parse_pipe(t_mini *mini, t_token **tokens)
 	return (left);
 }
 
-// Parse AND expressions
+/**
+ * @brief Parses AND expressions
+ * 
+ * Handles sequences of commands connected by AND operators.
+ * Recursively builds AST nodes for each command in the AND chain.
+ * 
+ * @param mini Pointer to main shell structure
+ * @param tokens Double pointer to current token in list
+ * @return t_ast* AST node for AND expression, NULL on error
+ */
 static t_ast	*parse_and(t_mini *mini, t_token **tokens)
 {
 	t_ast	*left;
@@ -81,7 +109,16 @@ static t_ast	*parse_and(t_mini *mini, t_token **tokens)
 	return (left);
 }
 
-// Parse OR expressions (lowest precedence)
+/**
+ * @brief Parses OR expressions
+ * 
+ * Handles sequences of commands connected by OR operators.
+ * Recursively builds AST nodes for each command in the OR chain.
+ * 
+ * @param mini Pointer to main shell structure
+ * @param tokens Double pointer to current token in list
+ * @return t_ast* AST node for OR expression, NULL on error
+ */
 t_ast	*parse_or(t_mini *mini, t_token **tokens)
 {
 	t_ast	*left;
