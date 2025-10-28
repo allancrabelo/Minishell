@@ -1,50 +1,5 @@
 #include "minishell.h"
 
-static char	**init_args_array(int count)
-{
-	char	**args;
-
-	args = malloc((count + 1) * sizeof(char *));
-	if (!args)
-		return (NULL);
-	ft_memset(args, 0, (count + 1) * sizeof(char *));
-	return (args);
-}
-
-int	count_cmd_args(t_token *tokens)
-{
-	int	count;
-
-	count = 0;
-	while (tokens)
-	{
-		if (tokens->type == TOKEN_WORD)
-		{
-			tokens = tokens->next;
-			count++;
-		}
-		else if (tokens->type >= TOKEN_REDIRECT_IN)
-		{
-			tokens = tokens->next;
-			if (tokens && tokens->type == TOKEN_WORD)
-				tokens = tokens->next;
-		}
-		else
-			break ;
-	}
-	return (count);
-}
-
-static int	handle_word_token(t_token **tokens, char **args, int *count)
-{
-	args[*count] = ft_strdup((*tokens)->data);
-	if (!args[*count])
-		return (0);
-	(*count)++;
-	*tokens = (*tokens)->next;
-	return (1);
-}
-
 static int	add_redir_to_list(t_redir **redir, t_redir *new_redir)
 {
 	t_redir	*current;
@@ -86,30 +41,46 @@ int	parse_redir(t_mini *mini, t_token **tokens, t_redir **redir)
 	return (1);
 }
 
+int	init_command(t_mini *mini, t_token **tokens, t_redir **redir, char **args)
+{
+	int	count;
+
+	count = 0;
+	while (*tokens)
+	{
+		if ((*tokens)->type == TOKEN_WORD)
+		{
+			if (!handle_word_token(tokens, args, &count))
+				return (-1);
+		}
+		else if ((*tokens)->type >= TOKEN_REDIRECT_IN)
+		{
+			if (!parse_redir(mini, tokens, redir))
+				return (-1);
+		}
+		else
+			break ;
+	}
+	return (count);
+}
+
 t_ast	*parse_command(t_mini *mini, t_token **tokens)
 {
 	int		count;
 	char	**args;
 	t_redir	*redir;
 
+	redir = NULL;
 	count = count_cmd_args(*tokens);
 	args = init_args_array(count);
-	count = 0;
-	redir = NULL;
-	while (*tokens)
+	if (!args)
+		return (NULL);
+	count = init_command(mini, tokens, &redir, args);
+	if (count == -1)
 	{
-		if ((*tokens)->type == TOKEN_WORD)
-		{
-			if (!handle_word_token(tokens, args, &count))
-				return (ft_free_split(args), free_redir(redir), NULL);
-		}
-		else if ((*tokens)->type >= TOKEN_REDIRECT_IN)
-		{
-			if (!parse_redir(mini, tokens, &redir))
-				return (ft_free_split(args), free_redir(redir), NULL);
-		}
-		else
-			break ;
+		ft_free_split(args);
+		free_redir(redir);
+		return (NULL);
 	}
 	if (count == 0 && redir != NULL && redir->type == TOKEN_HEREDOC)
 	{

@@ -56,6 +56,7 @@ SRCSLIST	:=	main \
 				fil_token_data_utils \
 				verify_tokens \
 				parser \
+				parse_args \
 				parse_command \
 				parse_ordered \
 				operator_checker \

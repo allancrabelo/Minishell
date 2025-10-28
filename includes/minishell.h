@@ -215,6 +215,10 @@ int			ft_tokenizer(t_mini *mini, char *input);
 int			check_validity(t_mini *mini, char *input);
 size_t		get_word_len(t_mini *mini, size_t len, size_t *i);
 int			is_op(const char *input, size_t i);
+char		**init_args_array(int count);
+int			count_cmd_args(t_token *tokens);
+int			handle_word_token(t_token **tokens, char **args, int *count);
+
 char		*fill_token_data(t_mini *mini, size_t *i, size_t len);
 void		do_var(t_mini *mini, char *dst, size_t *i, size_t *j);
 void		do_tilde(t_mini *mini, char *dst, size_t *i, size_t *j);
