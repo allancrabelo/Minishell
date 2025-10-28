@@ -16,23 +16,57 @@ static int	add_redir_to_list(t_redir **redir, t_redir *new_redir)
 	return (1);
 }
 
+static char	*expand_redir_file(t_mini *mini, char *pattern, int quoted)
+{
+	char	**expanded;
+	char	*result;
+
+	if (quoted || !has_wildcard(pattern))
+		return (ft_strdup(pattern));
+	expanded = expand_wildcard(pattern);
+	if (!expanded)
+	{
+		print_command_error(pattern, "No such file or directory");
+		mini->exit_status = 1;
+		return (NULL);
+	}
+	if (expanded[0] && expanded[1])
+	{
+		print_command_error(pattern, "ambiguous redirect");
+		ft_free_split(expanded);
+		mini->exit_status = 1;
+		return (NULL);
+	}
+	result = ft_strdup(expanded[0]);
+	ft_free_split(expanded);
+	return (result);
+}
+
 int	parse_redir(t_mini *mini, t_token **tokens, t_redir **redir)
 {
 	t_redir	*new_redir;
+	char	*file;
 
 	if (!(*tokens)->next || (*tokens)->next->type != TOKEN_WORD)
 		return (print_syntax_error(mini, "near unexpected token ", "newline"));
+	file = expand_redir_file(mini, (*tokens)->next->data,
+			(*tokens)->next->quoted);
+	if (!file)
+	{
+		*tokens = (*tokens)->next;
+		if (*tokens)
+			*tokens = (*tokens)->next;
+		return (0);
+	}
 	new_redir = malloc(sizeof(t_redir));
 	if (!new_redir)
-		return (0);
+		return (free(file), 0);
 	new_redir->type = (*tokens)->type;
-	new_redir->file = ft_strdup((*tokens)->next->data);
+	new_redir->file = file;
 	new_redir->heredoc_delimeter = NULL;
 	new_redir->fd = -1;
 	if (new_redir->type == TOKEN_HEREDOC)
 		new_redir->heredoc_delimeter = ft_strdup((*tokens)->next->data);
-	if (!new_redir->file)
-		return (free_redir(new_redir), 0);
 	new_redir->next = NULL;
 	add_redir_to_list(redir, new_redir);
 	*tokens = (*tokens)->next;
