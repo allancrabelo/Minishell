@@ -2,10 +2,10 @@
 
 /**
  * @brief Signal handler for interactive mode
- * 
+ *
  * Handles SIGINT (Ctrl-C) in the main shell loop. Sets global signal flag,
  * displays new prompt, and preserves current input line.
- * 
+ *
  * @param signal The signal number received
  * @return void
  */
@@ -20,10 +20,10 @@ void	sighandler(int signal)
 
 /**
  * @brief Initializes signal handlers for the shell
- * 
+ *
  * Sets up SIGINT (Ctrl-C) handling for interactive mode and
  * ignores SIGQUIT (Ctrl-\) in the main shell process.
- * 
+ *
  * @return void
  */
 void	signal_init(void)
@@ -34,10 +34,10 @@ void	signal_init(void)
 
 /**
  * @brief Signal handler for child processes during execution
- * 
+ *
  * Handles SIGINT (Ctrl-C) in child processes. Sets appropriate
  * exit status and displays newline without affecting parent shell.
- * 
+ *
  * @param signal The signal number received
  * @return void
  */
@@ -49,10 +49,10 @@ void	handle_exec_ctrl_c(int signal)
 
 /**
  * @brief Signal handler for SIGQUIT in child processes
- * 
+ *
  * Handles Ctrl-\ (SIGQUIT) during command execution. Sets the
  * appropriate exit status and displays quit message.
- * 
+ *
  * @param signal The signal number received
  * @return void
  */
@@ -65,14 +65,16 @@ static void	handle_exec_ctrl_bslash(int signal)
 
 /**
  * @brief Configures signal handling for child processes
- * 
+ *
  * Sets up signal handlers for SIGINT and SIGQUIT specifically
  * for commands being executed (child processes).
- * 
+ * Ignores SIGPIPE to allow normal cleanup on broken pipes.
+ *
  * @return void
  */
 void	setup_exec_signals(void)
 {
 	signal(SIGINT, handle_exec_ctrl_c);
 	signal(SIGQUIT, handle_exec_ctrl_bslash);
+	signal(SIGPIPE, SIG_IGN); // Remove if we refactor
 }

@@ -127,8 +127,10 @@ void		do_commands(t_mini *mini, char *input);
 void		handle_commands(t_mini *mini, char *input);
 int			execute_builtin(t_mini *mini, t_ast *node, t_redir *redir);
 void		execute_ast_node(t_mini *mini, t_ast *node);
-int			execute_external(t_mini *mini, char **argv);
+// int			execute_external(t_mini *mini, char **argv);
 int			execute_command(t_mini *mini, t_ast *node);
+int			execute_external(t_mini *mini, t_ast *node);
+char		*find_command_path(t_mini *mini, char *cmd);
 int			execute_external_command(t_mini *mini, t_ast *node,
 	t_redir *redirects);
 
@@ -254,10 +256,6 @@ t_ast		*parse_or(t_mini *mini, t_token **tokens);
 // Pipes Executor
 int			execute_pipe_node(t_mini *mini, t_ast *node);
 int			signals_pipe_update(int status_right, int status_left, t_mini *mini);
-
-//External Commands
-int			execute_external(t_mini *mini, char **argv);
-char		*find_command_path(t_mini *mini, char *cmd);
 
 // BONUS
 int			execute_and_node(t_mini *mini, t_ast *node);

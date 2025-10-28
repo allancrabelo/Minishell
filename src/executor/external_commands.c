@@ -89,12 +89,14 @@ char	**env_list_to_array(t_mini *mini)
 	return (env_array);
 }
 
-int	execute_external(t_mini *mini, char **argv)
+int	execute_external(t_mini *mini, t_ast *node)
 {
 	char		*full_path;
 	char		**env_array;
 	struct stat	path_stat;
+	char		**argv;
 
+	argv = node->args;
 	full_path = find_command_path(mini, argv[0]);
 	if (!full_path)
 	{
@@ -123,8 +125,8 @@ int	execute_external(t_mini *mini, char **argv)
 		return (126);
 	}
 	execve(full_path, argv, env_array);
-	print_command_error(argv[0], strerror(errno));
 	ft_free_split(env_array);
 	free(full_path);
+	print_command_error(argv[0], strerror(errno));
 	return (126);
 }

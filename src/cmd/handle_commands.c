@@ -105,7 +105,7 @@ int	execute_external_command(t_mini *mini, t_ast *node, t_redir *redirects)
 			ft_free_all(mini, mini->exit_status, 1);
 		if (mini->heredoc)
 			heredoc_cleaner(&mini->heredoc);
-		return (ft_free_all(mini, execute_external(mini, node->args), 1));
+		return (ft_free_all(mini, execute_external(mini, node), 1));
 	}
 	else if (pid < 0)
 		return (perror("fork"), 1);
