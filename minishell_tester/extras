@@ -50,7 +50,6 @@ echo Hello my friend$S$USER$S$=from 42?are you ok?$USER
 echo ~
 echo ~ Hello My friend
 echo Hello My friend ~
-echo ~$USER
 echo ~ $USE
 echo $USER~
 echo $USE ~

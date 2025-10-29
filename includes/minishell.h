@@ -194,8 +194,8 @@ void		restore_fd(int *stdin_backup, int *stdout_backup);
 
 // Heredoc:
 int			redirect_heredoc(t_redir *redirect, t_mini *mini);
-void		create_heredoc_pipe(t_mini *mini, char *delimiter,
-				t_heredoc **heredoc);
+char		*expand_heredoc_line(t_mini *mini, char *line);
+void		write_heredoc_to_pipe(int write_fd, char *delimiter, t_mini *mini);
 void		heredoc_cleaner(t_heredoc **heredoc);
 void		process_heredocs(t_mini *mini, t_ast *node);
 
@@ -240,11 +240,6 @@ int			is_special_var(char c);
 char		*expand_special_var(t_mini *mini, char var_char);
 void		ft_itoa_alternative(int n, char *dst);
 
-//Wildcard Expansion
-char		**expand_wildcard(const char *pattern);
-int			has_wildcard(const char *str);
-char		**expand_wildcards_in_args(char **args, int arg_count);
-
 //Environment Utils
 char		*get_env_var(t_mini *mini, char *var_name);
 char		*get_exp_var(t_mini *mini, char *var_name);
@@ -262,5 +257,10 @@ int			signals_pipe_update(int status_right, int status_left,
 // BONUS
 int			execute_and_node(t_mini *mini, t_ast *node);
 int			execute_or_node(t_mini *mini, t_ast *node);
+
+//Wildcard Expansion
+char		**expand_wildcard(const char *pattern);
+int			has_wildcard(const char *str);
+char		**expand_wildcards_in_args(char **args, int arg_count);
 
 #endif

@@ -84,3 +84,21 @@ int	redirect_append(t_redir *redirect, t_mini *mini)
 	close(fd);
 	return (0);
 }
+
+int	redirect_heredoc(t_redir *redirect, t_mini *mini)
+{
+	(void)mini;
+	if (!redirect || redirect->fd < 0)
+	{
+		print_command_error("heredoc", "pipe not available");
+		return (-1);
+	}
+	if (dup2(redirect->fd, STDIN_FILENO) == -1)
+	{
+		perror("dup2");
+		return (-1);
+	}
+	close(redirect->fd);
+	redirect->fd = -1;
+	return (0);
+}

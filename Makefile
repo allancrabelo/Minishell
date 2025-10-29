@@ -47,6 +47,8 @@ SRCSLIST	:=	main \
 				ft_unset \
 				ft_export \
 				export_list \
+				expand_heredoc_line \
+				heredoc_to_pipe \
 				heredoc \
 				redirections \
 				redirections_executor \
