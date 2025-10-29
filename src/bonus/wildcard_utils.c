@@ -1,17 +1,6 @@
 #include "minishell.h"
 
 /**
- * @brief Checks if a string contains wildcard characters
- *
- * @param str String to check
- * @return 1 if contains '*', 0 otherwise
- */
-int	has_wildcard(const char *str)
-{
-	return (ft_strchr(str, '*') != NULL);
-}
-
-/**
  * @brief Counts array elements
  *
  * @param arr NULL-terminated array
@@ -97,6 +86,16 @@ static int	count_total_expanded(char **args, int current_count)
 	return (total);
 }
 
+static void	copy_expanded_args(char **expanded, char **new_args,
+			int *j, int exp_count)
+{
+	int	k;
+
+	k = 0;
+	while (k < exp_count)
+		new_args[(*j)++] = expanded[k++];
+}
+
 /**
  * @brief Expands wildcards in all command arguments
  *
@@ -111,29 +110,27 @@ char	**expand_wildcards_in_args(char **args, int arg_count)
 {
 	char	**new_args;
 	char	**expanded;
-	int		indexes[3];
+	int		i;
+	int		j;
 	int		exp_count;
 
 	if (!args)
 		return (NULL);
-	new_args = malloc(sizeof(char *) * (count_total_expanded(args,
-					arg_count) + 1));
+	new_args = malloc(sizeof(char *) * (
+				count_total_expanded(args, arg_count) + 1));
 	if (!new_args)
 		return (NULL);
-	indexes[0] = 0;
-	indexes[2] = 0;
-	while (indexes[0] < arg_count)
+	i = 0;
+	j = 0;
+	while (i < arg_count)
 	{
-		expanded = expand_arg(args[indexes[0]], &exp_count);
+		expanded = expand_arg(args[i++], &exp_count);
 		if (expanded)
 		{
-			indexes[1] = 0;
-			while (indexes[1] < exp_count)
-				new_args[indexes[2]++] = expanded[indexes[1]++];
+			copy_expanded_args(expanded, new_args, &j, exp_count);
 			free(expanded);
 		}
-		indexes[0]++;
 	}
-	new_args[indexes[2]] = NULL;
+	new_args[j] = NULL;
 	return (new_args);
 }

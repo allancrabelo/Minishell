@@ -1,6 +1,17 @@
 #include "minishell.h"
 
 /**
+ * @brief Checks if a string contains wildcard characters
+ *
+ * @param str String to check
+ * @return 1 if contains '*', 0 otherwise
+ */
+int	has_wildcard(const char *str)
+{
+	return (ft_strchr(str, '*') != NULL);
+}
+
+/**
  * @brief Checks if token type is a logical or pipe operator
  * 
  * Determines whether the given token type represents a control

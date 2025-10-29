@@ -58,13 +58,9 @@ int	parse_redir(t_mini *mini, t_token **tokens, t_redir **redir)
 			*tokens = (*tokens)->next;
 		return (0);
 	}
-	new_redir = malloc(sizeof(t_redir));
+	new_redir = init_redir(((*tokens)->type), &file);
 	if (!new_redir)
-		return (free(file), 0);
-	new_redir->type = (*tokens)->type;
-	new_redir->file = file;
-	new_redir->heredoc_delimeter = NULL;
-	new_redir->fd = -1;
+		return (0);
 	if (new_redir->type == TOKEN_HEREDOC)
 		new_redir->heredoc_delimeter = ft_strdup((*tokens)->next->data);
 	new_redir->next = NULL;

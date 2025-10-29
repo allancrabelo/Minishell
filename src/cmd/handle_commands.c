@@ -132,25 +132,24 @@ int	execute_external_command(t_mini *mini, t_ast *node, t_redir *redirects)
 
 int	execute_command(t_mini *mini, t_ast *node)
 {
+	int	stdin_backup;
+	int	stdout_backup;
+	int	result;
+
 	if (!node)
 		return (0);
 	if (!node->args || !node->args[0])
 	{
 		if (node->redir && node->redir->type == TOKEN_HEREDOC)
 		{
-			int	stdin_backup;
-			int	stdout_backup;
-			int	result;
-
 			if (backup_fd(&stdin_backup, &stdout_backup) == -1)
 				return (1);
 			result = apply_redirections(node->redir, mini);
 			restore_fd(&stdin_backup, &stdout_backup);
-			return (result == -1 ? 1 : 0);
+			return (result);
 		}
 		return (0);
 	}
-
 	if (node->args[0][0] == '\0')
 	{
 		print_command_error("", "command not found");
@@ -162,7 +161,7 @@ int	execute_command(t_mini *mini, t_ast *node)
 		return (execute_external_command(mini, node, node->redir));
 }
 
-static int tokenizer_init(t_mini *mini, char *input)
+static int	tokenizer_init(t_mini *mini, char *input)
 {
 	if (ft_tokenizer(mini, input) != 0)
 	{
@@ -200,7 +199,6 @@ void	handle_commands(t_mini *mini, char *input)
 		free(mini->input);
 		mini->input = NULL;
 	}
-	/* Process heredocs for all AST nodes */
 	process_heredocs(mini, mini->ast);
 	if (mini->heredoc_signal)
 	{
@@ -211,7 +209,6 @@ void	handle_commands(t_mini *mini, char *input)
 	else
 	{
 		execute_ast_node(mini, mini->ast);
-		/* Clean up heredocs after successful execution */
 		if (mini->heredoc)
 			heredoc_cleaner(&mini->heredoc);
 	}

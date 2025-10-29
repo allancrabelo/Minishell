@@ -177,6 +177,7 @@ int			ft_setenv(char *key, char *newvalue, t_mini *mini);
 void		ft_addenv(t_env **lst, t_env *new);
 t_env		*ft_newenv(char *key, char *value);
 void		increment_shlvl(t_mini *mini);
+t_env		*findenv(t_mini *mini, char *key);
 
 // Unset :
 int			ft_unset(t_mini *mini, t_ast *node);
@@ -191,6 +192,7 @@ int			redirect_append(t_redir *redirect, t_mini *mini);
 int			apply_redirections(t_redir *redirections, t_mini *mini);
 int			backup_fd(int *stdin_backup, int *stdout_backup);
 void		restore_fd(int *stdin_backup, int *stdout_backup);
+t_redir		*init_redir(t_token_type type, char **file);
 
 // Heredoc:
 int			redirect_heredoc(t_redir *redirect, t_mini *mini);

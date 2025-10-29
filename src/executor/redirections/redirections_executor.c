@@ -1,22 +1,9 @@
 #include "minishell.h"
 
-int	apply_redirections(t_redir *redirections, t_mini *mini)
+int	step_through_redir(t_mini *mini, t_redir *cur, t_redir *last_heredoc)
 {
-	t_redir	*cur;
-	t_redir	*last_heredoc;
-	int		result;
+	int	result;
 
-	if (!redirections)
-		return (0);
-	last_heredoc = NULL;
-	cur = redirections;
-	while (cur)
-	{
-		if (cur->type == TOKEN_HEREDOC)
-			last_heredoc = cur;
-		cur = cur->next;
-	}
-	cur = redirections;
 	while (cur)
 	{
 		if (cur->type == TOKEN_REDIRECT_IN)
@@ -39,6 +26,25 @@ int	apply_redirections(t_redir *redirections, t_mini *mini)
 		cur = cur->next;
 	}
 	return (0);
+}
+
+int	apply_redirections(t_redir *redirections, t_mini *mini)
+{
+	t_redir	*cur;
+	t_redir	*last_heredoc;
+
+	if (!redirections)
+		return (0);
+	last_heredoc = NULL;
+	cur = redirections;
+	while (cur)
+	{
+		if (cur->type == TOKEN_HEREDOC)
+			last_heredoc = cur;
+		cur = cur->next;
+	}
+	cur = redirections;
+	return (step_through_redir(mini, cur, last_heredoc));
 }
 
 void	restore_fd(int *stdin_backup, int *stdout_backup)

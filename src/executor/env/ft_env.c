@@ -1,5 +1,31 @@
 #include "minishell.h"
 
+int	ft_setenv(char *key, char *newvalue, t_mini *mini)
+{
+	t_env	*newenv;
+	t_env	*find;
+
+	find = findenv(mini, key);
+	if (find)
+	{
+		if (find->value != NULL)
+			free(find->value);
+		if (newvalue)
+			find->value = ft_strdup(newvalue);
+		else
+			find->value = NULL;
+		return (EXIT_SUCCESS);
+	}
+	else
+	{
+		newenv = ft_newenv(key, newvalue);
+		if (!newenv)
+			return (-1);
+		ft_addenv(&mini->env_list, newenv);
+		return (EXIT_SUCCESS);
+	}
+}
+
 void	increment_shlvl(t_mini *mini)
 {
 	char	*shlvl_str;

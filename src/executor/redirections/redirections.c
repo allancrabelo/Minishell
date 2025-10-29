@@ -1,5 +1,19 @@
 #include "minishell.h"
 
+t_redir	*init_redir(t_token_type type, char **file)
+{
+	t_redir	*new_redir;
+
+	new_redir = malloc(sizeof(t_redir));
+	if (!new_redir)
+		return (free(*file), NULL);
+	new_redir->type = type;
+	new_redir->file = *file;
+	new_redir->heredoc_delimeter = NULL;
+	new_redir->fd = -1;
+	return (new_redir);
+}
+
 int	redirect_in(t_redir *redirect, t_mini *mini)
 {
 	int	fd;
@@ -27,6 +41,24 @@ int	redirect_in(t_redir *redirect, t_mini *mini)
 	return (0);
 }
 
+int	redirect_heredoc(t_redir *redirect, t_mini *mini)
+{
+	(void)mini;
+	if (!redirect || redirect->fd < 0)
+	{
+		print_command_error("heredoc", "pipe not available");
+		return (-1);
+	}
+	if (dup2(redirect->fd, STDIN_FILENO) == -1)
+	{
+		perror("dup2");
+		return (-1);
+	}
+	close(redirect->fd);
+	redirect->fd = -1;
+	return (0);
+}
+
 int	redirect_out(t_redir *redirect, t_mini *mini)
 {
 	int	fd;
@@ -50,8 +82,7 @@ int	redirect_out(t_redir *redirect, t_mini *mini)
 	if (dup2(fd, STDOUT_FILENO) == -1)
 	{
 		close(fd);
-		ft_putstr_fd("minishell: redirection failed\n", 2);
-		return (-1);
+		return (ft_putstr_fd("minishell: redirection failed\n", 2), -1);
 	}
 	close(fd);
 	return (0);
@@ -82,23 +113,5 @@ int	redirect_append(t_redir *redirect, t_mini *mini)
 		return (-1);
 	}
 	close(fd);
-	return (0);
-}
-
-int	redirect_heredoc(t_redir *redirect, t_mini *mini)
-{
-	(void)mini;
-	if (!redirect || redirect->fd < 0)
-	{
-		print_command_error("heredoc", "pipe not available");
-		return (-1);
-	}
-	if (dup2(redirect->fd, STDIN_FILENO) == -1)
-	{
-		perror("dup2");
-		return (-1);
-	}
-	close(redirect->fd);
-	redirect->fd = -1;
 	return (0);
 }
