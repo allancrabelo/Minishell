@@ -76,6 +76,7 @@ typedef struct s_token
 {
 	char				*data;
 	t_token_type		type;
+	int					quoted;
 	struct s_token		*next;
 }				t_token;
 
@@ -238,6 +239,11 @@ int			heredoc_expand_safe(t_mini *mini);
 int			is_special_var(char c);
 char		*expand_special_var(t_mini *mini, char var_char);
 void		ft_itoa_alternative(int n, char *dst);
+
+//Wildcard Expansion
+char		**expand_wildcard(const char *pattern);
+int			has_wildcard(const char *str);
+char		**expand_wildcards_in_args(char **args, int arg_count);
 
 //Environment Utils
 char		*get_env_var(t_mini *mini, char *var_name);

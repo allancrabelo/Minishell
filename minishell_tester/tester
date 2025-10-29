@@ -32,7 +32,7 @@ else
 fi
 
 if [[ $1 == "wildcards"  || $1 == "bonus" ]]; then
-	MINISHELL_PATH="../minishell_bonus"
+	MINISHELL_PATH="../minishell"
 fi
 
 #Define supressions for readline:wa
@@ -111,7 +111,7 @@ check_valgrind_output(){
 		((total_fd_leaks++))
     fi
 	[ $has_leaks -eq 1 ] || [ $has_fd_leaks -eq 1 ]
-    
+
 }
 
 PROMPT=$(echo -e "\nexit\n" | $MINISHELL_PATH | head -n 1 | sed "s/\x1B\[[0-9;]\{1,\}[A-Za-z]//g" )

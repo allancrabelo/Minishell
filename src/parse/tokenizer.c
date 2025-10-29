@@ -2,10 +2,10 @@
 
 /**
  * @brief Fills token data from input string
- * 
+ *
  * Extracts a substring from the input starting at index `*i`
  * with length `len`, updates index `*i` to point after the token.
- * 
+ *
  * @param mini Pointer to main shell structure
  * @param i Pointer to start index of token in input string
  * @param len Length of token data to extract
@@ -14,10 +14,12 @@
 t_token	*new_token(t_mini *mini, size_t *i, size_t len, t_token_type type)
 {
 	t_token	*token;
+	int		quoted;
 
 	token = malloc(sizeof(t_token));
 	if (!token)
 		return (NULL);
+	quoted = (mini->input[*i] == '"' || mini->input[*i] == '\'');
 	token->data = fill_token_data(mini, i, len);
 	if (!token->data)
 	{
@@ -25,16 +27,17 @@ t_token	*new_token(t_mini *mini, size_t *i, size_t len, t_token_type type)
 		return (NULL);
 	}
 	token->type = type;
+	token->quoted = quoted;
 	token->next = NULL;
 	return (token);
 }
 
 /**
  * @brief Adds a new token to the end of the token list
- * 
+ *
  * Creates a token node and appends it to the linked list.
  * Handles both empty list and existing list cases.
- * 
+ *
  * @param mini Pointer to main shell structure
  * @param i Pointer to start index of token in input string
  * @param len Length of token data to extract
@@ -64,10 +67,10 @@ void	add_token(t_mini *mini, size_t *i, size_t len, t_token_type type)
 
 /**
  * @brief Identifies and tokenizes operators in input string
- * 
+ *
  * Detects shell operators (||, &&, |, >>, <<, >, <, etc.) at current
  * position and adds corresponding token to the token list.
- * 
+ *
  * @param mini Pointer to main shell structure
  * @param i Pointer to current index in input string
  * @return int 1 if operator was tokenized, 0 if no operator found
@@ -92,10 +95,10 @@ int	tokenize_op(t_mini *mini, size_t *i)
 
 /**
  * @brief Tokenizes input string into lexical tokens
- * 
+ *
  * Processes input string by skipping whitespace, identifying operators,
  * and extracting words (including quoted strings). Builds token linked list.
- * 
+ *
  * @param mini Pointer to main shell structure
  * @param input Input string to tokenize
  * @return int EXIT_SUCCESS on success, EXIT_FAILURE on syntax error
