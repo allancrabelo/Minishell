@@ -127,7 +127,7 @@ int			execute_command(t_mini *mini, t_ast *node);
 int			execute_external(t_mini *mini, t_ast *node);
 char		*find_command_path(t_mini *mini, char *cmd);
 int			execute_external_command(t_mini *mini, t_ast *node,
-	t_redir *redirects);
+				t_redir *redirects);
 
 // Frees
 int			ft_free_all(t_mini *mini, int ret, int exit_prog);
@@ -193,7 +193,8 @@ void		restore_fd(int *stdin_backup, int *stdout_backup);
 
 // Heredoc:
 int			redirect_heredoc(t_redir *redirect, t_mini *mini);
-void		create_heredoc_pipe(t_mini *mini, char *delimiter, t_heredoc **heredoc);
+void		create_heredoc_pipe(t_mini *mini, char *delimiter,
+				t_heredoc **heredoc);
 void		heredoc_cleaner(t_heredoc **heredoc);
 void		process_heredocs(t_mini *mini, t_ast *node);
 
@@ -249,7 +250,8 @@ t_ast		*parse_or(t_mini *mini, t_token **tokens);
 //[Pipes]
 // Pipes Executor
 int			execute_pipe_node(t_mini *mini, t_ast *node);
-int			signals_pipe_update(int status_right, int status_left, t_mini *mini);
+int			signals_pipe_update(int status_right, int status_left,
+				t_mini *mini);
 
 // BONUS
 int			execute_and_node(t_mini *mini, t_ast *node);
