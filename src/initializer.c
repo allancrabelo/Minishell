@@ -13,14 +13,16 @@
  */
 void	mini_init(t_mini *mini, char **envp)
 {
-	mini->token = NULL;
 	mini->ast = NULL;
+	mini->token = NULL;
 	mini->input = NULL;
-	mini->exit_status = 0;
+	mini->envp = envp;
 	mini->export_list = NULL;
+	mini->exit_status = 0;
 	mini->env_list = NULL;
+	mini->pwd = NULL;
 	mini->heredoc = NULL;
 	mini->heredoc_fd = 0;
 	mini->heredoc_signal = 0;
-	mini->envp = envp;
+	mini->child = 0;
 }

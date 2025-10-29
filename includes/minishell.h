@@ -3,21 +3,21 @@
 
 // Includes
 # include "../libft/libft.h"
-# include <stdio.h>				// printf, perror
-# include <stdlib.h>			// malloc, free, exit
-# include <unistd.h>			// write, access, read, close, fork, chdir, unlink, execve, dup, dup2, pipe, isatty, ttyname, ttyslot, getcwd
-# include <fcntl.h>				// open
-# include <sys/stat.h>			// stat, lstat, fstat
-# include <sys/wait.h>			// wait, waitpid, wait3, wait4
-# include <signal.h>			// signal, sigaction, sigemptyset, sigaddset, kill
-# include <dirent.h>			// opendir, readdir, closedir
-# include <string.h>			// strerror
-# include <errno.h>				// errno
-# include <termios.h>			// tcsetattr, tcgetattr
-# include <sys/ioctl.h>			// ioctl
-# include <curses.h>			// tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs (ou <termcap.h>)
-# include <readline/readline.h>	// readline
-# include <readline/history.h>	// add_history, rl_clear_history, etc.
+# include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <fcntl.h>
+# include <sys/stat.h>
+# include <sys/wait.h>
+# include <signal.h>
+# include <dirent.h>
+# include <string.h>
+# include <errno.h>
+# include <termios.h>
+# include <sys/ioctl.h>
+# include <curses.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 # include <limits.h>
 # define LINE "]\001" SBYELLOW "\002 minishell$\001" SRESET "\002 "
 # define COMMAND_NOT_FOUND 127
@@ -101,22 +101,18 @@ typedef struct s_ast
 typedef struct s_mini
 {
 	t_ast				*ast;
-	t_token_type		type;
 	t_token				*token;
 	char				*input;
 	char				**envp;
 	t_export			*export_list;
-	int					env_size;
 	long				exit_status;
-	int					pipe_count;
-	int					**pipes;
-	pid_t				*child_pids;
 	int					child_count;
 	t_env				*env_list;
 	char				*pwd;
 	t_heredoc			*heredoc;
 	int					heredoc_fd;
 	int					heredoc_signal;
+	int					child;
 }	t_mini;
 
 // Initializer:
@@ -127,7 +123,6 @@ void		do_commands(t_mini *mini, char *input);
 void		handle_commands(t_mini *mini, char *input);
 int			execute_builtin(t_mini *mini, t_ast *node, t_redir *redir);
 void		execute_ast_node(t_mini *mini, t_ast *node);
-// int			execute_external(t_mini *mini, char **argv);
 int			execute_command(t_mini *mini, t_ast *node);
 int			execute_external(t_mini *mini, t_ast *node);
 char		*find_command_path(t_mini *mini, char *cmd);
@@ -212,7 +207,6 @@ void		setup_exec_signals(void);
 void		handle_ctrl_c_on_pipe(int signal);
 
 // Tokenizer
-//void	ft_tokenizer(t_mini *mini, char *input);
 int			ft_tokenizer(t_mini *mini, char *input);
 int			check_validity(t_mini *mini, char *input);
 size_t		get_word_len(t_mini *mini, size_t len, size_t *i);
