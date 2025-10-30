@@ -1,19 +1,52 @@
 #include "minishell.h"
 
+static char	*join_path_cmd(char *path, char *cmd)
+{
+	char	*temp;
+	char	*full_path;
+
+	temp = ft_strjoin(path, "/");
+	if (!temp)
+		return (NULL);
+	full_path = ft_strjoin(temp, cmd);
+	free(temp);
+	if (!full_path)
+		return (NULL);
+	return (full_path);
+}
+
+static char	*search_in_paths(char **paths, char *cmd)
+{
+	int		i;
+	char	*full_path;
+
+	i = 0;
+	while (paths[i])
+	{
+		full_path = join_path_cmd(paths[i], cmd);
+		if (!full_path)
+			return (NULL);
+		if (access(full_path, X_OK) == 0)
+			return (full_path);
+		free(full_path);
+		i++;
+	}
+	return (NULL);
+}
+
 char	*find_command_path(t_mini *mini, char *cmd)
 {
 	char	*path_env;
 	char	**paths;
-	int		i;
-	char	*path;
-	char	*full_path;
+	char	*result;
 
 	(void)mini;
 	if (ft_strchr(cmd, '/'))
 	{
 		if (access(cmd, F_OK) == 0)
 			return (ft_strdup(cmd));
-		return (NULL);
+		else
+			return (NULL);
 	}
 	path_env = getenv("PATH");
 	if (!path_env)
@@ -21,23 +54,12 @@ char	*find_command_path(t_mini *mini, char *cmd)
 	paths = ft_split(path_env, ':');
 	if (!paths)
 		return (NULL);
-	i = 0;
-	while (paths[i])
-	{
-		path = ft_strjoin(paths[i], "/");
-		full_path = ft_strjoin(path, cmd);
-		free (path);
-		if (access(full_path, X_OK) == 0)
-		{
-			ft_free_split(paths);
-			return (full_path);
-		}
-		free (full_path);
-		i++;
-	}
+	result = search_in_paths(paths, cmd);
 	ft_free_split(paths);
-	return (NULL);
+	return (result);
 }
+
+
 
 void	print_command_error(char *cmd, char *error)
 {
@@ -48,85 +70,114 @@ void	print_command_error(char *cmd, char *error)
 	ft_putstr_fd("\n", 2);
 }
 
-char	**env_list_to_array(t_mini *mini)
+
+static int	count_env_vars(t_env *list)
 {
-	t_env	*current;
-	char	**env_array;
-	int		count;
-	int		i;
-	char	*temp;
+	int	count;
 
 	count = 0;
-	current = mini->env_list;
-	while (current)
+	while (list)
 	{
-		if (current->value != NULL)
+		if (list->value)
 			count++;
-		current = current->next;
+		list = list->next;
 	}
-	env_array = malloc((count + 1) * sizeof(char *));
-	if (!env_array)
+	return (count);
+}
+
+static char	*join_env_pair(t_env *env)
+{
+	char	*temp;
+	char	*result;
+
+	temp = ft_strjoin(env->key, "=");
+	if (!temp)
 		return (NULL);
+	result = ft_strjoin(temp, env->value);
+	free(temp);
+	if (!result)
+		return (NULL);
+	return (result);
+}
+
+char	**env_list_to_array(t_mini *mini)
+{
+	t_env	*cur;
+	char	**env;
+	int		i;
+	int		count;
+
+	count = count_env_vars(mini->env_list);
+	env = malloc((count + 1) * sizeof(char *));
+	if (!env)
+		return (NULL);
+	cur = mini->env_list;
 	i = 0;
-	current = mini->env_list;
-	while (current && i < count)
+	while (cur)
 	{
-		if (current->value != NULL)
+		if (cur->value)
 		{
-			temp = ft_strjoin(current->key, "=");
-			env_array[i] = ft_strjoin(temp, current->value);
-			free(temp);
-			if (!env_array[i])
-			{
-				ft_free_split(env_array);
-				return (NULL);
-			}
+			env[i] = join_env_pair(cur);
+			if (!env[i])
+				return (ft_free_split(env), NULL);
 			i++;
 		}
-		current = current->next;
+		cur = cur->next;
 	}
-	env_array[i] = NULL;
-	return (env_array);
+	env[i] = NULL;
+	return (env);
+}
+
+
+static int	validate_command(char *cmd, char *full_path)
+{
+	struct stat	path_stat;
+
+	if (stat(full_path, &path_stat) == 0 && S_ISDIR(path_stat.st_mode))
+	{
+		print_command_error(cmd, "Is a directory");
+		free(full_path);
+		return (0);
+	}
+	if (access(full_path, X_OK) != 0)
+	{
+		print_command_error(cmd, "Permission denied");
+		free(full_path);
+		return (0);
+	}
+	return (1);
+}
+
+static int	handle_path_not_found(char *cmd)
+{
+	if (ft_strchr(cmd, '/'))
+		print_command_error(cmd, "No such file or directory");
+	else
+		print_command_error(cmd, "command not found");
+	return (127);
 }
 
 int	execute_external(t_mini *mini, t_ast *node)
 {
-	char		*full_path;
-	char		**env_array;
-	struct stat	path_stat;
-	char		**argv;
+	char	**env;
+	char	**argv;
+	char	*path;
 
 	argv = node->args;
-	full_path = find_command_path(mini, argv[0]);
-	if (!full_path)
+	path = find_command_path(mini, argv[0]);
+	if (!path)
+		return (handle_path_not_found(argv[0]));
+	if (!validate_command(argv[0], path))
+		return (126);
+	env = env_list_to_array(mini);
+	if (!env)
 	{
-		if (ft_strchr(argv[0], '/'))
-			print_command_error(argv[0], "No such file or directory");
-		else
-			print_command_error(argv[0], "command not found");
-		return (127);
-	}
-	if (stat(full_path, &path_stat) == 0 && S_ISDIR(path_stat.st_mode))
-	{
-		print_command_error(argv[0], "Is a directory");
-		free(full_path);
+		free(path);
 		return (126);
 	}
-	if (access(full_path, X_OK) != 0)
-	{
-		print_command_error(argv[0], "Permission denied");
-		free(full_path);
-		return (126);
-	}
-	env_array = env_list_to_array(mini);
-	if (!env_array)
-	{
-		free(full_path);
-		return (126);
-	}
-	execve(full_path, argv, env_array);
-	ft_free_split(env_array);
-	free(full_path);
+	execve(path, argv, env);
+	ft_free_split(env);
+	free(path);
 	print_command_error(argv[0], strerror(errno));
 	return (126);
 }
