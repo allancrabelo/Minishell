@@ -121,6 +121,7 @@ int	execute_pipe_node(t_mini *mini, t_ast *node)
 	if (pipe(pipefd) == -1)
 		return (perror("pipe"), 1);
 	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 	pid_left = handle_left_fork(mini, node, pipefd);
 	if (pid_left == -1)
 		return (1);

@@ -76,7 +76,8 @@ int	build_ast(t_mini *mini)
 
 	if (mini->token->type == TOKEN_PIPE || mini->token->type == TOKEN_AND
 		|| mini->token->type == TOKEN_OR)
-		return (print_syntax_error(mini, "near unexpected token ", "|"), 1);
+		return (print_syntax_error(mini, "near unexpected token ",
+				mini->token->data), 1);
 	cur = mini->token;
 	if (!verify_tokens(mini, cur))
 		return (1);

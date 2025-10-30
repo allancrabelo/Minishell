@@ -1,5 +1,4 @@
 #include "minishell.h"
-#include "colors.h"
 
 volatile sig_atomic_t	g_signal = 0;
 
@@ -70,7 +69,7 @@ static void	main_loop(t_mini *mini)
 	while (1)
 	{
 		signal_init();
-		input = readline(SYELLOW "minishell$ " SRESET);
+		input = readline(LINE);
 		if (g_signal)
 		{
 			mini->exit_status = g_signal;
@@ -137,7 +136,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	if (argc != 1 || argv[1])
-		return (ft_putstr_fd("[ERROR] Usage: ./minishell\n" SRESET, 2), 127);
+		return (ft_putstr_fd("[ERROR] Usage: ./minishell\n", 2), 127);
 	signal_init();
 	mini_init(&mini, envp);
 	if (envp[0] == NULL || envp == NULL)

@@ -34,11 +34,12 @@ VPATH		:=	src src/utils \
 SRCSLIST	:=	main \
 				initializer \
 				signals \
-				especial_signals \
+				special_signals \
 				handle_commands \
+				handle_commands_utils \
 				utils \
 				atoll \
-				env_setter \
+				aux_functions \
 				ft_echo \
 				ft_exit \
 				ft_pwd \
@@ -71,6 +72,7 @@ SRCSLIST	:=	main \
 				pipes_executor \
 				signals_pipe_update \
 				external_commands \
+				external_commands_utils \
 				free_all \
 				free_all_redirections \
 				and_or_bonus

@@ -126,7 +126,6 @@ int			execute_builtin(t_mini *mini, t_ast *node, t_redir *redir);
 void		execute_ast_node(t_mini *mini, t_ast *node);
 int			execute_command(t_mini *mini, t_ast *node);
 int			execute_external(t_mini *mini, t_ast *node);
-char		*find_command_path(t_mini *mini, char *cmd);
 int			execute_external_command(t_mini *mini, t_ast *node,
 				t_redir *redirects);
 
@@ -147,6 +146,16 @@ int			print_syntax_error(t_mini *mini, char *error_msg, char *token);
 int			ft_atoll_safe(const char *str, long long *result);
 void		print_command_error(char *cmd, char *error);
 int			set_getcwd(char *cwd, int total_size, char **new_envp, int i);
+
+//External Commands
+int			validate_command(char *cmd, char *full_path);
+char		**env_list_to_array(t_mini *mini);
+char		*join_env_pair(t_env *env);
+int			count_env_vars(t_env *list);
+char		*search_in_paths(char **paths, char *cmd);
+char		*join_path_cmd(char *path, char *cmd);
+char		*find_command_path(t_mini *mini, char *cmd);
+int			handle_path_not_found(char *cmd);
 
 // [BUILTINS]:
 // Echo:
@@ -209,6 +218,7 @@ void		setup_heredoc_signals(void);
 void		wait_update_main(int pid, int *status);
 void		setup_exec_signals(void);
 void		handle_ctrl_c_on_pipe(int signal);
+int			signal_execute_setup(t_mini *mini, pid_t pid);
 
 // Tokenizer
 int			ft_tokenizer(t_mini *mini, char *input);
@@ -218,6 +228,7 @@ int			is_op(const char *input, size_t i);
 char		**init_args_array(int count);
 int			count_cmd_args(t_token *tokens);
 int			handle_word_token(t_token **tokens, char **args, int *count);
+int			tokenizer_init(t_mini *mini, char *input);
 
 char		*fill_token_data(t_mini *mini, size_t *i, size_t len);
 void		do_var(t_mini *mini, char *dst, size_t *i, size_t *j);
