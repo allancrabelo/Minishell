@@ -1,4 +1,4 @@
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 /**
  * @brief Expands variable name by advancing through valid characters
