@@ -19,7 +19,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <limits.h>
-# define LINE "]\001" SBYELLOW "\002 minishell$\001" SRESET "\002 "
+# define LINE "\033[93mminishell$ \033[0m"
 # define COMMAND_NOT_FOUND 127
 # define COMMAND_DENIED_OR_FAILED 126
 

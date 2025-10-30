@@ -76,5 +76,5 @@ void	setup_exec_signals(void)
 {
 	signal(SIGINT, handle_exec_ctrl_c);
 	signal(SIGQUIT, handle_exec_ctrl_bslash);
-	signal(SIGPIPE, SIG_IGN); // Remove if we refactor
+	signal(SIGPIPE, SIG_IGN);
 }

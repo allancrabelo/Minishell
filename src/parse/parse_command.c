@@ -1,5 +1,15 @@
 #include "minishell.h"
 
+/**
+ * @brief Appends redirection node to redirection list
+ * 
+ * Adds a new redirection node to the end of the linked list.
+ * Handles both empty list and existing list cases.
+ * 
+ * @param redir Double pointer to head of redirection list
+ * @param new_redir New redirection node to append
+ * @return int Always returns 1 (success)
+ */
 static int	add_redir_to_list(t_redir **redir, t_redir *new_redir)
 {
 	t_redir	*current;
@@ -16,6 +26,17 @@ static int	add_redir_to_list(t_redir **redir, t_redir *new_redir)
 	return (1);
 }
 
+/**
+ * @brief Expands filename for redirection with wildcard support
+ * 
+ * Handles filename expansion for redirection targets. Processes
+ * wildcards unless quoted, validates single match for ambiguity.
+ * 
+ * @param mini Pointer to main shell structure
+ * @param pattern Filename pattern to expand
+ * @param quoted Flag indicating if pattern was quoted
+ * @return char* Expanded filename, NULL on error or ambiguity
+ */
 static char	*expand_redir_file(t_mini *mini, char *pattern, int quoted)
 {
 	char	**expanded;
@@ -42,6 +63,17 @@ static char	*expand_redir_file(t_mini *mini, char *pattern, int quoted)
 	return (result);
 }
 
+/**
+ * @brief Parses redirection operator and expands target file
+ * 
+ * Processes redirection tokens, expands filename with wildcard support,
+ * and creates redirection node. Handles heredoc delimiters specially.
+ * 
+ * @param mini Pointer to main shell structure
+ * @param tokens Double pointer to current token in list
+ * @param redir Double pointer to redirection list head
+ * @return int 1 on success, 0 on syntax error or expansion failure
+ */
 int	parse_redir(t_mini *mini, t_token **tokens, t_redir **redir)
 {
 	t_redir	*new_redir;
@@ -71,6 +103,18 @@ int	parse_redir(t_mini *mini, t_token **tokens, t_redir **redir)
 	return (1);
 }
 
+/**
+ * @brief Initializes command structure from tokens
+ * 
+ * Processes tokens to build command arguments array and redirection list.
+ * Alternates between word tokens and redirection operators.
+ * 
+ * @param mini Pointer to main shell structure
+ * @param tokens Double pointer to current token in list
+ * @param redir Double pointer to redirection list head
+ * @param args Pre-allocated arguments array to populate
+ * @return int Number of arguments processed, -1 on error
+ */
 int	init_command(t_mini *mini, t_token **tokens, t_redir **redir, char **args)
 {
 	int	count;
@@ -94,6 +138,16 @@ int	init_command(t_mini *mini, t_token **tokens, t_redir **redir, char **args)
 	return (count);
 }
 
+/**
+ * @brief Parses command with arguments and redirections
+ * 
+ * Builds command AST node by processing tokens into arguments array
+ * and redirection list. Handles special case of heredoc-only commands.
+ * 
+ * @param mini Pointer to main shell structure
+ * @param tokens Double pointer to current token in list
+ * @return t_ast* Command AST node, NULL on parsing error
+ */
 t_ast	*parse_command(t_mini *mini, t_token **tokens)
 {
 	int		count;

@@ -1,5 +1,16 @@
 #include "minishell.h"
 
+/**
+ * @brief Identifies operator type at current input position
+ * 
+ * Scans input string for shell operators including parentheses,
+ * logical operators, pipes, and redirections. Handles multi-character
+ * operators (||, &&, >>, <<).
+ * 
+ * @param input Input string to scan
+ * @param i Current index in input string
+ * @return t_token_type Operator token type, 0 if no operator found
+ */
 int	is_op(const char *input, size_t i)
 {
 	if (input[i] == '\0')

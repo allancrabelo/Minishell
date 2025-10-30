@@ -38,6 +38,7 @@ SRCSLIST	:=	main \
 				handle_commands \
 				utils \
 				atoll \
+				env_setter \
 				ft_echo \
 				ft_exit \
 				ft_pwd \
