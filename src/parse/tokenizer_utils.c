@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokenizer_utils.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/30 23:43:46 by mqueiros          #+#    #+#             */
+/*   Updated: 2025/10/30 23:43:47 by mqueiros         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /**
  * @brief Expands variable name by advancing through valid characters
- * 
+ *
  * Moves index pointer through alphanumeric characters and underscores
  * that form a valid shell variable name.
- * 
+ *
  * @param mini Pointer to main shell structure
  * @param i Pointer to current index in input string
  * @return size_t Length of the variable name
@@ -22,10 +34,10 @@ size_t	expand_var(t_mini *mini, size_t *i)
 
 /**
  * @brief Processes quoted string and calculates expanded length
- * 
+ *
  * Handles both single and double quotes, expanding variables
  * within double quotes. Advances index to end of quoted section.
- * 
+ *
  * @param mini Pointer to main shell structure
  * @param i Pointer to current index in input string
  * @param quote Type of quote (' or ")
@@ -54,10 +66,10 @@ size_t	handle_quotes(t_mini *mini, size_t *i, char quote)
 
 /**
  * @brief Expands tilde to home directory length
- * 
+ *
  * Retrieves HOME environment variable and returns its length.
  * Advances index past the tilde character.
- * 
+ *
  * @param mini Pointer to main shell structure
  * @param i Pointer to current index in input string
  * @return size_t Length of the expanded home directory path
@@ -79,11 +91,11 @@ static size_t	expand_tilde_len(t_mini *mini, size_t *i)
 
 /**
  * @brief Calculates length of next word in input string
- * 
+ *
  * Processes input starting from index, handling quotes,
  * variable expansions, and tilde expansions to compute
  * the total length of the next word token.
- * 
+ *
  * @param mini Pointer to main shell structure
  * @param len Total length of input string
  * @param i Pointer to current index in input string
@@ -113,10 +125,10 @@ size_t	get_word_len(t_mini *mini, size_t len, size_t *i)
 
 /**
  * @brief Checks for balanced quotes in input string
- * 
+ *
  * Scans the input for single and double quotes, ensuring
  * that all opened quotes are properly closed.
- * 
+ *
  * @param mini Pointer to main shell structure
  * @param input Input string to validate
  * @return int 1 if quotes are balanced, 0 otherwise

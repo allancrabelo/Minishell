@@ -1,14 +1,26 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   variable_expander.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/30 23:44:18 by mqueiros          #+#    #+#             */
+/*   Updated: 2025/10/30 23:44:19 by mqueiros         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /**
  * @brief Handles special variable expansion cases
- * 
+ *
  * Processes special characters following '$' including:
  * - '?' for exit status
  * - '*' for wildcard
  * - '$' for literal dollar
  * - Digits and '!' for special parameters
- * 
+ *
  * @param mini Pointer to main shell structure
  * @param i Pointer to current index in input string
  * @return char* Special variable name, NULL for regular variables
@@ -43,10 +55,10 @@ static char	*handle_special_cases(t_mini *mini, size_t *i)
 
 /**
  * @brief Extracts variable name from input string
- * 
+ *
  * Parses alphanumeric characters and underscores following '$'
  * to form a valid variable name.
- * 
+ *
  * @param mini Pointer to main shell structure
  * @param start Starting index of variable name
  * @param i Pointer to current index in input string
@@ -75,10 +87,10 @@ static char	*extract_variable_name(t_mini *mini, size_t start, size_t *i)
 
 /**
  * @brief Extracts variable name considering special cases
- * 
+ *
  * Combines special case handling and regular variable name extraction.
  * Advances index appropriately based on variable type.
- * 
+ *
  * @param mini Pointer to main shell structure
  * @param i Pointer to current index in input string
  * @return char* Extracted variable name
@@ -97,10 +109,10 @@ char	*extract_var_name(t_mini *mini, size_t *i)
 
 /**
  * @brief Expands variable name to its value
- * 
+ *
  * Looks up the variable name in environment and
  * expansion variables, handling special cases.
- * 
+ *
  * @param mini Pointer to main shell structure
  * @param var_name Variable name to expand
  * @return char* Expanded variable value
@@ -130,10 +142,10 @@ char	*expand_variable(t_mini *mini, char *var_name)
 
 /**
  * @brief Expands variable in tokenizer and returns value length
- * 
+ *
  * Extracts variable name from input, expands it to its value,
  * and returns the length of the expanded value. Advances index.
- * 
+ *
  * @param mini Pointer to main shell structure
  * @param i Pointer to current index in input string
  * @return size_t Length of expanded variable value

@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipes_executor.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/30 23:43:45 by mqueiros          #+#    #+#             */
+/*   Updated: 2025/10/30 23:43:46 by mqueiros         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /**
  * @brief Executes left command in pipe sequence
- * 
+ *
  * Configures stdout to write to pipe, sets execution signals,
  * and processes left AST node. Terminates process after execution.
- * 
+ *
  * @param mini Pointer to main shell structure
  * @param left Left AST node to execute
  * @param pipefd Pipe file descriptors [read, write]
@@ -23,10 +35,10 @@ static void	execute_left_pipe(t_mini *mini, t_ast *left, int pipefd[2])
 
 /**
  * @brief Executes right command in pipe sequence
- * 
+ *
  * Configures stdin to read from pipe, sets execution signals,
  * and processes right AST node. Terminates process after execution.
- * 
+ *
  * @param mini Pointer to main shell structure
  * @param right Right AST node to execute
  * @param pipefd Pipe file descriptors [read, write]
@@ -44,10 +56,10 @@ static void	execute_right_pipe(t_mini *mini, t_ast *right, int pipefd[2])
 
 /**
  * @brief Forks and executes left side of pipe operation
- * 
+ *
  * Creates child process for left command in pipe sequence.
  * Handles fork failures by cleaning up pipe file descriptors.
- * 
+ *
  * @param mini Pointer to main shell structure
  * @param node Left AST node of pipe operation
  * @param pipefd Pipe file descriptors [read, write]
@@ -71,10 +83,10 @@ static int	handle_left_fork(t_mini *mini, t_ast *node, int pipefd[2])
 
 /**
  * @brief Forks and executes right side of pipe operation
- * 
+ *
  * Creates child process for right command in pipe sequence.
  * Handles fork failures by cleaning up and terminating left process.
- * 
+ *
  * @param mini Pointer to main shell structure
  * @param node Right AST node of pipe operation
  * @param pipefd Pipe file descriptors [read, write]
@@ -101,11 +113,11 @@ static int	handle_right_fork(t_mini *mini, t_ast *node, int pipefd[2],
 
 /**
  * @brief Executes pipe node by forking left and right processes
- * 
+ *
  * Creates pipe and forks two child processes for left and right sides
  * of the pipe. Manages file descriptors and waits for both processes
  * to complete before updating exit status.
- * 
+ *
  * @param mini Pointer to main shell structure
  * @param node AST node representing pipe operation
  * @return int Exit status of the rightmost command in pipe

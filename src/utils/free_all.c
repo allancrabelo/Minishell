@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free_all.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/30 23:43:39 by mqueiros          #+#    #+#             */
+/*   Updated: 2025/10/30 23:43:40 by mqueiros         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /**
  * @brief Frees the entire export list memory
- * 
+ *
  * Iterates through the export linked list and frees all allocated
  * memory for keys, values, and node structures.
- * 
+ *
  * @param lst Pointer to the head of the export list
  * @return void
  */
@@ -28,11 +40,11 @@ void	free_export_list(t_export *lst)
 
 /**
  * @brief Frees all tokens from the shell structure
- * 
+ *
  * Iterates through the token linked list and frees all allocated
  * memory for token data and structures. Resets the token
  * pointer to NULL.
- * 
+ *
  * @param mini Pointer to the main shell structure
  * @return void
  */
@@ -57,10 +69,10 @@ void	free_tokens(t_mini *mini)
 
 /**
  * @brief Recursively frees the abstract syntax tree (AST)
- * 
+ *
  * Performs post-order traversal to free all AST nodes, including
  * command arguments and redirection lists.
- * 
+ *
  * @param node Root node of the AST to free
  * @return void
  */
@@ -79,10 +91,10 @@ void	free_ast(t_ast *node)
 
 /**
  * @brief Frees temporary shell resources and optionally exits
- * 
+ *
  * Cleans up heredocs, tokens, and AST structures. Updates exit status
  * and can terminate the program if requested.
- * 
+ *
  * @param mini Pointer to the main shell structure
  * @param ret Exit status to set
  * @param exit_prog Flag to terminate program (1) or continue (0)
@@ -106,11 +118,11 @@ void	ft_free_extra(t_mini *mini, int ret, int exit_prog)
 
 /**
  * @brief Comprehensive cleanup of all shell resources
- * 
+ *
  * Frees all allocated memory including temporary structures,
  * environment lists, export lists, and heredocs. Optionally
  * terminates the program with specified exit status.
- * 
+ *
  * @param mini Pointer to the main shell structure
  * @param ret Exit status to set
  * @param exit_prog Flag to terminate program (1) or return status (0)

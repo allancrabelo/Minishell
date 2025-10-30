@@ -1,12 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_ordered.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/30 23:43:49 by mqueiros          #+#    #+#             */
+/*   Updated: 2025/10/30 23:43:50 by mqueiros         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /**
  * @brief Parses primary expressions including parentheses
- * 
+ *
  * Handles parenthesized expressions and command sequences.
  * Recursively parses content within parentheses and ensures
  * proper closing parenthesis.
- * 
+ *
  * @param mini Pointer to main shell structure
  * @param tokens Double pointer to current token in list
  * @return t_ast* AST node for primary expression, NULL on error
@@ -37,10 +49,10 @@ static t_ast	*parse_primary(t_mini *mini, t_token **tokens)
 
 /**
  * @brief Parses pipe expressions
- * 
+ *
  * Handles sequences of commands connected by pipe operators.
  * Recursively builds AST nodes for each command in the pipe chain.
- * 
+ *
  * @param mini Pointer to main shell structure
  * @param tokens Double pointer to current token in list
  * @return t_ast* AST node for pipe expression, NULL on error
@@ -74,10 +86,10 @@ static t_ast	*parse_pipe(t_mini *mini, t_token **tokens)
 
 /**
  * @brief Parses AND expressions
- * 
+ *
  * Handles sequences of commands connected by AND operators.
  * Recursively builds AST nodes for each command in the AND chain.
- * 
+ *
  * @param mini Pointer to main shell structure
  * @param tokens Double pointer to current token in list
  * @return t_ast* AST node for AND expression, NULL on error
@@ -111,10 +123,10 @@ static t_ast	*parse_and(t_mini *mini, t_token **tokens)
 
 /**
  * @brief Parses OR expressions
- * 
+ *
  * Handles sequences of commands connected by OR operators.
  * Recursively builds AST nodes for each command in the OR chain.
- * 
+ *
  * @param mini Pointer to main shell structure
  * @param tokens Double pointer to current token in list
  * @return t_ast* AST node for OR expression, NULL on error

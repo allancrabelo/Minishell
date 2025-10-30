@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free_all_redirections.c                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/30 23:43:38 by mqueiros          #+#    #+#             */
+/*   Updated: 2025/10/30 23:43:39 by mqueiros         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /**
  * @brief Frees redirection linked list and associated resources
- * 
+ *
  * Iterates through redirection structures, freeing filenames,
  * heredoc delimiters, and node memory.
- * 
+ *
  * @param redir Pointer to the head of the redirection list
  * @return void
  */
@@ -29,10 +41,10 @@ void	free_redir(t_redir *redir)
 
 /**
  * @brief Frees all heredoc structures and associated resources
- * 
+ *
  * Iterates through the heredoc linked list, freeing delimiters,
  * closing pipe file descriptors, and freeing node memory.
- * 
+ *
  * @param head Double pointer to the head of the heredoc list
  * @return void
  */

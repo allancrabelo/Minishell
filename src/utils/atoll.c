@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   atoll.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/30 23:43:41 by mqueiros          #+#    #+#             */
+/*   Updated: 2025/10/30 23:43:44 by mqueiros         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /**
  * @brief Skips whitespace and processes optional sign character
- * 
+ *
  * Advances string pointer past any leading whitespace and
  * handles optional '+' or '-' sign, updating the sign flag.
- * 
+ *
  * @param str Double pointer to current position in input string
  * @param sign Pointer to sign flag (1 for positive, -1 for negative)
  * @return void
@@ -24,10 +36,10 @@ static void	skip_whitespace_and_sign(const char **str, int *sign)
 
 /**
  * @brief Parses digit sequence with overflow protection
- * 
+ *
  * Processes numeric digits from string, accumulating value
  * while checking for arithmetic overflow at each step.
- * 
+ *
  * @param str Double pointer to current position in input string
  * @param acum Pointer to accumulator for numeric value
  * @param lim Maximum allowed value for overflow checking
@@ -54,12 +66,12 @@ static int	parse_digits(const char **str, unsigned long long *acum,
 
 /**
  * @brief Safe string to long long conversion with overflow checking
- * 
+ *
  * Converts string to long long with comprehensive error checking:
  * - Handles whitespace and optional sign
  * - Detects overflow/underflow
  * - Validates digit sequence
- * 
+ *
  * @param str String to convert
  * @param result Pointer to store conversion result
  * @return int 1 on success, 0 on conversion error

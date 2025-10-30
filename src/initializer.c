@@ -1,12 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   initializer.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/30 23:44:05 by mqueiros          #+#    #+#             */
+/*   Updated: 2025/10/30 23:44:06 by mqueiros         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /**
  * @brief Initializes a t_mini structure with default values
- * 
+ *
  * This function initializes all members of the t_mini structure to their
  * default starting state. Pointers are set to NULL, numeric values to 0,
  * and the environment pointer is assigned.
- * 
+ *
  * @param mini Pointer to the t_mini structure to initialize
  * @param envp Array of environment variables
  * @return void

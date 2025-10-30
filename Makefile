@@ -67,8 +67,8 @@ SRCSLIST	:=	main \
 				variable_expander \
 				expander_utils \
 				environment_utils \
-				wildcard \
-				wildcard_utils \
+				wildcard_bonus \
+				wildcard_utils_bonus \
 				pipes_executor \
 				signals_pipe_update \
 				external_commands \

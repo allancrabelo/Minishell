@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_command.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/30 23:43:50 by mqueiros          #+#    #+#             */
+/*   Updated: 2025/10/30 23:43:51 by mqueiros         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /**
  * @brief Appends redirection node to redirection list
- * 
+ *
  * Adds a new redirection node to the end of the linked list.
  * Handles both empty list and existing list cases.
- * 
+ *
  * @param redir Double pointer to head of redirection list
  * @param new_redir New redirection node to append
  * @return int Always returns 1 (success)
@@ -28,21 +40,22 @@ static int	add_redir_to_list(t_redir **redir, t_redir *new_redir)
 
 /**
  * @brief Expands filename for redirection with wildcard support
- * 
+ *
  * Handles filename expansion for redirection targets. Processes
  * wildcards unless quoted, validates single match for ambiguity.
- * 
+ *
  * @param mini Pointer to main shell structure
  * @param pattern Filename pattern to expand
  * @param quoted Flag indicating if pattern was quoted
  * @return char* Expanded filename, NULL on error or ambiguity
  */
-static char	*expand_redir_file(t_mini *mini, char *pattern, int quoted)
+static char	*expand_redir_file(t_mini *mini, t_token *token,
+				char *pattern, int quoted)
 {
 	char	**expanded;
 	char	*result;
 
-	if (quoted || !has_wildcard(pattern))
+	if (quoted || !has_wildcard(pattern) || token->type == TOKEN_HEREDOC)
 		return (ft_strdup(pattern));
 	expanded = expand_wildcard(pattern);
 	if (!expanded)
@@ -65,10 +78,10 @@ static char	*expand_redir_file(t_mini *mini, char *pattern, int quoted)
 
 /**
  * @brief Parses redirection operator and expands target file
- * 
+ *
  * Processes redirection tokens, expands filename with wildcard support,
  * and creates redirection node. Handles heredoc delimiters specially.
- * 
+ *
  * @param mini Pointer to main shell structure
  * @param tokens Double pointer to current token in list
  * @param redir Double pointer to redirection list head
@@ -81,7 +94,7 @@ int	parse_redir(t_mini *mini, t_token **tokens, t_redir **redir)
 
 	if (!(*tokens)->next || (*tokens)->next->type != TOKEN_WORD)
 		return (print_syntax_error(mini, "near unexpected token ", "newline"));
-	file = expand_redir_file(mini, (*tokens)->next->data,
+	file = expand_redir_file(mini, (*tokens), (*tokens)->next->data,
 			(*tokens)->next->quoted);
 	if (!file)
 	{
@@ -105,10 +118,10 @@ int	parse_redir(t_mini *mini, t_token **tokens, t_redir **redir)
 
 /**
  * @brief Initializes command structure from tokens
- * 
+ *
  * Processes tokens to build command arguments array and redirection list.
  * Alternates between word tokens and redirection operators.
- * 
+ *
  * @param mini Pointer to main shell structure
  * @param tokens Double pointer to current token in list
  * @param redir Double pointer to redirection list head
@@ -140,10 +153,10 @@ int	init_command(t_mini *mini, t_token **tokens, t_redir **redir, char **args)
 
 /**
  * @brief Parses command with arguments and redirections
- * 
+ *
  * Builds command AST node by processing tokens into arguments array
  * and redirection list. Handles special case of heredoc-only commands.
- * 
+ *
  * @param mini Pointer to main shell structure
  * @param tokens Double pointer to current token in list
  * @return t_ast* Command AST node, NULL on parsing error

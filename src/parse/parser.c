@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/30 23:43:48 by mqueiros          #+#    #+#             */
+/*   Updated: 2025/10/30 23:43:49 by mqueiros         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /**
  * @brief Creates AST node for logical or pipe operators
- * 
+ *
  * Allocates and initializes operator node (PIPE, AND, OR) with
  * left and right subtrees. Sets node type and initializes other fields.
- * 
+ *
  * @param left Left subtree AST node
  * @param right Right subtree AST node
  * @param type Token type of the operator
@@ -34,11 +46,11 @@ t_ast	*build_operator_node(t_ast *left, t_ast *right, t_token_type type)
 
 /**
  * @brief Creates AST node for command with arguments and redirections
- * 
+ *
  * Allocates and initializes command node with provided arguments,
  * argument count, and redirection list. Sets node type and initializes
  * child pointers to NULL.
- * 
+ *
  * @param args Array of command arguments
  * @param arg_count Number of arguments
  * @param redir Linked list of redirections
@@ -62,11 +74,11 @@ t_ast	*build_cmd_node(char **args, int arg_count, t_redir *redir)
 
 /**
  * @brief Builds the abstract syntax tree (AST) from tokens
- * 
+ *
  * Validates initial token and overall token sequence before
  * parsing into an AST. Starts parsing from the highest precedence
  * level (OR) and constructs the full AST.
- * 
+ *
  * @param mini Pointer to main shell structure
  * @return int 0 on success, 1 on failure
  */

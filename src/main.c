@@ -1,13 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/30 23:44:08 by mqueiros          #+#    #+#             */
+/*   Updated: 2025/10/30 23:44:09 by mqueiros         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 volatile sig_atomic_t	g_signal = 0;
 
 /**
  * @brief Initializes the export list from environment variables
- * 
+ *
  * Parses the environment variables array and populates the shell's
  * export list. Handles both key=value pairs and standalone keys.
- * 
+ *
  * @param mini Pointer to the main shell structure
  * @param envp Array of environment variables strings
  * @return void
@@ -38,10 +50,10 @@ static void	init_export_list(t_mini *mini, char **envp)
 
 /**
  * @brief Processes user input commands
- * 
+ *
  * Adds input to command history, updates current working directory,
  * and delegates to command handler for execution.
- * 
+ *
  * @param mini Pointer to the main shell structure
  * @param input User input string to process
  * @return void
@@ -55,10 +67,10 @@ void	do_commands(t_mini *mini, char *input)
 
 /**
  * @brief Main interactive loop for the minishell
- * 
+ *
  * Handles the REPL (Read-Eval-Print Loop) cycle for user interaction.
  * Reads input, processes commands, and manages exit conditions.
- * 
+ *
  * @param mini Pointer to the main shell structure
  * @return void
  */
@@ -87,11 +99,11 @@ static void	main_loop(t_mini *mini)
 
 /**
  * @brief Initializes a basic environment when no environment is provided
- * 
+ *
  * Creates a minimal environment array with essential variables including
  * PWD, OLDPWD, SHLVL, and underscore. Used when the shell starts without
  * an inherited environment.
- * 
+ *
  * @return char** Newly allocated environment array, NULL-terminated
  */
 static char	**envp_initializer(void)
@@ -120,10 +132,10 @@ static char	**envp_initializer(void)
 
 /**
  * @brief Main entry point for the minishell program
- * 
+ *
  * Initializes the shell environment, processes startup configuration,
  * and enters the main command loop. Handles program cleanup on exit.
- * 
+ *
  * @param argc Argument count
  * @param argv Argument vector
  * @param envp Environment variables array

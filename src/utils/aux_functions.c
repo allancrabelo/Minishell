@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   aux_functions.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/30 23:43:40 by mqueiros          #+#    #+#             */
+/*   Updated: 2025/10/30 23:43:41 by mqueiros         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /**
  * @brief Sets PWD environment variable from current working directory
- * 
+ *
  * Retrieves current working directory and creates PWD environment variable
  * string. Handles getcwd failures and memory allocation.
- * 
+ *
  * @param cwd Buffer for current working directory
  * @param total_size
  * @param new_envp Environment array to populate

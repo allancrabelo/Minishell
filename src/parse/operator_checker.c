@@ -1,12 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   operator_checker.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/30 23:43:51 by mqueiros          #+#    #+#             */
+/*   Updated: 2025/10/30 23:43:52 by mqueiros         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /**
  * @brief Identifies operator type at current input position
- * 
+ *
  * Scans input string for shell operators including parentheses,
  * logical operators, pipes, and redirections. Handles multi-character
  * operators (||, &&, >>, <<).
- * 
+ *
  * @param input Input string to scan
  * @param i Current index in input string
  * @return t_token_type Operator token type, 0 if no operator found

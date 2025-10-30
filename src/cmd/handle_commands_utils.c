@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   handle_commands_utils.c                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/30 23:44:02 by mqueiros          #+#    #+#             */
+/*   Updated: 2025/10/30 23:44:03 by mqueiros         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	execute_ast_node(t_mini *mini, t_ast *node)
@@ -73,7 +85,8 @@ int	signal_execute_setup(t_mini *mini, pid_t pid)
 {
 	int	status;
 
-	setup_exec_signals();
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 	waitpid(pid, &status, 0);
 	signal_init();
 	if (WIFEXITED(status))

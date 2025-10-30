@@ -1,13 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   verify_tokens.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/30 23:43:46 by mqueiros          #+#    #+#             */
+/*   Updated: 2025/10/30 23:43:47 by mqueiros         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /**
  * @brief Validates start and end tokens of the token stream
- * 
+ *
  * Checks that the token sequence begins and ends with valid tokens:
  * - First token cannot be operator or right parenthesis
  * - Last token cannot be operator
  * - Last token cannot be left parenthesis (expecting continuation)
- * 
+ *
  * @param first First token in the linked list
  * @return char* Error token data if invalid, NULL if valid
  */
@@ -31,10 +43,10 @@ static char	*check_start_end_tokens(t_token *first)
 
 /**
  * @brief Validates parentheses balance in token stream
- * 
+ *
  * Counts left and right parentheses to ensure proper nesting
  * and balance. Detects unmatched or misordered parentheses.
- * 
+ *
  * @param token Linked list of tokens to check
  * @return int 1 if parentheses are balanced, 0 otherwise
  */
@@ -60,10 +72,10 @@ static int	check_parentheses_balance(t_token *token)
 
 /**
  * @brief Checks for empty parentheses in token stream
- * 
+ *
  * Scans token list for adjacent left and right parentheses
  * without any content between them (e.g., "()")
- * 
+ *
  * @param token Linked list of tokens to check
  * @return int 0 if empty parentheses found, 1 otherwise
  */
@@ -80,13 +92,13 @@ static int	check_empty_parentheses(t_token *token)
 
 /**
  * @brief Validates syntax rules for individual tokens
- * 
+ *
  * Checks operator and redirect placement rules:
  * - Operators (OR, AND, PIPE) cannot be followed by other operators
  * or right parentheses
  * - Redirects must be followed by valid filename tokens
  * - Detects missing tokens at end of input
- * 
+ *
  * @param cur Current token to validate
  * @return char* Error token data if invalid, NULL if valid
  */
@@ -116,13 +128,13 @@ static char	*check_syntax(t_token *cur)
 
 /**
  * @brief Validates token sequence syntax
- * 
+ *
  * Performs comprehensive syntax validation on tokenized input including:
  * - Start/end token verification
  * - Parentheses balancing
- * - Empty parentheses detection  
+ * - Empty parentheses detection
  * - Operator and redirect syntax rules
- * 
+ *
  * @param mini Pointer to main shell structure
  * @param token Linked list of tokens to validate
  * @return int 1 if syntax valid, 0 if error detected

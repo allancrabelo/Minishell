@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/30 23:43:37 by mqueiros          #+#    #+#             */
+/*   Updated: 2025/10/30 23:43:38 by mqueiros         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /**
@@ -13,10 +25,10 @@ int	has_wildcard(const char *str)
 
 /**
  * @brief Checks if token type is a logical or pipe operator
- * 
+ *
  * Determines whether the given token type represents a control
  * operator (OR, AND, PIPE) used for command sequencing.
- * 
+ *
  * @param type Token type to check
  * @return int 1 if operator, 0 otherwise
  */
@@ -27,10 +39,10 @@ int	is_operator(t_token_type type)
 
 /**
  * @brief Checks if token type is a redirection operator
- * 
+ *
  * Determines whether the given token type represents a file
  * redirection operator (in, out or append).
- * 
+ *
  * @param type Token type to check
  * @return int 1 if redirection operator, 0 otherwise
  */
@@ -42,10 +54,10 @@ int	is_redirect(t_token_type type)
 
 /**
  * @brief Prints syntax error message and sets exit status
- * 
+ *
  * Formats and displays syntax error information to stderr
  * and updates the shell's exit status to indicate syntax error.
- * 
+ *
  * @param mini Pointer to main shell structure
  * @param error_msg Primary error description
  * @param token Offending token data (optional)
@@ -69,10 +81,10 @@ int	print_syntax_error(t_mini *mini, char *error_msg, char *token)
 
 /**
  * @brief Concatenates two strings and frees the first string
- * 
+ *
  * Allocates new memory for the concatenated result, copies both strings,
  * and frees the first input string. Useful for building strings incrementally.
- * 
+ *
  * @param s1 First string (will be freed)
  * @param s2 Second string to append
  * @return char* New concatenated string, NULL on allocation failure

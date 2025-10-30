@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   handle_commands.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/30 23:44:03 by mqueiros          #+#    #+#             */
+/*   Updated: 2025/10/30 23:44:04 by mqueiros         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	execute_external_command(t_mini *mini, t_ast *node, t_redir *redirects)
@@ -40,7 +52,7 @@ int	execute_command(t_mini *mini, t_ast *node)
 		return (0);
 	if (!node->args || !node->args[0])
 	{
-		if (node->redir && node->redir->type == TOKEN_HEREDOC)
+		if (node->redir)
 			return (redir_result_handler(mini, node, result));
 		return (0);
 	}

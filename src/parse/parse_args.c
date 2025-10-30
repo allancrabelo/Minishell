@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_args.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/30 23:43:51 by mqueiros          #+#    #+#             */
+/*   Updated: 2025/10/30 23:43:52 by mqueiros         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /**
  * @brief Allocates and initializes command arguments array
- * 
+ *
  * Creates a NULL-terminated array of strings with specified capacity.
  * Memory is zero-initialized to ensure proper termination.
- * 
+ *
  * @param count Number of argument slots to allocate
  * @return char** Allocated arguments array, NULL on allocation failure
  */
@@ -22,11 +34,11 @@ char	**init_args_array(int count)
 
 /**
  * @brief Counts expanded arguments after wildcard processing
- * 
+ *
  * Calculates the number of arguments after wildcard expansion.
  * If token contains unquoted wildcards, counts all matching files,
  * otherwise counts as single argument.
- * 
+ *
  * @param tokens Token to check for wildcard expansion
  * @return int Number of arguments after expansion
  */
@@ -60,11 +72,11 @@ int	count_expanded_args(t_token *tokens)
 
 /**
  * @brief Counts command arguments with wildcard expansion
- * 
+ *
  * Iterates through tokens to count command arguments, expanding
  * wildcards in unquoted word tokens. Skips redirection operators
  * and their associated files.
- * 
+ *
  * @param tokens Linked list of tokens to count
  * @return int Total number of command arguments after expansion
  */
@@ -118,10 +130,10 @@ int	handle_wildcard_expansion(t_token *token, char **args, int *count)
 
 /**
  * @brief Expands wildcards in token and adds to arguments array
- * 
+ *
  * Processes token with wildcard characters, expands matching files,
  * and adds them to the arguments array. Handles memory management.
- * 
+ *
  * @param token Token containing potential wildcard pattern
  * @param args Arguments array to populate
  * @param count Pointer to current argument count

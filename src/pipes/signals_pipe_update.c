@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signals_pipe_update.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/30 23:43:44 by mqueiros          #+#    #+#             */
+/*   Updated: 2025/10/30 23:43:45 by mqueiros         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /**
  * @brief Updates exit status after pipe execution
- * 
+ *
  * Processes exit status from both pipe commands, prioritizing
  * the right command's status. Handles signal termination cases.
- * 
+ *
  * @param status_right Exit status of right pipe command
  * @param status_left Exit status of left pipe command
  * @param mini Pointer to main shell structure

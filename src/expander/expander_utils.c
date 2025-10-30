@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expander_utils.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/30 23:43:57 by mqueiros          #+#    #+#             */
+/*   Updated: 2025/10/30 23:43:58 by mqueiros         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /**
  * @brief Converts an integer to a string (no allocation).
- * 
+ *
  * Writes the decimal representation of `n` into `dst`.
  * Handles only non-negative integers and ensures null termination.
- * 
+ *
  * @param n   Integer to convert
  * @param dst Destination buffer for the resulting string
  */
@@ -39,10 +51,10 @@ void	ft_itoa_alternative(int n, char *dst)
 
 /**
  * @brief Expands the special variable `$?` with the shell's exit status.
- * 
+ *
  * Converts `mini->exit_status` into a string using `ft_itoa_alternative()`
  * and returns it. The returned string is dynamically allocated.
- * 
+ *
  * @param mini Pointer to the main shell structure
  * @return char* Newly allocated string with the exit status, or NULL on failure
  */
@@ -59,10 +71,10 @@ char	*expand_exit_status(t_mini *mini)
 
 /**
  * @brief Expands special shell variables.
- * 
+ *
  * Handles expansion for special variables like `$?`.
  * Returns the expanded value as a newly allocated string.
- * 
+ *
  * @param mini Pointer to the main shell structure
  * @param var_char Character representing the special variable
  * @return char* Expanded variable value, or NULL if not a special variable
@@ -76,10 +88,10 @@ char	*expand_special_var(t_mini *mini, char var_char)
 
 /**
  * @brief Checks if a character is a special shell variable.
- * 
+ *
  * Identifies characters that represent special shell variables
  * such as `$?`, `$$`, `$!`, positional parameters, and `$*`.
- * 
+ *
  * @param c Character to check
  * @return int 1 if `c` is a special variable character, 0 otherwise
  */
