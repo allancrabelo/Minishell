@@ -1,0 +1,17 @@
+image: gitpod/workspace-full
+
+tasks:
+  - name: Minishell
+    init: |
+      # Navegue até o diretório do seu projeto se ele não estiver na raiz
+      # cd meu_projeto_shell
+      
+      # Use make para compilar seu projeto
+      make all 
+      
+
+    echo: "Minishell compiled successfully."
+
+ports:
+  - port: 8080
+    onOpen: ignore
