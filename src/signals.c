@@ -6,7 +6,7 @@
 /*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 23:44:07 by mqueiros          #+#    #+#             */
-/*   Updated: 2025/10/30 23:44:08 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/10/31 16:48:19 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ static void	handle_exec_ctrl_bslash(int signal)
 {
 	(void)signal;
 	g_signal = 131;
-	printf("Quit (core dumped)\n");
+	write(1, "Quit (core dumped)\n", 19);
 }
 
 /**
@@ -80,7 +80,8 @@ static void	handle_exec_ctrl_bslash(int signal)
  *
  * Sets up signal handlers for SIGINT and SIGQUIT specifically
  * for commands being executed (child processes).
- * Ignores SIGPIPE to allow normal cleanup on broken pipes.
+ * Restores default SIGPIPE behavior so writers terminate silently
+ * when the reader closes the pipe (standard Unix behavior).
  *
  * @return void
  */
@@ -88,5 +89,5 @@ void	setup_exec_signals(void)
 {
 	signal(SIGINT, handle_exec_ctrl_c);
 	signal(SIGQUIT, handle_exec_ctrl_bslash);
-	signal(SIGPIPE, SIG_IGN);
+	signal(SIGPIPE, SIG_DFL);
 }

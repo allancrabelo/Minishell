@@ -6,7 +6,7 @@
 /*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 23:44:02 by mqueiros          #+#    #+#             */
-/*   Updated: 2025/10/30 23:44:03 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/10/31 16:49:13 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,8 @@ int	signal_execute_setup(t_mini *mini, pid_t pid)
 	{
 		if (WTERMSIG(status) == SIGINT)
 			write(1, "\n", 1);
+		else if (WTERMSIG(status) == SIGQUIT)
+			write(1, "Quit (core dumped)\n", 19);
 		mini->exit_status = 128 + WTERMSIG(status);
 		return (mini->exit_status);
 	}

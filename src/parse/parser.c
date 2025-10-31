@@ -6,7 +6,7 @@
 /*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 23:43:48 by mqueiros          #+#    #+#             */
-/*   Updated: 2025/10/30 23:43:49 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/10/31 15:26:29 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,8 @@ t_ast	*build_cmd_node(char **args, int arg_count, t_redir *redir)
 /**
  * @brief Builds the abstract syntax tree (AST) from tokens
  *
- * Validates initial token and overall token sequence before
  * parsing into an AST. Starts parsing from the highest precedence
+ * Validates initial token and overall token sequence before
  * level (OR) and constructs the full AST.
  *
  * @param mini Pointer to main shell structure
