@@ -6,7 +6,7 @@
 /*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 23:45:24 by mqueiros          #+#    #+#             */
-/*   Updated: 2025/11/01 11:00:50 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/11/04 12:32:51 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,6 @@ int	is_valid_identifier(char *str)
 	i = 1;
 	while (str[i] && str[i] != '=')
 	{
-		if ((str[i] == '+' && str[i + 1] == '=') || (str[i] == '+'
-				&& str[i + 1] == '=' && str[i + 3] == ':'))
-		{
-			if ((str[i] == '+' && str[i + 1] == '=' && str[i + 3] == ':'))
-				i += 3;
-			else
-				i += 2;
-			break ;
-		}
 		if (!ft_isalnum(str[i]) && str[i] != '_')
 			return (0);
 		i++;

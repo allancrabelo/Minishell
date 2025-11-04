@@ -6,7 +6,7 @@
 /*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 23:43:52 by mqueiros          #+#    #+#             */
-/*   Updated: 2025/10/30 23:43:53 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/11/04 13:19:51 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,19 @@ static void	copy_exp(char *dst, size_t *j, char *exp)
  */
 void	do_tilde(t_mini *mini, char *dst, size_t *i, size_t *j)
 {
-	(*i)++;
-	copy_exp(dst, j, expand_tilde(mini));
+	size_t new;
+
+	new = (*i) + 1;
+	if (ft_isspace(mini->input[new]) || mini->input[new] == '\0' || mini->input[new] == '/')
+	{
+		(*i)++;
+		copy_exp(dst, j, expand_tilde(mini));
+	}
+	else
+	{
+		dst[(*j)++] = mini->input[*i];
+		(*i)++;
+	}
 }
 
 /**

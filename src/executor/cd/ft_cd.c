@@ -6,7 +6,7 @@
 /*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 23:45:17 by mqueiros          #+#    #+#             */
-/*   Updated: 2025/11/04 10:18:27 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/11/04 12:38:34 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,22 +31,20 @@ static void set_pwd_oldpwd(t_mini *mini)
 	char	pwd[4096];
 
 	if (findenv(mini, "OLDPWD") || mini->old_pwd == NULL)
-	{
-		mini->old_pwd = mini->pwd;
-		ft_setenv("OLDPWD", mini->old_pwd, mini);
-	}
+		ft_setenv("OLDPWD", mini->pwd, mini);
+	if (mini->old_pwd)
+		free(mini->old_pwd);
+	mini->old_pwd = mini->pwd;
+	mini->pwd = ft_strdup(getcwd(pwd, sizeof(pwd)));
 	if (findenv(mini, "PWD"))
-	{
-		mini->pwd = getcwd(pwd, sizeof(pwd));
 		ft_setenv("PWD", mini->pwd, mini);
-	}
 }
 
 static int	cd_dash(t_mini *mini)
 {
 	char	*target_dir;
 
-	target_dir = mini->old_pwd;
+	target_dir = ft_getenv("OLDPWD", mini);
 	if (!target_dir)
 		return (print_command_error("cd", "OLDPWD not set"), 1);
 	if (chdir(target_dir) != 0)
