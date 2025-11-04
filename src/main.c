@@ -6,7 +6,7 @@
 /*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 23:44:08 by mqueiros          #+#    #+#             */
-/*   Updated: 2025/11/01 13:54:09 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/11/04 10:18:36 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,11 @@ static void	init_export_list(t_mini *mini, char **envp)
 void	do_commands(t_mini *mini, char *input)
 {
 	add_history(input);
-	mini->pwd = ft_getenv("PWD", mini);
+	if (findenv(mini, "PWD"))
+		ft_setenv("PWD", mini->pwd, mini);
+	if (findenv(mini, "OLDPWD"))
+		ft_setenv("OLDPWD", mini->old_pwd, mini);
+	// mini->pwd = ft_getenv("PWD", mini);
 	handle_commands(mini, input);
 }
 
@@ -157,6 +161,7 @@ int	main(int argc, char **argv, char **envp)
 	init_export_list(&mini, mini.envp);
 	init_env_list(&mini, mini.envp);
 	increment_shlvl(&mini);
+	mini.pwd = ft_strdup(ft_getenv("PWD", &mini));
 	g_signal = 0;
 	main_loop(&mini);
 	ft_free_all(&mini, mini.exit_status, 0);
