@@ -6,7 +6,7 @@
 /*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 23:43:39 by mqueiros          #+#    #+#             */
-/*   Updated: 2025/11/01 13:19:32 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/11/04 14:41:44 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,6 +145,10 @@ int	ft_free_all(t_mini *mini, int ret, int exit_prog)
 	}
 	if (mini->envp)
 		ft_free_split(mini->envp);
+	if (mini->pwd)
+		free(mini->pwd);
+	if (mini->old_pwd)
+		free(mini->old_pwd);
 	mini->exit_status = ret;
 	if (exit_prog)
 		exit(mini->exit_status);

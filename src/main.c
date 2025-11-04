@@ -6,7 +6,7 @@
 /*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 23:44:08 by mqueiros          #+#    #+#             */
-/*   Updated: 2025/11/04 12:17:10 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/11/04 13:24:55 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ void	do_commands(t_mini *mini, char *input)
 		ft_setenv("PWD", mini->pwd, mini);
 	if (findenv(mini, "OLDPWD"))
 		ft_setenv("OLDPWD", mini->old_pwd, mini);
-	// mini->pwd = ft_getenv("PWD", mini);
 	handle_commands(mini, input);
 }
 

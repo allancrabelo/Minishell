@@ -6,7 +6,7 @@
 /*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 23:44:05 by mqueiros          #+#    #+#             */
-/*   Updated: 2025/11/01 13:17:16 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/11/04 15:24:19 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ void	mini_init(t_mini *mini, char **envp)
 	mini->exit_status = 0;
 	mini->env_list = NULL;
 	mini->pwd = NULL;
+	mini->old_pwd = NULL;
 	mini->heredoc = NULL;
 	mini->heredoc_fd = 0;
 	mini->heredoc_signal = 0;

@@ -6,7 +6,7 @@
 /*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 23:45:17 by mqueiros          #+#    #+#             */
-/*   Updated: 2025/11/01 13:20:45 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/11/04 15:29:42 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,20 @@ static void	cd_error(char *target_dir)
 	return ;
 }
 
+static void	set_pwd_oldpwd(t_mini *mini)
+{
+	char	pwd[4096];
+
+	if (findenv(mini, "OLDPWD") || mini->old_pwd == NULL)
+		ft_setenv("OLDPWD", mini->pwd, mini);
+	if (mini->old_pwd)
+		free(mini->old_pwd);
+	mini->old_pwd = mini->pwd;
+	mini->pwd = ft_strdup(getcwd(pwd, sizeof(pwd)));
+	if (findenv(mini, "PWD"))
+		ft_setenv("PWD", mini->pwd, mini);
+}
+
 static int	cd_dash(t_mini *mini)
 {
 	char	*target_dir;
@@ -35,36 +49,29 @@ static int	cd_dash(t_mini *mini)
 		return (print_command_error("cd", "OLDPWD not set"), 1);
 	if (chdir(target_dir) != 0)
 		return (cd_error(target_dir), 1);
-	ft_setenv("OLDPWD", ft_getenv("PWD", mini), mini);
-	ft_setenv("PWD", target_dir, mini);
+	set_pwd_oldpwd(mini);
+	printf("%s\n", mini->pwd);
 	return (0);
 }
 
 int	ft_cd(t_mini *mini, t_ast *node)
 {
 	char	*target_dir;
-	char	*old_pdw_var;
-	char	pwd[4096];
 
 	target_dir = ft_getenv("HOME", mini);
 	if (node->arg_count == 3)
 		return (print_command_error("cd", "too many arguments"), 1);
 	if (node->args[1] == NULL)
 	{
-		if (target_dir)
-			return (chdir(target_dir), 0);
-		else
+		if (!target_dir)
 			return (print_command_error("cd", "HOME not set"), 1);
 	}
-	target_dir = node->args[1];
+	else
+		target_dir = node->args[1];
 	if (ft_strcmp("-", target_dir) == 0)
 		return (cd_dash(mini));
-	if (!target_dir)
-		return (print_command_error("cd", "OLDPWD not set"), 1);
-	old_pdw_var = ft_getenv("PWD", mini);
-	ft_setenv("OLDPWD", old_pdw_var, mini);
 	if (chdir(target_dir) != 0)
 		return (cd_error(target_dir), 1);
-	ft_setenv("PWD", getcwd(pwd, sizeof(pwd)), mini);
+	set_pwd_oldpwd(mini);
 	return (0);
 }

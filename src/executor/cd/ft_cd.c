@@ -6,7 +6,7 @@
 /*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 23:45:17 by mqueiros          #+#    #+#             */
-/*   Updated: 2025/11/04 12:38:34 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/11/04 13:25:14 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static void	cd_error(char *target_dir)
 	return ;
 }
 
-static void set_pwd_oldpwd(t_mini *mini)
+static void	set_pwd_oldpwd(t_mini *mini)
 {
 	char	pwd[4096];
 

@@ -6,7 +6,7 @@
 /*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 23:45:26 by mqueiros          #+#    #+#             */
-/*   Updated: 2025/10/31 17:50:50 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/11/04 15:28:16 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	increment_shlvl(t_mini *mini)
 
 	shlvl_str = ft_getenv("SHLVL", mini);
 	if (!shlvl_str)
-		ft_setenv("SHLVL", "1", mini);
+		shlvl = 1;
 	else
 	{
 		shlvl = ft_atoi(shlvl_str);
@@ -54,13 +54,13 @@ void	increment_shlvl(t_mini *mini)
 			shlvl = 0;
 		else
 			shlvl++;
-		new_shlvl = ft_itoa(shlvl);
-		if (new_shlvl)
-		{
-			ft_setenv("SHLVL", new_shlvl, mini);
-			free(new_shlvl);
-		}
 	}
+	new_shlvl = ft_itoa(shlvl);
+	if (!new_shlvl)
+		return ;
+	ft_setenv("SHLVL", new_shlvl, mini);
+	free(new_shlvl);
+	mini->env_mod = 1;
 }
 
 void	init_env_list(t_mini *mini, char **envp)

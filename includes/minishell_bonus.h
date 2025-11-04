@@ -6,7 +6,7 @@
 /*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 23:45:53 by mqueiros          #+#    #+#             */
-/*   Updated: 2025/11/01 15:04:03 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/11/04 14:40:15 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,7 @@ typedef struct s_mini
 	int					child_count;
 	t_env				*env_list;
 	char				*pwd;
+	char				*old_pwd;
 	t_heredoc			*heredoc;
 	int					heredoc_fd;
 	int					heredoc_signal;
