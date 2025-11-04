@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   minishell_bonus.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 23:45:53 by mqueiros          #+#    #+#             */
-/*   Updated: 2025/11/04 09:20:34 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/11/01 15:04:03 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#ifndef MINISHELL_BONUS_H
+# define MINISHELL_BONUS_H
 
 // Includes
 # include "../libft/libft.h"
@@ -31,7 +31,8 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <limits.h>
-# define LINE "minishell$ "
+# define LINE "\033[1m\033[91mm\033[93mi\033[92mn\033[94mi\033[95ms\033[91mh\
+\033[93me\033[92ml\033[94ml\033[95m$\033[0m "
 # define COMMAND_NOT_FOUND 127
 # define COMMAND_DENIED_OR_FAILED 126
 

@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   external_commands.c                                :+:      :+:    :+:   */
+/*   external_commands_bonus.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 23:44:27 by mqueiros          #+#    #+#             */
-/*   Updated: 2025/11/01 13:10:55 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/11/01 13:18:02 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "minishell_bonus.h"
 
 char	*join_path_cmd(char *path, char *cmd)
 {

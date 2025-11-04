@@ -1,4 +1,5 @@
 NAME		:= minishell
+BONUS		:= minishell_bonus
 CC			:= cc
 RM			:= rm -f
 
@@ -29,6 +30,21 @@ VPATH		:=	src src/utils \
 				src/expander \
 				src/pipes \
 				src/bonus \
+				bonus bonus/utils \
+				bonus/executor \
+				bonus/cmd \
+				bonus/executor/echo \
+				bonus/executor/exit \
+				bonus/executor/export \
+				bonus/executor/pwd \
+				bonus/executor/env \
+				bonus/executor/cd \
+				bonus/executor/unset \
+				bonus/executor/redirections \
+				bonus/parse \
+				bonus/expander \
+				bonus/pipes \
+				bonus/bonus
 
 
 SRCSLIST	:=	main \
@@ -67,20 +83,23 @@ SRCSLIST	:=	main \
 				variable_expander \
 				expander_utils \
 				environment_utils \
-				wildcard_bonus \
-				wildcard_utils_bonus \
+				wildcard \
+				wildcard_utils \
 				pipes_executor \
 				signals_pipe_update \
 				external_commands \
 				external_commands_utils \
 				free_all \
 				free_all_redirections \
-				and_or_bonus
+				and_or
+
 
 SRCS		:= $(addsuffix .c, ${SRCSLIST})
+SRCS_BONUS	:= $(addsuffix _bonus.c, ${SRCSLIST})
 
 OBJSDIR		:= ./obj/
 OBJS		:= ${SRCS:%.c=${OBJSDIR}%.o}
+OBJS_BONUS	:= ${SRCS_BONUS:%.c=${OBJSDIR}%.o}
 
 LIBFTDIR	:= ./libft/
 LIBFT		:= ${LIBFTDIR}libft.a
@@ -111,20 +130,41 @@ ${LIBFT}:
 	@echo "${CYAN}Compiling libft ...${RESET}"
 	@make -C ${LIBFTDIR} --no-print-directory
 
+bonus: ${BONUS}
+
+${BONUS}: ${OBJS_BONUS} ${LIBFT}
+	@echo ""
+	@echo "${CYAN}Linking ${BONUS} ...${RESET}"
+	${CC} ${CFLAGS} ${DEBUGFLAGS} ${OBJS_BONUS} ${LIBFT} -o ${BONUS} -lreadline
+	@echo ""
+	@echo "${CYAN}${BONUS} Ready to use${RESET}"
+
 # ============================
 # Cleaning
 # ============================
 
 clean:
 	@echo ""
-	@echo "${RED}Deleting ${NAME} Objects ...${RESET}"
+	@if [ -f ${NAME} ]; then \
+		echo "${RED}Deleting ${NAME} Objects ...${RESET}"; \
+	fi
+	@if [ -f ${BONUS} ]; then \
+		echo "${RED}Deleting ${BONUS} Objects ...${RESET}"; \
+	fi
 	@${RM} -r ${OBJSDIR}
 	@make -C ${LIBFTDIR} clean --no-print-directory --quiet
 
 fclean:
 	@echo ""
-	@echo "${RED}Deleting ${NAME} Executable ...${RESET}"
-	@${RM} ${NAME}
+	@if [ -f ${NAME} ]; then \
+		echo "${RED}Deleting ${NAME} Objects ...${RESET}"; \
+		${RM} ${NAME}; \
+	fi
+	@if [ -f ${BONUS} ]; then \
+		echo "${RED}Deleting ${BONUS} Objects ...${RESET}"; \
+		${RM} $(BONUS); \
+	fi
+	@${RM} readline.supp
 	@${RM} -r ${OBJSDIR}
 	@make -C ${LIBFTDIR} fclean --no-print-directory --quiet
 
@@ -158,4 +198,4 @@ debug: re
 release: CFLAGS += -O3
 release: re
 
-.PHONY: all clean fclean re run debug release
+.PHONY: all clean fclean re run debug release bonus val
