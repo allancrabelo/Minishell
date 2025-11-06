@@ -64,6 +64,7 @@ SRCSLIST	:=	main \
 				ft_cd \
 				ft_unset \
 				ft_export \
+				print_export_list \
 				export_list \
 				expand_heredoc_line \
 				heredoc_to_pipe \

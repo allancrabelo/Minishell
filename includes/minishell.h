@@ -6,7 +6,7 @@
 /*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 23:45:53 by mqueiros          #+#    #+#             */
-/*   Updated: 2025/11/04 09:38:17 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/11/06 08:55:41 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,6 +177,7 @@ int			ft_echo(t_ast *node);
 
 // Export:
 int			ft_export(t_mini *mini, t_ast *node);
+void		print_export_list(t_mini *mini);
 int			is_valid_identifier(char *str);
 
 // Export list

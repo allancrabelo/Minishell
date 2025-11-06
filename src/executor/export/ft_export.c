@@ -6,7 +6,7 @@
 /*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 23:45:24 by mqueiros          #+#    #+#             */
-/*   Updated: 2025/11/04 12:32:51 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/11/06 08:55:04 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,22 +26,6 @@ int	is_valid_identifier(char *str)
 		i++;
 	}
 	return (1);
-}
-
-static void	print_export_list(t_mini *mini)
-{
-	t_export	*lst;
-
-	lst = mini->export_list;
-	while (lst)
-	{
-		if (lst->value == NULL)
-			printf("declare -x %s\n", lst->key);
-		else
-			printf("declare -x %s=\"%s\"\n", lst->key, lst->value);
-		lst = lst->next;
-	}
-	mini->exit_status = 0;
 }
 
 static void	extract_key_value(char *arg, char **key, char **value)

@@ -6,7 +6,7 @@
 /*   By: mqueiros <mqueiros@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 23:45:26 by mqueiros          #+#    #+#             */
-/*   Updated: 2025/10/30 23:45:27 by mqueiros         ###   ########.fr       */
+/*   Updated: 2025/11/06 08:14:01 by mqueiros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,6 @@ int	ft_exit(t_mini *mini, t_ast *node)
 	write(1, "exit\n", 5);
 	res = 0;
 	arg_index = 1;
-	if (node->arg_count >= 2 && ft_strcmp(node->args[arg_index], "--") == 0)
-		arg_index++;
 	if (node->arg_count > arg_index)
 	{
 		if (!get_num_256(node->args[arg_index], &res))
@@ -67,7 +65,8 @@ int	ft_exit(t_mini *mini, t_ast *node)
 			ft_free_all(mini, 2, 1);
 		}
 		if (node->arg_count > arg_index + 1)
-			return (print_command_error("exit", "too many arguments"), 1);
+			return (print_command_error("exit", "too many arguments"),
+				mini->exit_status + (mini->exit_status == 0));
 		mini->exit_status = res;
 	}
 	close_extra_fds();
