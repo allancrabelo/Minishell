@@ -131,15 +131,6 @@ ${LIBFT}:
 	@echo "${CYAN}Compiling libft ...${RESET}"
 	@make -C ${LIBFTDIR} --no-print-directory
 
-bonus: ${BONUS}
-
-${BONUS}: ${OBJS_BONUS} ${LIBFT}
-	@echo ""
-	@echo "${CYAN}Linking ${BONUS} ...${RESET}"
-	${CC} ${CFLAGS} ${DEBUGFLAGS} ${OBJS_BONUS} ${LIBFT} -o ${BONUS} -lreadline
-	@echo ""
-	@echo "${CYAN}${BONUS} Ready to use${RESET}"
-
 # ============================
 # Cleaning
 # ============================
