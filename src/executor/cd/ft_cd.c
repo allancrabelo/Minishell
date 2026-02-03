@@ -11,21 +11,48 @@ static void	cd_error(char *target_dir)
 		ft_putstr_fd("Permission denied\n", 2);
 	else
 		ft_putstr_fd("Not a directory\n", 2);
-	return ;
 }
 
-static void	set_pwd_oldpwd(t_mini *mini)
+static char	*build_manual_pwd(char *old_pwd, char *target_dir)
+{
+	char	*tmp;
+	char	*new_pwd;
+
+	if (!old_pwd)
+		return (ft_strdup(target_dir));
+	tmp = ft_strjoin(old_pwd, "/");
+	if (!tmp)
+		return (NULL);
+	new_pwd = ft_strjoin(tmp, target_dir);
+	free(tmp);
+	return (new_pwd);
+}
+
+static int	set_pwd_oldpwd(t_mini *mini, char *target_dir)
 {
 	char	pwd[4096];
+	char	*cwd_result;
+	int		getcwd_failed;
 
+	getcwd_failed = 0;
 	if (findenv(mini, "OLDPWD") || mini->old_pwd == NULL)
 		ft_setenv("OLDPWD", mini->pwd, mini);
 	if (mini->old_pwd)
 		free(mini->old_pwd);
 	mini->old_pwd = mini->pwd;
-	mini->pwd = ft_strdup(getcwd(pwd, sizeof(pwd)));
+	cwd_result = getcwd(pwd, sizeof(pwd));
+	if (cwd_result == NULL)
+	{
+		print_command_error("cd", "error retrieving current directory: getcwd: "
+			"cannot access parent directories: No such file or directory");
+		mini->pwd = build_manual_pwd(mini->old_pwd, target_dir);
+		getcwd_failed = 1;
+	}
+	else
+		mini->pwd = ft_strdup(cwd_result);
 	if (findenv(mini, "PWD"))
 		ft_setenv("PWD", mini->pwd, mini);
+	return (getcwd_failed);
 }
 
 static int	cd_dash(t_mini *mini)
