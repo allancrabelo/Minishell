@@ -64,7 +64,7 @@ static int	cd_dash(t_mini *mini)
 		return (print_command_error("cd", "OLDPWD not set"), 1);
 	if (chdir(target_dir) != 0)
 		return (cd_error(target_dir), 1);
-	set_pwd_oldpwd(mini);
+	set_pwd_oldpwd(mini, target_dir);
 	printf("%s\n", mini->pwd);
 	return (0);
 }
@@ -87,6 +87,5 @@ int	ft_cd(t_mini *mini, t_ast *node)
 		return (cd_dash(mini));
 	if (chdir(target_dir) != 0)
 		return (cd_error(target_dir), 1);
-	set_pwd_oldpwd(mini);
-	return (0);
+	return (set_pwd_oldpwd(mini, target_dir));
 }
