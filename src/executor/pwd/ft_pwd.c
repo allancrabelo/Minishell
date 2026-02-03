@@ -17,7 +17,8 @@ int	ft_pwd(t_mini *mini)
 	}
 	if (getcwd(pwd, sizeof(pwd)) == NULL)
 	{
-		printf("%s\n", mini->pwd);
+		if (mini->pwd)
+			printf("%s\n", mini->pwd);
 		return (0);
 	}
 	printf("%s\n", pwd);
